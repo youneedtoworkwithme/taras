@@ -225,7 +225,9 @@ input[type=range]{width:100%;accent-color:var(--brand-ink)}
 .gal{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none}
 .gal::-webkit-scrollbar{display:none}
 .gp{flex:none;width:72%;aspect-ratio:4/3;border:0;padding:0;border-radius:14px;overflow:hidden;scroll-snap-align:start;background:var(--line);cursor:zoom-in}
-.gp img{width:100%;height:100%;object-fit:cover;display:block}
+.gp img,.gp video{width:100%;height:100%;object-fit:cover;display:block}
+.gv{position:relative;cursor:default}
+.gvb{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px}
 .lb{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px}
 .lb img{max-width:100%;max-height:78vh;border-radius:12px}
 .lb p{color:#fff;margin:0;font-weight:700;text-align:center}
@@ -460,7 +462,7 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
       <div class="hours"><span><b>Пн–Пт 09:00–18:00</b> · Львів, вул. Зелена, 238, корпус «В»</span><a id="mapLink" target="_blank" rel="noopener">Маршрут ↗</a></div>
       <div class="shop">
         <div class="shop-h"><b>Наш магазин</b><span>Гортайте вбік →</span></div>
-        <div class="gal" id="gal"><button type="button" class="gp" data-i="0"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Rbvct8ILIglZyhi7Z5DjpA7gy-NNkuInuuqQnz_FfrdVSehs9wzJOussp7nUnS7OOlsYDOISScunhlS3mYVcF--3YVz994YaSaVpvU2cTPIK-UU2Y7KNDZk9pPaQnq7RtwG4-C=w1000-h750" referrerpolicy="no-referrer" alt="Магазин на Зеленій, 238" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="1"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QYaE5fnzbhA0bZfWYjzwqjRe0NcowGd2aXiwh2WO4nQiKED0p3m1h_skMda_0EKzf0PghXLeuYnYCs7FBBS1g8Hj6xg1vgYDKl1D0YCBPygHUxtKNGv5qv_OnTPgY3eFqBDlCprTkKJnQ=w1000-h750" referrerpolicy="no-referrer" alt="Стенди з трубами і фітингами" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="2"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9T7Y7pxgwCSuQY82IwxDc2oKTtTOc89Etj2wcOzh5F1AlnKeVUPIFsqk4ojr9FBFtUpXdGzbrcctNIqtF6CbD3LmhkY_wqzDpGc7O95EOmpS0U6AQof2AjiExUexkzeTglNzOiv=w1000-h750" referrerpolicy="no-referrer" alt="Зал чистової сантехніки" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="3"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5rRllJUrOIVoggK4nDvX4QC5bodcHmQBvt159QaZsZlTXAHtJQcUiyNZJO3tzKeYquvvWUgLefW_4X5cClmwt7v1CFTjJAR20DKpQfIjI3XYqye1HPIcG4bXxi0Uqa6jfyi8T=w1000-h750" referrerpolicy="no-referrer" alt="Котли і бойлери" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="4"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TJORJ4zcKs1vOJmkuZg4ZSqbEen3u7U1I45i3IDNzCXtOzl8zzAfjnZ3mPH4mKtx0WRDde0H1apJeX63Hk8_6HlFjMMNT08yETJQjjh6SWJ_ZhIddsBfp2AUwVr7RuqolfTltIMpC62PQW=w1000-h750" referrerpolicy="no-referrer" alt="Raftec: труби, шланги, фітинги" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="5"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q6tPT2aAuvdxhBjQUx8-yygfH_Su_nmW_x6F_CIiGJBbUETch_M879s4Y0-N2TC8AauHLGVOP76om7Ue8GlGPKZKbDa9SEqZ6yD2kDSdT4U3o9ff2hcK6rf7tyWXtaQ-_r4JbdG9D64yGW=w1000-h750" referrerpolicy="no-referrer" alt="Очищення води Ecosoft" loading="lazy" width="200" height="150"></button></div>
+        <div class="gal" id="gal"><div class="gp gv" aria-label="Відео: шоурум мережі"><video id="shopVid" src="https://dus-level.com/storage/pages/tbz6ewUyr74f4gtwKDTBtAFkMWKSb2HrHkE61Tkm.mp4#t=0.2" poster="" muted loop playsinline preload="metadata"></video><span class="gvb">▶ Шоурум мережі</span></div><button type="button" class="gp" data-i="0"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Rbvct8ILIglZyhi7Z5DjpA7gy-NNkuInuuqQnz_FfrdVSehs9wzJOussp7nUnS7OOlsYDOISScunhlS3mYVcF--3YVz994YaSaVpvU2cTPIK-UU2Y7KNDZk9pPaQnq7RtwG4-C=w1000-h750" referrerpolicy="no-referrer" alt="Магазин на Зеленій, 238" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="1"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QYaE5fnzbhA0bZfWYjzwqjRe0NcowGd2aXiwh2WO4nQiKED0p3m1h_skMda_0EKzf0PghXLeuYnYCs7FBBS1g8Hj6xg1vgYDKl1D0YCBPygHUxtKNGv5qv_OnTPgY3eFqBDlCprTkKJnQ=w1000-h750" referrerpolicy="no-referrer" alt="Стенди з трубами і фітингами" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="2"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9T7Y7pxgwCSuQY82IwxDc2oKTtTOc89Etj2wcOzh5F1AlnKeVUPIFsqk4ojr9FBFtUpXdGzbrcctNIqtF6CbD3LmhkY_wqzDpGc7O95EOmpS0U6AQof2AjiExUexkzeTglNzOiv=w1000-h750" referrerpolicy="no-referrer" alt="Зал чистової сантехніки" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="3"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5rRllJUrOIVoggK4nDvX4QC5bodcHmQBvt159QaZsZlTXAHtJQcUiyNZJO3tzKeYquvvWUgLefW_4X5cClmwt7v1CFTjJAR20DKpQfIjI3XYqye1HPIcG4bXxi0Uqa6jfyi8T=w1000-h750" referrerpolicy="no-referrer" alt="Котли і бойлери" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="4"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TJORJ4zcKs1vOJmkuZg4ZSqbEen3u7U1I45i3IDNzCXtOzl8zzAfjnZ3mPH4mKtx0WRDde0H1apJeX63Hk8_6HlFjMMNT08yETJQjjh6SWJ_ZhIddsBfp2AUwVr7RuqolfTltIMpC62PQW=w1000-h750" referrerpolicy="no-referrer" alt="Raftec: труби, шланги, фітинги" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="5"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q6tPT2aAuvdxhBjQUx8-yygfH_Su_nmW_x6F_CIiGJBbUETch_M879s4Y0-N2TC8AauHLGVOP76om7Ue8GlGPKZKbDa9SEqZ6yD2kDSdT4U3o9ff2hcK6rf7tyWXtaQ-_r4JbdG9D64yGW=w1000-h750" referrerpolicy="no-referrer" alt="Очищення води Ecosoft" loading="lazy" width="200" height="150"></button></div>
       </div>
     </div>
     <button type="button" class="btn next" data-go="brands"><span>З якими виробниками працюємо</span><span aria-hidden="true">→</span></button>
@@ -643,12 +645,15 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 /* ---------- tabs ---------- */
 const TABS = ["me", "brands", "win", "obj", "write", "3d"];
 const FUNNEL = ["me", "brands", "win", "obj", "write"];   // 3D is a bonus, outside the funnel
-function go(tab) {
+let NAVD = 0;   // depth inside this visit, so "Назад" knows if there is somewhere to return
+function go(tab, o = {}) {
+  if (!o.pop) { const st = history.state || {}; if (st.tab !== tab || (tab === "write" && st.step !== step)) { NAVD++; history.pushState({ tab, step: tab === "write" ? step : null, d: NAVD }, ""); } }
   TABS.forEach(t => { $("s-" + t).hidden = t !== tab; });
   document.querySelectorAll(".tab").forEach(b => { if (b.dataset.tab === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
   $("homeBtn").hidden = tab === "me"; $("gaugeMini").style.display = tab === "me" ? "" : "none";
   if (tab === "3d") { document.querySelector('.tab[data-tab="3d"] .dot').classList.remove("new"); init3D(); }
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: o.pop ? "auto" : "smooth" });
+  if (tab === "write") renderStep();
 }
 document.querySelectorAll(".tab").forEach(b => b.onclick = () => go(b.dataset.tab));
 document.querySelectorAll(".btn.next").forEach(b => {
@@ -879,7 +884,7 @@ function renderStep() {
   $("wzTitle").textContent = s.t; $("wzHint").textContent = s.h;
   $("wzBar").style.width = ((step + 1) / A.length * 100) + "%";
   $("wzBody").innerHTML = s.body();
-  $("wzBack").style.visibility = step ? "visible" : "hidden";
+  $("wzBack").style.visibility = step || (history.state || {}).d > 0 ? "visible" : "hidden";
   $("wzNext").hidden = step === A.length - 1;
   const area = $("wzArea"); if (area) area.oninput = () => { WZ.area = +area.value; $("wzAreaO").textContent = WZ.area + " м²"; };
   const note = $("wzNote"); if (note) note.oninput = () => WZ.note = note.value;
@@ -898,9 +903,14 @@ $("wzBody").addEventListener("click", e => {
   } else WZ[key] = v;
   row.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", row.dataset.multi === "1" ? WZ[key].has(c.dataset.v) : WZ[key] === c.dataset.v));
 });
-$("wzNext").onclick = () => { if (step < act().length - 1) { step++; renderStep(); } };
-$("wzBack").onclick = () => { if (step > 0) { step--; renderStep(); } };
-function wizardWith(service) { WZ.need = new Set([service]); step = 1; renderStep(); }
+$("wzNext").onclick = () => { if (step < act().length - 1) { step++; NAVD++; history.pushState({ tab: "write", step, d: NAVD }, ""); renderStep(); $("s-write").scrollIntoView({ behavior: "smooth", block: "start" }); } };
+$("wzBack").onclick = () => { if ((history.state || {}).d > 0) history.back(); else if (step > 0) { step--; renderStep(); } };
+function wizardWith(service) { WZ.need = new Set([service]); step = 0; renderStep(); }
+history.replaceState({ tab: "me", step: null, d: 0 }, "");
+window.addEventListener("popstate", e => { const st = e.state || { tab: "me", d: 0 }; NAVD = st.d || 0;
+  if (st.tab === "write" && st.step != null) step = st.step;
+  document.querySelectorAll(".lb").forEach(x => x.hidden = true);
+  go(st.tab || "me", { pop: true }); });
 renderStep();
 setSeg("Майстер");
 
@@ -1687,7 +1697,7 @@ function build3D(stage) {
 renderSecret();
 
 /* ---------- shop photos ---------- */
-["#gal", "#whGal"].forEach(sel => { const G = [...document.querySelectorAll(sel + " .gp")]; let lb = null, k = 0;
+["#gal", "#whGal"].forEach(sel => { const G = [...document.querySelectorAll(sel + " .gp[data-i]")]; let lb = null, k = 0;
   const show = i => { k = (i + G.length) % G.length; const im = G[k].querySelector("img"); lb.querySelector("img").src = im.src; lb.querySelector("img").alt = im.alt; lb.querySelector("p").textContent = im.alt + ` · ${k + 1}/${G.length}`; };
   const open = i => { if (!lb) { lb = document.createElement("div"); lb.className = "lb"; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-label", "Фото магазину");
       lb.innerHTML = '<img alt=""><p></p><div class="row2"><button type="button" class="btn" data-d="-1">← Назад</button><button type="button" class="btn" data-d="1">Далі →</button></div><button type="button" class="btn" data-x="1">Закрити</button>';
@@ -1703,9 +1713,7 @@ renderSecret();
   // ~35 s: main warehouse wide shot → service & warehouse → photos from the presentation → showroom
   const CL = [
     { v: D + "pages/cKIseqNzDXei9fylEojgSxyj1rzqtoJIhKvPQinz.mp4", a: 1.9, b: 5.2, c: "Логістичний центр мережі" },
-    { v: D + "slides/videos/1aaNQKs6jmRgTUufoWpz8p2ZFbfPiflNkJQfnfAL.mp4", a: 2.0, b: 11.9, c: "Перевірка і комплектація" },
-    { p: "photos/sklad1.jpg", c: "10 тис. м² складів" }, { p: "photos/sklad2.jpg", c: "Збираємо Ваше замовлення" }, { p: "photos/sklad3.jpg", c: "15 тис.+ товарів у наявності" },
-    { v: D + "pages/tbz6ewUyr74f4gtwKDTBtAFkMWKSb2HrHkE61Tkm.mp4", a: 0.2, b: 11.8, c: "Шоурум і стенди" }
+    { v: D + "slides/videos/1aaNQKs6jmRgTUufoWpz8p2ZFbfPiflNkJQfnfAL.mp4", a: 4.2, b: 11.9, c: "Комплектація замовлень" }
   ];
   let k = -1, cur = 0, timer = null, paused = false, seen = false, bad = new Set();
   const prep = (el, c) => { if (el.dataset.src !== c.v) { el.dataset.src = c.v; el.src = c.v; } const go = () => { try { el.currentTime = c.a; } catch (e) {} };
@@ -1731,6 +1739,11 @@ renderSecret();
   let manual = false;
   btn.onclick = () => { if (paused) { manual = false; play(); } else { manual = true; stopIt(); } };
   new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { if (!manual) play(); } else if (!paused) { stopIt(); btn.textContent = "❚❚"; } })).observe(box);
+})();
+
+(() => { const v = $("shopVid"); if (!v) return; const tile = v.parentElement;
+  v.onerror = () => tile.remove();
+  new IntersectionObserver(es => es.forEach(e => e.isIntersecting && !document.getElementById("s-me").hidden ? v.play().catch(() => {}) : v.pause()), { threshold: .5 }).observe(v);
 })();
 </script>
 
