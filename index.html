@@ -661,7 +661,7 @@ const viberUrl = "viber://chat?number=" + encodeURIComponent(CONFIG.viberPhone);
 const who = () => seg === "Для себе" ? "Роблю ремонт для себе." : `Я ${seg.toLowerCase()}.`;
 function viberGo(text, toastEl) { copy(text).then(ok => toast(toastEl, ok ? `Текст скопійовано. Якщо Viber не відкрився, мій номер: ${CONFIG.viberShown}` : `Мій номер у Viber: ${CONFIG.viberShown}`)); }
 for (const id of ["viberBtn", "cmpViber"]) $(id).href = viberUrl;
-$("cmpTg").href = CONFIG.telegram; $("mapLink").href = CONFIG.map; $("geoBtn").href = CONFIG.place;
+$("cmpTg").href = CONFIG.telegram; $("mapLink").href = CONFIG.map; $("geoBtn").href = CONFIG.place; $("geoBtn").onclick = e => { e.preventDefault(); openMaps("place"); }; $("mapLink").onclick = e => { e.preventDefault(); openMaps("route"); };
 const helloMsg = () => `Добрий день, ${CONFIG.vocative}! Ми говорили телефоном. ${who()} Надішліть, будь ласка, умови співпраці.`;
 const cmpMsg = () => `Добрий день, ${CONFIG.vocative}! ${who()} Надсилаю рахунок від свого постачальника: порахуйте, будь ласка, ці ж позиції у Вас.`;
 $("viberBtn").onclick = () => viberGo(helloMsg(), $("meToast"));
@@ -916,7 +916,43 @@ const contacts = [
 ];
 $("clist").innerHTML = contacts.map(([k, v], i) => `<div class="citem"><div class="v"><small>${esc(k)}</small><span>${esc(v)}</span></div><button type="button" class="copy" data-i="${i}">Копіювати</button></div>`).join("");
 $("clist").onclick = async e => { const b = e.target.closest(".copy"); if (!b) return; flash(b, await copy(contacts[+b.dataset.i][1])); };
-$("saveVcf").onclick = () => { location.href = "taras.vcf"; };
+$("saveVcf").onclick = () => saveContact();
+$("vcfBtn").onclick = e => { e.preventDefault(); saveContact(); };
+/* ---------- open the phone's own apps (Contacts, Google Maps), not a browser page ---------- */
+const UA = navigator.userAgent, IOS = /iPhone|iPad|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1), ANDROID = /Android/.test(UA);
+const IN_APP = IOS && !/Safari\//.test(UA);             // Telegram / Viber / Instagram built-in browser on iPhone
+const PAGE = "https://549343lev-ship-it.github.io/taras/";
+const SHOP_Q = "Гаряча Точка, вулиця Зелена 238, Львів";
+function saveContact() {
+  if (ANDROID) {   // Android: opens Contacts → "New contact" already filled in
+    const f = { name: CONFIG.name, phone: CONFIG.viberPhone, phone_type: 2, secondary_phone: CONFIG.phones[1].replace(/[^+\d]/g, ""), secondary_phone_type: 3,
+      email: CONFIG.email, company: "Гаряча Точка", job_title: CONFIG.role, postal: "Львів, вул. Зелена, 238, корпус В", notes: "Візитівка: " + PAGE };
+    const extras = Object.entries(f).map(([k, v]) => (typeof v === "number" ? "i." : "S.") + k + "=" + encodeURIComponent(v)).join(";");
+    location.href = "intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/raw_contact;" + extras + ";S.browser_fallback_url=" + encodeURIComponent(PAGE + "taras.vcf") + ";end";
+    return;
+  }
+  // iPhone: Safari shows the contact card with "Create New Contact"; built-in app browsers would only download a file, so hand it to Safari
+  location.href = IN_APP ? "x-safari-" + PAGE + "taras.vcf" : PAGE + "taras.vcf";
+}
+function openMaps(mode) {
+  const q = encodeURIComponent(SHOP_Q);
+  const web = mode === "route" ? "https://www.google.com/maps/dir/?api=1&destination=" + q : "https://www.google.com/maps/search/?api=1&query=" + q;
+  if (ANDROID) {
+    location.href = mode === "route"
+      ? "intent://maps.google.com/maps?daddr=" + q + "#Intent;scheme=https;package=com.google.android.apps.maps;S.browser_fallback_url=" + encodeURIComponent(web) + ";end"
+      : "intent://maps.google.com/maps?q=" + q + "#Intent;scheme=https;package=com.google.android.apps.maps;S.browser_fallback_url=" + encodeURIComponent(web) + ";end";
+    return;
+  }
+  if (IOS) {
+    let left = false; const gone = () => { left = true; };
+    document.addEventListener("visibilitychange", gone, { once: true }); window.addEventListener("pagehide", gone, { once: true });
+    location.href = mode === "route" ? "comgooglemaps://?daddr=" + q + "&directionsmode=driving" : "comgooglemaps://?q=" + q;
+    // no Google Maps app → Apple Maps
+    setTimeout(() => { if (!left && !document.hidden) location.href = mode === "route" ? "maps://?daddr=" + q : "maps://?q=" + q; }, 1500);
+    return;
+  }
+  window.open(web, "_blank", "noopener");
+}
 $("copyAll").onclick = async () => { const ok = await copy(`${CONFIG.name}\n${CONFIG.role}, «${COMPANY.name}»\n` + contacts.map(([k, v]) => `${k}: ${v}`).join("\n"));
   toast($("cToast"), ok ? "Контакти скопійовано." : "Виділіть контакти вручну."); };
 
