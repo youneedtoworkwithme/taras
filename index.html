@@ -232,12 +232,24 @@ input[type=range]{width:100%;accent-color:var(--brand-ink)}
 .lb .row2{width:100%;max-width:460px}
 .lb .btn{background:#fff;color:#1F1F1F;border-color:#fff}
 .vid{position:relative;border-radius:16px;overflow:hidden;background:#111;aspect-ratio:16/9}
-.vid video{width:100%;height:100%;object-fit:cover;display:block}
+.vid .vl,.vid .vp{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .45s ease}
+.vid .on{opacity:1}
+.vid .vp.on{animation:kb 4s ease-out both}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.12)}}
+.vcap{position:absolute;left:10px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;pointer-events:none}
 .vsnd{position:absolute;right:10px;bottom:10px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:14px;font-weight:800;cursor:pointer}
 .stats4.whs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stats4.whs .stat{text-align:left;background:var(--bg);border-radius:12px;padding:10px 12px}
 .stats4.whs .stat span{font-size:12.5px;color:var(--muted)}
 #whGal .gp{width:60%}
+.ios-card{width:100%;max-width:300px;background:#F2F2F7;color:#111;border-radius:16px;padding:12px 14px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:-apple-system,system-ui,sans-serif}
+.ios-top{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:13px;color:#0A84FF}
+.ios-top b{color:#111}
+.ios-done{text-decoration:line-through;opacity:.55}
+.ios-av{width:64px;height:64px;border-radius:50%;background:#ccc center/cover}
+.ios-n{font-weight:700;font-size:16px}.ios-r{font-size:12.5px;color:#666}
+.ios-btn{margin-top:8px;width:100%;background:#fff;border-radius:10px;padding:11px;text-align:center;color:#0A84FF;font-weight:600;font-size:15px;outline:3px solid #F2673A;outline-offset:2px}
+.ios-arrow{font-size:13px;font-weight:700;color:#B8431C}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:stretch;margin:0 18px}
 .row3 .btn{flex-direction:column;gap:4px;min-height:64px;padding:8px 4px;font-size:13.5px}
 .row3 .btn svg{width:22px;height:22px}
@@ -481,8 +493,11 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
     <div class="card wh">
       <div class="head"><div class="eyebrow">Головний склад мережі</div><h2>Товар уже є на складі</h2>
         <p>Логістичний центр «Гарячої Точки». Звідси товар їде на наш магазин і до Вас на об'єкт.</p></div>
-      <div class="vid"><video id="whVid" src="https://dus-level.com/storage/slides/videos/1aaNQKs6jmRgTUufoWpz8p2ZFbfPiflNkJQfnfAL.mp4" poster="photos/sklad1.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Відео зі складу"></video>
-        <button type="button" class="vsnd" id="whSnd" aria-label="Відтворити або зупинити відео">❚❚</button></div>
+      <div class="vid" id="whVid" aria-label="Відео зі складу">
+        <video class="vl on" muted playsinline preload="auto"></video><video class="vl" muted playsinline preload="auto"></video>
+        <img class="vp" alt="" aria-hidden="true">
+        <span class="vcap" id="whCap"></span>
+        <button type="button" class="vsnd" id="whSnd" aria-label="Пауза або відтворення">❚❚</button></div>
       <div class="stats4 whs"><div class="stat"><b>10 тис. м²</b><span>складів</span></div><div class="stat"><b>15 тис.+</b><span>товарів</span></div><div class="stat"><b>22</b><span>центри комплектації</span></div><div class="stat"><b>20 років</b><span>на ринку</span></div></div>
       <div class="gal" id="whGal"><button type="button" class="gp" data-g="wh" data-i="0"><img src="photos/sklad1.jpg" alt="Логістичний центр мережі" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="1"><img src="photos/sklad2.jpg" alt="Комплектація замовлень" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="2"><img src="photos/sklad3.jpg" alt="Стелажі з трубами і фітингами" loading="lazy" width="300" height="200"></button></div>
     </div>
@@ -939,6 +954,20 @@ const UA = navigator.userAgent, IOS = /iPhone|iPad|iPod/.test(UA) || (navigator.
 const IN_APP = IOS && (!("standalone" in navigator) || !!window.TelegramWebviewProxy || !!window.TelegramWebview || /Telegram|Viber|Instagram|FBAN|FBAV|Line\/|GSA\/|CriOS|FxiOS|EdgiOS/.test(UA) || !/Safari\//.test(UA));
 const PAGE = "https://549343lev-ship-it.github.io/taras/";
 const SHOP_Q = "Гаряча Точка, вулиця Зелена 238, Львів";
+function iosHint() {
+  let h = $("iosHint");
+  if (!h) { h = document.createElement("div"); h.id = "iosHint"; h.className = "lb"; h.setAttribute("role", "dialog");
+    h.innerHTML = `<div class="ios-card"><div class="ios-top"><span>Скасувати</span><b>Контакт</b><span class="ios-done">Готово ✕</span></div>
+        <div class="ios-av"></div><div class="ios-n">Тарас-Борис Левицький</div><div class="ios-r">Гаряча Точка</div>
+        <div class="ios-btn">Створити новий контакт</div><div class="ios-arrow">👆 Натисніть саме цю кнопку внизу</div></div>
+      <p style="max-width:330px">Відкриється картка контакту. <b>Не натискайте «Готово» чи галочку вгорі</b> — вона просто закриває картку. Прокрутіть донизу й натисніть <b>«Створити новий контакт»</b>.</p>
+      <button type="button" class="btn" data-k="go" style="min-width:260px;background:#B8431C;border-color:#B8431C;color:#fff">Зрозуміло, відкрити картку</button>
+      <button type="button" class="btn" data-k="x">Закрити</button>`;
+    h.onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.k === "go") { h.hidden = true; window.__vcfOk = true; saveContact(); } else if ((b && b.dataset.k === "x") || e.target === h) h.hidden = true; };
+    document.body.append(h);
+    h.querySelector(".ios-av").style.backgroundImage = `url(${CONFIG.photo})`; }
+  h.hidden = false;
+}
 function contactHelp() {
   let h = $("cHelp");
   if (!h) { h = document.createElement("div"); h.id = "cHelp"; h.className = "lb"; h.setAttribute("role", "dialog");
@@ -965,6 +994,7 @@ function saveContact() {
     location.href = "intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/raw_contact;" + extras + ";end";
     return;
   }
+  if (IOS && !window.__vcfOk) { iosHint(); return; }
   if (IOS) {
     // Telegram/Viber on iPhone open links in "In-App Safari", which looks exactly like Safari but only downloads .vcf.
     // So always hand the card to real Safari (iOS 17+): it shows the contact with "Create New Contact".
@@ -1668,11 +1698,37 @@ renderSecret();
     lb.hidden = false; show(i); };
   G.forEach((g, i) => { g.onclick = () => open(i); g.querySelector("img").onerror = () => g.remove(); });
 });
-(() => { const v = $("whVid"), b = $("whSnd"); if (!v) return;
-  v.onerror = () => { v.removeAttribute("src"); v.load(); b.hidden = true; };   // video unavailable → poster photo stays
-  const sync = () => b.textContent = v.paused ? "▶" : "❚❚";
-  b.onclick = () => { v.paused ? v.play().catch(() => {}) : v.pause(); }; v.onplay = v.onpause = sync;
-  new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? v.play().catch(() => {}) : v.pause())).observe(v);
+(() => { const box = $("whVid"), btn = $("whSnd"); if (!box) return;
+  const D = "https://dus-level.com/storage/", V = [...box.querySelectorAll(".vl")], P = box.querySelector(".vp"), cap = $("whCap");
+  // ~35 s: main warehouse wide shot → service & warehouse → photos from the presentation → showroom
+  const CL = [
+    { v: D + "pages/cKIseqNzDXei9fylEojgSxyj1rzqtoJIhKvPQinz.mp4", a: 1.9, b: 5.2, c: "Логістичний центр мережі" },
+    { v: D + "slides/videos/1aaNQKs6jmRgTUufoWpz8p2ZFbfPiflNkJQfnfAL.mp4", a: 2.0, b: 11.9, c: "Перевірка і комплектація" },
+    { p: "photos/sklad1.jpg", c: "10 тис. м² складів" }, { p: "photos/sklad2.jpg", c: "Збираємо Ваше замовлення" }, { p: "photos/sklad3.jpg", c: "15 тис.+ товарів у наявності" },
+    { v: D + "pages/tbz6ewUyr74f4gtwKDTBtAFk.mp4", a: 0.2, b: 11.8, c: "Шоурум і стенди" }
+  ];
+  let k = -1, cur = 0, timer = null, paused = false, seen = false, bad = new Set();
+  const prep = (el, c) => { if (el.dataset.src !== c.v) { el.dataset.src = c.v; el.src = c.v; } const go = () => { try { el.currentTime = c.a; } catch (e) {} };
+    el.readyState >= 1 ? go() : el.addEventListener("loadedmetadata", go, { once: true }); };
+  const nextIdx = i => { for (let n = 1; n <= CL.length; n++) { const t = (i + n) % CL.length; if (!bad.has(t)) return t; } return (i + 1) % CL.length; };
+  function show(i) {
+    clearTimeout(timer); k = i; const c = CL[i]; cap.textContent = c.c;
+    if (c.p) { V.forEach(x => { x.classList.remove("on"); x.pause(); }); P.classList.remove("on"); void P.offsetWidth; P.src = c.p; P.classList.add("on");
+      if (!paused) timer = setTimeout(() => show(nextIdx(k)), 3600); }
+    else { const el = V[cur]; prep(el, c); P.classList.remove("on"); V[1 - cur].classList.remove("on"); el.classList.add("on");
+      if (!paused) el.play().catch(() => {}); }
+    const n = CL[nextIdx(i)]; if (n.v && !c.p) prep(V[1 - cur], n); else if (n.v) prep(V[cur], n);
+  }
+  V.forEach((el, idx) => {
+    el.addEventListener("timeupdate", () => { const c = CL[k]; if (!c || !c.v || idx !== cur || paused) return;
+      if (el.currentTime >= c.b) { const n = nextIdx(k); if (CL[n].v) cur = 1 - cur; el.pause(); show(n); } });
+    el.addEventListener("error", () => { const i = CL.findIndex(c => c.v === el.dataset.src); if (i >= 0) bad.add(i); if (idx === cur && CL[k] && CL[k].v === el.dataset.src) show(nextIdx(k)); });
+  });
+  const play = () => { paused = false; btn.textContent = "❚❚"; if (k < 0) return show(0); const c = CL[k]; if (c.p) timer = setTimeout(() => show(nextIdx(k)), 2000); else V[cur].play().catch(() => {}); };
+  const stopIt = () => { paused = true; btn.textContent = "▶"; clearTimeout(timer); V.forEach(x => x.pause()); };
+  let manual = false;
+  btn.onclick = () => { if (paused) { manual = false; play(); } else { manual = true; stopIt(); } };
+  new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { if (!manual) play(); } else if (!paused) { stopIt(); btn.textContent = "❚❚"; } })).observe(box);
 })();
 </script>
 
