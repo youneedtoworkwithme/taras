@@ -661,7 +661,7 @@ const viberUrl = "viber://chat?number=" + encodeURIComponent(CONFIG.viberPhone);
 const who = () => seg === "Для себе" ? "Роблю ремонт для себе." : `Я ${seg.toLowerCase()}.`;
 function viberGo(text, toastEl) { copy(text).then(ok => toast(toastEl, ok ? `Текст скопійовано. Якщо Viber не відкрився, мій номер: ${CONFIG.viberShown}` : `Мій номер у Viber: ${CONFIG.viberShown}`)); }
 for (const id of ["viberBtn", "cmpViber"]) $(id).href = viberUrl;
-$("cmpTg").href = CONFIG.telegram; $("mapLink").href = CONFIG.map; $("geoBtn").href = CONFIG.place; $("geoBtn").onclick = e => { e.preventDefault(); openMaps("place"); }; $("mapLink").onclick = e => { e.preventDefault(); openMaps("route"); };
+$("cmpTg").href = CONFIG.telegram; $("mapLink").href = CONFIG.map; $("geoBtn").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Гаряча Точка, вулиця Зелена 238, Львів"); $("geoBtn").onclick = e => { e.preventDefault(); openMaps("place"); }; $("mapLink").onclick = e => { e.preventDefault(); openMaps("route"); };
 const helloMsg = () => `Добрий день, ${CONFIG.vocative}! Ми говорили телефоном. ${who()} Надішліть, будь ласка, умови співпраці.`;
 const cmpMsg = () => `Добрий день, ${CONFIG.vocative}! ${who()} Надсилаю рахунок від свого постачальника: порахуйте, будь ласка, ці ж позиції у Вас.`;
 $("viberBtn").onclick = () => viberGo(helloMsg(), $("meToast"));
