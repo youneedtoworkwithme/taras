@@ -231,6 +231,13 @@ input[type=range]{width:100%;accent-color:var(--brand-ink)}
 .lb p{color:#fff;margin:0;font-weight:700;text-align:center}
 .lb .row2{width:100%;max-width:460px}
 .lb .btn{background:#fff;color:#1F1F1F;border-color:#fff}
+.vid{position:relative;border-radius:16px;overflow:hidden;background:#111;aspect-ratio:16/9}
+.vid video{width:100%;height:100%;object-fit:cover;display:block}
+.vsnd{position:absolute;right:10px;bottom:10px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:14px;font-weight:800;cursor:pointer}
+.stats4.whs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats4.whs .stat{text-align:left;background:var(--bg);border-radius:12px;padding:10px 12px}
+.stats4.whs .stat span{font-size:12.5px;color:var(--muted)}
+#whGal .gp{width:60%}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:stretch;margin:0 18px}
 .row3 .btn{flex-direction:column;gap:4px;min-height:64px;padding:8px 4px;font-size:13.5px}
 .row3 .btn svg{width:22px;height:22px}
@@ -471,6 +478,14 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
 
   <!-- 3. SERVICES -->
   <section class="screen" id="s-brands" aria-label="Виробники" hidden>
+    <div class="card wh">
+      <div class="head"><div class="eyebrow">Головний склад мережі</div><h2>Товар уже є на складі</h2>
+        <p>Логістичний центр «Гарячої Точки». Звідси товар їде на наш магазин і до Вас на об'єкт.</p></div>
+      <div class="vid"><video id="whVid" src="https://dus-level.com/storage/slides/videos/1aaNQKs6jmRgTUufoWpz8p2ZFbfPiflNkJQfnfAL.mp4" poster="photos/sklad1.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Відео зі складу"></video>
+        <button type="button" class="vsnd" id="whSnd" aria-label="Відтворити або зупинити відео">❚❚</button></div>
+      <div class="stats4 whs"><div class="stat"><b>10 тис. м²</b><span>складів</span></div><div class="stat"><b>15 тис.+</b><span>товарів</span></div><div class="stat"><b>22</b><span>центри комплектації</span></div><div class="stat"><b>20 років</b><span>на ринку</span></div></div>
+      <div class="gal" id="whGal"><button type="button" class="gp" data-g="wh" data-i="0"><img src="photos/sklad1.jpg" alt="Логістичний центр мережі" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="1"><img src="photos/sklad2.jpg" alt="Комплектація замовлень" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="2"><img src="photos/sklad3.jpg" alt="Стелажі з трубами і фітингами" loading="lazy" width="300" height="200"></button></div>
+    </div>
     <div class="card">
       <div class="head"><div class="eyebrow">Імпортер і офіційний представник</div><h2>Виробники, з якими працюємо</h2>
         <p>Натисніть на бренд і розділ, щоб подивитися саме ці товари на нашому сайті. Ціну для Вас і наявність скажу я.</p></div>
@@ -950,8 +965,15 @@ function saveContact() {
     location.href = "intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/raw_contact;" + extras + ";end";
     return;
   }
-  if (IOS && IN_APP) { leftPage(contactHelp); location.href = "x-safari-" + PAGE + "taras.vcf"; return; }   // hand over to Safari
-  location.href = PAGE + "taras.vcf";   // Safari: shows the contact card → "Create New Contact"
+  if (IOS) {
+    // Telegram/Viber on iPhone open links in "In-App Safari", which looks exactly like Safari but only downloads .vcf.
+    // So always hand the card to real Safari (iOS 17+): it shows the contact with "Create New Contact".
+    // If the phone did not switch apps, open the card right here; if that also stays, show the short help.
+    leftPage(() => { location.href = PAGE + "taras.vcf"; leftPage(contactHelp, 2500); }, 1200);
+    location.href = "x-safari-" + PAGE + "taras.vcf";
+    return;
+  }
+  location.href = PAGE + "taras.vcf";
 }
 function openMaps(mode) {
   const q = encodeURIComponent(SHOP_Q);
@@ -1635,7 +1657,7 @@ function build3D(stage) {
 renderSecret();
 
 /* ---------- shop photos ---------- */
-(() => { const G = [...document.querySelectorAll("#gal .gp")]; let lb = null, k = 0;
+["#gal", "#whGal"].forEach(sel => { const G = [...document.querySelectorAll(sel + " .gp")]; let lb = null, k = 0;
   const show = i => { k = (i + G.length) % G.length; const im = G[k].querySelector("img"); lb.querySelector("img").src = im.src; lb.querySelector("img").alt = im.alt; lb.querySelector("p").textContent = im.alt + ` · ${k + 1}/${G.length}`; };
   const open = i => { if (!lb) { lb = document.createElement("div"); lb.className = "lb"; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-label", "Фото магазину");
       lb.innerHTML = '<img alt=""><p></p><div class="row2"><button type="button" class="btn" data-d="-1">← Назад</button><button type="button" class="btn" data-d="1">Далі →</button></div><button type="button" class="btn" data-x="1">Закрити</button>';
@@ -1645,6 +1667,12 @@ renderSecret();
       document.body.append(lb); }
     lb.hidden = false; show(i); };
   G.forEach((g, i) => { g.onclick = () => open(i); g.querySelector("img").onerror = () => g.remove(); });
+});
+(() => { const v = $("whVid"), b = $("whSnd"); if (!v) return;
+  v.onerror = () => { v.removeAttribute("src"); v.load(); b.hidden = true; };   // video unavailable → poster photo stays
+  const sync = () => b.textContent = v.paused ? "▶" : "❚❚";
+  b.onclick = () => { v.paused ? v.play().catch(() => {}) : v.pause(); }; v.onplay = v.onpause = sync;
+  new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? v.play().catch(() => {}) : v.pause())).observe(v);
 })();
 </script>
 
