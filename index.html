@@ -423,7 +423,9 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
   .screen{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
   .screen > *{grid-column:auto;min-width:0}
   .screen > .card:only-of-type, .screen > .hero, .screen > .route, .screen > .btn.next, .screen > .btn.backto, .screen > .offer, #s-brands > .card.wh{grid-column:1/-1}
-  .btn.next, #s-me .btn.next{position:static;max-width:560px;justify-self:end;width:100%}
+  .btn.next, #s-me .btn.next{position:sticky;bottom:24px;z-index:12;max-width:440px;justify-self:end;width:100%;box-shadow:0 18px 40px -14px rgba(184,67,28,.75);animation:pop .4s ease .2s both}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+  .btn.next:hover{transform:translateY(-2px)}
   .route{justify-self:end}
   .card{padding:24px;border-radius:24px}
   h2{font-size:26px}
