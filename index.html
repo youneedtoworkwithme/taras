@@ -252,6 +252,22 @@ input[type=range]{width:100%;accent-color:var(--brand-ink)}
 .ios-n{font-weight:700;font-size:16px}.ios-r{font-size:12.5px;color:#666}
 .ios-btn{margin-top:8px;width:100%;background:#fff;border-radius:10px;padding:11px;text-align:center;color:#0A84FF;font-weight:600;font-size:15px;outline:3px solid #F2673A;outline-offset:2px}
 .ios-arrow{font-size:13px;font-weight:700;color:#B8431C}
+.offer{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center;text-align:left;width:100%;font:inherit;cursor:pointer;
+  background:linear-gradient(135deg,#2B2B2B,#3a2a24);color:#fff;border:0;border-radius:20px;padding:14px 16px;box-shadow:var(--shadow)}
+.of-ic{width:48px;height:48px;border-radius:14px;background:rgba(242,103,58,.22);display:grid;place-items:center;font-size:24px}
+.of-t{display:flex;flex-direction:column;gap:2px}
+.of-t small{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#FFB59A}
+.of-t b{font-size:17px;line-height:1.2}
+.of-t span{font-size:13px;opacity:.85}
+.qz-gift{background:var(--surface-2);border-radius:14px;padding:10px 12px;font-size:14px;margin-bottom:10px}
+.cpn{position:relative;margin:10px 0 6px;border:2px dashed var(--brand);border-radius:18px;padding:14px 16px;background:linear-gradient(135deg,var(--surface-2),var(--surface));display:flex;flex-direction:column;gap:4px;text-align:center}
+.cpn-h{display:flex;justify-content:space-between;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--brand-ink)}
+.cpn-h b{letter-spacing:.04em}
+.cpn-sum{font-size:40px;font-weight:800;color:var(--brand-ink);line-height:1.1}
+.cpn-t{font-weight:700}
+.cpn-m{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted);margin-top:4px}
+.cpn-how{background:var(--bg);border-radius:14px;padding:10px 12px;font-size:14px;margin-bottom:8px}
+.cpn-how ol{margin:6px 0 0;padding-left:20px}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:stretch;margin:0 18px}
 .row3 .btn{flex-direction:column;gap:4px;min-height:64px;padding:8px 4px;font-size:13.5px}
 .row3 .btn svg{width:22px;height:22px}
@@ -456,7 +472,7 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span>Номер</span></button>
       </div>
       <div class="row2 save2">
-        <a class="btn" id="vcfBtn" href="taras.vcf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21c1.2-3.8 3.8-6 7-6 1.6 0 3 .5 4.2 1.4M19 14v6M16 17h6"/></svg><span>Зберегти контакт</span></a>
+        <a class="btn" id="vcfBtn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21c1.2-3.8 3.8-6 7-6 1.6 0 3 .5 4.2 1.4M19 14v6M16 17h6"/></svg><span>Зберегти контакт</span></a>
         <a class="btn" id="geoBtn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Локація в Картах</span></a>
       </div>
       <div class="hours"><span><b>Пн–Пт 09:00–18:00</b> · Львів, вул. Зелена, 238, корпус «В»</span><a id="mapLink" target="_blank" rel="noopener">Маршрут ↗</a></div>
@@ -465,13 +481,17 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
         <div class="gal" id="gal"><div class="gp gv" aria-label="Відео: шоурум мережі"><video id="shopVid" src="https://dus-level.com/storage/pages/tbz6ewUyr74f4gtwKDTBtAFkMWKSb2HrHkE61Tkm.mp4#t=0.2" poster="" muted loop playsinline preload="metadata"></video><span class="gvb">▶ Шоурум мережі</span></div><button type="button" class="gp" data-i="0"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Rbvct8ILIglZyhi7Z5DjpA7gy-NNkuInuuqQnz_FfrdVSehs9wzJOussp7nUnS7OOlsYDOISScunhlS3mYVcF--3YVz994YaSaVpvU2cTPIK-UU2Y7KNDZk9pPaQnq7RtwG4-C=w1000-h750" referrerpolicy="no-referrer" alt="Магазин на Зеленій, 238" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="1"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QYaE5fnzbhA0bZfWYjzwqjRe0NcowGd2aXiwh2WO4nQiKED0p3m1h_skMda_0EKzf0PghXLeuYnYCs7FBBS1g8Hj6xg1vgYDKl1D0YCBPygHUxtKNGv5qv_OnTPgY3eFqBDlCprTkKJnQ=w1000-h750" referrerpolicy="no-referrer" alt="Стенди з трубами і фітингами" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="2"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9T7Y7pxgwCSuQY82IwxDc2oKTtTOc89Etj2wcOzh5F1AlnKeVUPIFsqk4ojr9FBFtUpXdGzbrcctNIqtF6CbD3LmhkY_wqzDpGc7O95EOmpS0U6AQof2AjiExUexkzeTglNzOiv=w1000-h750" referrerpolicy="no-referrer" alt="Зал чистової сантехніки" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="3"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5rRllJUrOIVoggK4nDvX4QC5bodcHmQBvt159QaZsZlTXAHtJQcUiyNZJO3tzKeYquvvWUgLefW_4X5cClmwt7v1CFTjJAR20DKpQfIjI3XYqye1HPIcG4bXxi0Uqa6jfyi8T=w1000-h750" referrerpolicy="no-referrer" alt="Котли і бойлери" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="4"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TJORJ4zcKs1vOJmkuZg4ZSqbEen3u7U1I45i3IDNzCXtOzl8zzAfjnZ3mPH4mKtx0WRDde0H1apJeX63Hk8_6HlFjMMNT08yETJQjjh6SWJ_ZhIddsBfp2AUwVr7RuqolfTltIMpC62PQW=w1000-h750" referrerpolicy="no-referrer" alt="Raftec: труби, шланги, фітинги" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="5"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q6tPT2aAuvdxhBjQUx8-yygfH_Su_nmW_x6F_CIiGJBbUETch_M879s4Y0-N2TC8AauHLGVOP76om7Ue8GlGPKZKbDa9SEqZ6yD2kDSdT4U3o9ff2hcK6rf7tyWXtaQ-_r4JbdG9D64yGW=w1000-h750" referrerpolicy="no-referrer" alt="Очищення води Ecosoft" loading="lazy" width="200" height="150"></button></div>
       </div>
     </div>
+    <button type="button" class="offer" id="offerBtn">
+      <span class="of-ic" aria-hidden="true">🎁</span>
+      <span class="of-t"><small>Для нових клієнтів</small><b>−2 000 грн на першу закупівлю</b><span>При замовленні від 30 000 грн. Дізнатись як →</span></span>
+    </button>
     <button type="button" class="btn next" data-go="brands"><span>З якими виробниками працюємо</span><span aria-hidden="true">→</span></button>
   </section>
 
   <!-- 2. 3D -->
   <section class="screen" id="s-3d" aria-label="3D-менеджер" hidden>
     <div class="card">
-      <div class="head"><div class="eyebrow">Бонус · для настрою</div><h2>Що зробите з Тарасом?</h2><p>Це не обов'язково. Просто щоб познайомитися ближче.</p></div>
+      <div class="head"><div class="eyebrow">Бонус · для настрою</div><h2 id="h3d">Що зробите зі мною?</h2><p>Це не обов'язково. Просто щоб познайомитися ближче.</p></div>
       <div class="stage" id="stage">
         <div class="hint" id="hint">Вбік — крутити · двома пальцями — зум</div>
       </div>
@@ -483,7 +503,7 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
       <div class="secret">
         <div class="secret-h"><span aria-hidden="true">🤫</span><b>Усе між нами.</b> Я не бачу, що Ви робите з моделькою. Хочете посміятися разом? Надішліть мені.</div>
         <div class="msg" id="secretMsg"></div>
-        <a class="btn primary" id="tellBtn" target="_blank" rel="noopener" aria-disabled="true">Скопіювати й надіслати Тарасу</a>
+        <a class="btn primary" id="tellBtn" target="_blank" rel="noopener" aria-disabled="true">Скопіювати й надіслати мені</a>
         <div class="toast" id="secretToast" aria-live="polite"></div>
       </div>
     </div>
@@ -606,7 +626,9 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
 const CONFIG = {
   name: "Тарас-Борис Левицький",
   short: "Тарас",
-  vocative: "Тарасе",
+  vocative: "Тарасе", gen: "Тараса", dat: "Тарасу", ins: "Тарасом",
+  female: false, ai: true, glasses3d: true,
+  page: "https://youneedtoworkwithme.github.io/taras/", vcf: "taras.vcf",
   role: "Директор магазину",
   shop: "Львів, вул. Зелена, 238",
   phones: ["+38 (063) 334 37 25", "+38 (067) 118 97 00"],
@@ -665,12 +687,15 @@ document.querySelectorAll(".btn.next").forEach(b => {
 });
 document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
 $("homeBtn").onclick = () => go("me");
+$("offerBtn").onclick = () => { go("3d"); setTimeout(() => { if (typeof G !== "undefined" && G && !cur) play("quiz"); else quizOpen(); }, 700); };
 document.querySelector(".brandbar .co").onclick = () => go("me");
 
 /* ---------- me ---------- */
 $("logoSlot").innerHTML = CONFIG.logo ? `<img src="${CONFIG.logo}" alt="${esc(COMPANY.name)}">` : "";
 $("coName").innerHTML = CONFIG.logo ? "" : `${esc(COMPANY.name)}<small>${esc(COMPANY.descriptor)}</small>`;
 $("photo").src = CONFIG.photo;
+$("h3d").textContent = `Що зробите з ${CONFIG.ins}?`; $("tellBtn").textContent = `Скопіювати й надіслати ${CONFIG.dat}`;
+if (!CONFIG.ai) { const sg = document.querySelector(".hero .seg"); if (sg) sg.hidden = true; }
 $("mName").textContent = CONFIG.name;
 $("mRole").textContent = CONFIG.role;
 $("shopLine").textContent = COMPANY.name + " · " + CONFIG.shop;
@@ -962,13 +987,13 @@ $("vcfBtn").onclick = e => { e.preventDefault(); saveContact(); };
 const UA = navigator.userAgent, IOS = /iPhone|iPad|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1), ANDROID = /Android/.test(UA);
 // Built-in browser of Telegram / Viber / Instagram on iPhone: only real Safari shows the "Create contact" card
 const IN_APP = IOS && (!("standalone" in navigator) || !!window.TelegramWebviewProxy || !!window.TelegramWebview || /Telegram|Viber|Instagram|FBAN|FBAV|Line\/|GSA\/|CriOS|FxiOS|EdgiOS/.test(UA) || !/Safari\//.test(UA));
-const PAGE = "https://youneedtoworkwithme.github.io/taras/";
+const PAGE = CONFIG.page;
 const SHOP_Q = "Гаряча Точка, вулиця Зелена 238, Львів";
 function iosHint() {
   let h = $("iosHint");
   if (!h) { h = document.createElement("div"); h.id = "iosHint"; h.className = "lb"; h.setAttribute("role", "dialog");
     h.innerHTML = `<div class="ios-card"><div class="ios-top"><span>Скасувати</span><b>Контакт</b><span class="ios-done">Готово ✕</span></div>
-        <div class="ios-av"></div><div class="ios-n">Тарас-Борис Левицький</div><div class="ios-r">Гаряча Точка</div>
+        <div class="ios-av"></div><div class="ios-n">${esc(CONFIG.name)}</div><div class="ios-r">Гаряча Точка</div>
         <div class="ios-btn">Створити новий контакт</div><div class="ios-arrow">👆 Натисніть саме цю кнопку внизу</div></div>
       <p style="max-width:330px">Відкриється картка контакту. <b>Не натискайте «Готово» чи галочку вгорі</b> — вона просто закриває картку. Прокрутіть донизу й натисніть <b>«Створити новий контакт»</b>.</p>
       <button type="button" class="btn" data-k="go" style="min-width:260px;background:#B8431C;border-color:#B8431C;color:#fff">Зрозуміло, відкрити картку</button>
@@ -986,7 +1011,7 @@ function contactHelp() {
       <div class="row2"><button type="button" class="btn" data-k="file">Завантажити картку</button><button type="button" class="btn" data-k="num">Скопіювати номер</button></div>
       <button type="button" class="btn" data-k="x">Закрити</button>`;
     h.onclick = async e => { const b = e.target.closest("button"); if (!b && e.target !== h) return;
-      if (b && b.dataset.k === "file") location.href = PAGE + "taras.vcf";
+      if (b && b.dataset.k === "file") location.href = PAGE + CONFIG.vcf;
       else if (b && b.dataset.k === "num") { await copy(CONFIG.phones[0]); b.textContent = "Скопійовано"; return; }
       h.hidden = true; };
     document.body.append(h); }
@@ -997,7 +1022,7 @@ function leftPage(cb, ms = 1600) { let left = false; const g = () => { left = tr
   setTimeout(() => { if (!left && !document.hidden) cb(); }, ms); }
 function saveContact() {
   if (ANDROID) {   // Android: opens Contacts → "New contact" already filled in, just press Save
-    const f = { name: CONFIG.name, phone: CONFIG.viberPhone, phone_type: 2, secondary_phone: CONFIG.phones[1].replace(/[^+\d]/g, ""), secondary_phone_type: 3,
+    const f = { name: CONFIG.name, phone: CONFIG.viberPhone, phone_type: 2, ...(CONFIG.phones[1] ? { secondary_phone: CONFIG.phones[1].replace(/[^+\d]/g, ""), secondary_phone_type: 3 } : {}),
       email: CONFIG.email, company: "Гаряча Точка", job_title: CONFIG.role, postal: "Львів, вул. Зелена, 238, корпус В", notes: "Візитівка: " + PAGE };
     const extras = Object.entries(f).map(([k, v]) => (typeof v === "number" ? "i." : "S.") + k + "=" + encodeURIComponent(v)).join(";");
     leftPage(contactHelp);
@@ -1009,11 +1034,11 @@ function saveContact() {
     // Telegram/Viber on iPhone open links in "In-App Safari", which looks exactly like Safari but only downloads .vcf.
     // So always hand the card to real Safari (iOS 17+): it shows the contact with "Create New Contact".
     // If the phone did not switch apps, open the card right here; if that also stays, show the short help.
-    leftPage(() => { location.href = PAGE + "taras.vcf"; leftPage(contactHelp, 2500); }, 1200);
-    location.href = "x-safari-" + PAGE + "taras.vcf";
+    leftPage(() => { location.href = PAGE + CONFIG.vcf; leftPage(contactHelp, 2500); }, 1200);
+    location.href = "x-safari-" + PAGE + CONFIG.vcf;
     return;
   }
-  location.href = PAGE + "taras.vcf";
+  location.href = PAGE + CONFIG.vcf;
 }
 function openMaps(mode) {
   const q = encodeURIComponent(SHOP_Q);
@@ -1078,6 +1103,7 @@ function quizOpen() { $("quiz").hidden = false; requestAnimationFrame(() => $("q
 function quizClose(done) { $("quiz").classList.remove("open"); setTimeout(() => { $("quiz").hidden = true; }, 320); if (window.quizResume) quizResume(done ? QZ.last : null); }
 function quizMenu() {
   $("qzBody").innerHTML = `<div class="qz-intro"><div class="eyebrow">Тест для сантехніка</div><h2>Який Ви сантехнік?</h2><p>Питання різної складності: легке — 1 бал, середнє — 2, складне — 3. Максимум 100.</p></div>
+    <div class="qz-gift">🎁 <b>Пройдіть тест до кінця</b> і отримайте купон: <b>−2 000 грн</b> на першу закупівлю від 30 000 грн.</div>
     <div class="qz-len">${[[7, "Короткий", "≈ 2 хв"], [15, "Середній", "≈ 4 хв"], [30, "Довгий", "≈ 8 хв"]].map(([n, t, m]) =>
       `<button type="button" class="btn" data-n="${n}"><b>${t}</b><span>${n} питань · ${m}</span></button>`).join("")}</div>`;
 }
@@ -1105,6 +1131,17 @@ function quizAnswer(k) {
   $("qzEx").innerHTML = `<b>${o.ok ? "Правильно! +" + q[0] : "Не зовсім."}</b> ${esc(q[3])}`;
   $("qzNext").hidden = false; $("qzNext").focus({ preventScroll: true });
 }
+function coupon(score) {
+  const d = new Date(), date = d.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" });
+  const code = "ГТ-" + String((d.getDate() * 37 + (d.getMonth() + 1) * 101 + score * 7 + (QZ.ok || 0) * 13) % 9000 + 1000);
+  QZ.code = code;
+  return `<div class="cpn" id="cpn"><div class="cpn-h"><span>Купон на знижку</span><b>${code}</b></div>
+    <div class="cpn-sum">−2 000 грн</div>
+    <div class="cpn-t">на першу закупівлю від 30 000 грн</div>
+    <div class="cpn-m"><span>Тест: ${score}/100 · ${date}</span><span>Менеджер: ${esc(CONFIG.name)}</span></div></div>
+  <div class="cpn-how"><b>📸 Як отримати знижку</b><ol><li>Зробіть <b>скріншот</b> цього екрана з купоном.</li><li>Надішліть його мені у Viber або Telegram.</li><li>Я застосую знижку до Вашого першого замовлення.</li></ol></div>
+  <div class="row2"><a class="btn viber" id="cpnVb" href="${esc(viberUrl)}">Надіслати у Viber</a><a class="btn tg" id="cpnTg" href="${esc(CONFIG.telegram)}" target="_blank" rel="noopener">У Telegram</a></div>`;
+}
 function quizResult() {
   const score = Math.round(QZ.pts / QZ.max * 100);
   QZ.last = { score, ok: QZ.ok, n: QZ.list.length };
@@ -1113,8 +1150,9 @@ function quizResult() {
     <div class="qz-score"><b>${score}</b><span>/ 100</span></div>
     <p class="qz-sub">${QZ.ok} з ${QZ.list.length} правильно · ${QZ.pts} з ${QZ.max} балів</p>
     <h2>${tier[0]}</h2><p>${tier[1]}</p></div>
-    <div class="qz-acts"><button type="button" class="btn primary" id="qzShare">Похвалитися Тарасу</button>
-    <div class="row2"><button type="button" class="btn" id="qzAgain">Ще раз</button><button type="button" class="btn" id="qzDone">До 3D-Тараса</button></div></div>
+    ${coupon(score)}
+    <div class="qz-acts"><button type="button" class="btn primary" id="qzShare">Похвалитися ${esc(CONFIG.dat)}</button>
+    <div class="row2"><button type="button" class="btn" id="qzAgain">Ще раз</button><button type="button" class="btn" id="qzDone">До 3D-${esc(CONFIG.gen)}</button></div></div>
     <div class="toast" id="qzToast" aria-live="polite"></div>`;
   sfx(score >= 70 ? "kaching" : "wahwah1"); renderSecret();
 }
@@ -1123,10 +1161,14 @@ $("quiz").addEventListener("click", e => {
   const o = e.target.closest(".qz-o"); if (o && !o.disabled) return quizAnswer(+o.dataset.k);
   if (e.target.closest("#qzNext")) { QZ.i++; return QZ.i < QZ.list.length ? quizQ() : quizResult(); }
   if (e.target.closest("#qzAgain")) return quizMenu();
+  const cv = e.target.closest("#cpnVb, #cpnTg");
+  if (cv) { const t = `${CONFIG.vocative}, я пройшов тест сантехніка (${QZ.last.score}/100). Мій купон ${QZ.code}: −2 000 грн на першу закупівлю від 30 000 грн. Скріншот додаю.`;
+    if (cv.id === "cpnVb") { e.preventDefault(); viberGo(t, $("qzToast")); } else copy(t).then(ok => ok && toast($("qzToast"), "Текст скопійовано. Вставте його в чат і додайте скріншот."));
+    return; }
   if (e.target.closest("#qzDone")) return quizClose(true);
   if (e.target.closest("#qzX")) return quizClose(!!QZ.last);
   const sh = e.target.closest("#qzShare");
-  if (sh) { const t = `Тарасе, я пройшов тест сантехніка: ${QZ.last.score}/100 (${QZ.last.ok} з ${QZ.last.n}) 😎`;
+  if (sh) { const t = `${CONFIG.vocative}, я пройшов тест сантехніка: ${QZ.last.score}/100 (${QZ.last.ok} з ${QZ.last.n}) 😎`;
     copy(t).then(ok => toast($("qzToast"), ok ? "Скопійовано. Telegram відкривається, вставте текст у чат." : "Не вдалося скопіювати."));
     const a = document.createElement("a"); a.href = CONFIG.telegram; a.target = "_blank"; a.rel = "noopener"; document.body.append(a); a.click(); a.remove(); }
 });
@@ -1134,7 +1176,7 @@ addEventListener("keydown", e => { if (e.key === "Escape" && !$("quiz").hidden) 
 
 /* =================================== 3D =================================== */
 const ACT_LIST = [
-  ["quiz", "🎓", "Перевірити знання сантехніка"],
+  ["quiz", "🎓", "Перевірити знання сантехніка · −2 000 грн"],
   ["shake", "🤝", "Потиснути руку"], ["kick", "🦵", "Копнути"], ["slap", "✋", "Дати ляпас"], ["hug", "🤗", "Обійняти"],
   ["talk", "💬", "Поговорити"], ["laugh", "😂", "Розсмішити"], ["coffee", "☕", "Дати каву"], ["five", "🙌", "Дати «п'ять»"],
   ["order", "🧾", "Замовити підбір"], ["dance", "🕺", "Потанцювати"], ["selfie", "🤳", "Селфі разом"], ["kiss", "💋", "Поцілувати в лобик"]
@@ -1163,7 +1205,7 @@ const ACTIONS = {
       if (v === 1) { M.y = AB(sh) * .15; V.y = AB(sh) * .12; M.mouth = .5 * r; }
       if (v === 2) { const bw = P(t, 4.1, 4.4, 4.9, 5.3); M.tx += .5 * bw; M.lsz = -.2 * bw; } },
     say: [[["v", 1.5, 2.7, "Доброго дня!"], ["m", 2.8, 4.4, "Доброго дня! Радий знайомству!"]],
-          [["v", 1.5, 2.6, "Доброго дня, Тарасе!"], ["m", 2.7, 3.9, "Ого, оце потиск! Як у справжнього майстра!"], ["v", 4.0, 5.1, "Ще б пак, щодня крани кручу"]],
+          [["v", 1.5, 2.6, "Доброго дня, " + CONFIG.vocative + "!"], ["m", 2.7, 3.9, "Ого, оце потиск! Як у справжнього майстра!"], ["v", 4.0, 5.1, "Ще б пак, щодня крани кручу"]],
           [["v", 1.5, 2.7, "Вітаю! Я до Вас по котел"], ["m", 2.8, 4.0, "Вітаю! Вже уявляю Вашу котельню"], ["m", 4.1, 5.4, "Кланяюсь клієнту!"]]],
     fx: v => v === 1 ? [[2.2, "c", "ТРУСЬ!"]] : [], sfx: v => [[.1, "jingle"], [1.7, "ding"], [2.0, "ding2"]].concat(v === 1 ? [[2.1, "boing"]] : v === 2 ? [[4.2, "blush"]] : []) },
 
@@ -1313,6 +1355,11 @@ const ACTIONS = {
     sfx: v => [[.1, "romance"], [2.0, "mwah"], [3.9, "blush"]].concat(v === 2 ? [[3.3, "whistle"]] : []) }
 };
 
+if (!CONFIG.female && !CONFIG.glasses3d) Object.values(ACTIONS).forEach(d => d.say.forEach(v => v.forEach(l => { if (l[0] === "m") l[3] = l[3].replace("Аж окуляри злетіли", "Аж в очах заіскрило"); })));
+/* female manager: fix verb endings in the manager's lines */
+if (CONFIG.female) { const FEM = [["Радий", "Рада"], ["моргнув", "моргнула"], ["я схожий", "я схожа"], ["почервонів", "почервоніла"], ["засоромився", "засоромилася"], ["поплив", "поплила"], ["сертифікований", "сертифікована"], ["Аж окуляри злетіли", "Аж сережки задзвеніли"]];
+  const fx = t => FEM.reduce((a, [m, f]) => a.split(m).join(f), t);
+  Object.values(ACTIONS).forEach(d => d.say.forEach(v => v.forEach(l => { if (l[0] === "m") l[3] = fx(l[3]); }))); }
 /* ---------- sound: synthesized effects + short music + voice ---------- */
 let AC = null, soundOn = true, master = null;
 function ac() {
@@ -1383,13 +1430,14 @@ function loadVoices() { try { VOICES = speechSynthesis.getVoices() || []; } catc
 try { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } catch (e) {}
 const MALE = /ostap|остап|dmytro|male|чолов|anatol|taras|andriy|pavlo/i, FEMALE = /polina|поліна|lesya|леся|female|жін|natalia|oksana|olena|google/i;
 function pickVoice(who) {
+  const mm = who === "m" && !CONFIG.female, fm = who === "m" && CONFIG.female;
   const uk = VOICES.filter(v => /^uk/i.test(v.lang)); if (!uk.length) return null;
-  const want = who === "m" ? MALE : FEMALE, other = who === "m" ? FEMALE : MALE;
-  const exact = uk.find(v => want.test(v.name) && !(who === "m" && FEMALE.test(v.name) && !MALE.test(v.name)));
+  const want = mm ? MALE : FEMALE, other = mm ? FEMALE : MALE;
+  const exact = uk.find(v => want.test(v.name) && !(mm && FEMALE.test(v.name) && !MALE.test(v.name)));
   if (exact) return { v: exact, pitch: 1 };
   const v = uk.find(v => !other.test(v.name)) || uk[0];
   const isFem = FEMALE.test(v.name) || !MALE.test(v.name);   // most phones ship only a female Ukrainian voice
-  return { v, pitch: who === "m" ? (isFem ? .55 : 1) : (isFem ? 1.15 : 1.6) };
+  return { v, pitch: mm ? (isFem ? .55 : 1) : (fm ? (isFem ? .95 : 1.3) : (isFem ? 1.15 : 1.6)) };
 }
 const clean = s => s.replace(/[^\p{L}\p{N}\s.,!?'’…-]/gu, "").trim();
 function speak(who, text) {
@@ -1409,7 +1457,7 @@ const DONE = {};
 const PAST = { shake: "потиск руки", kick: "копняк", slap: "ляпас", hug: "обійми", talk: "розмова", laugh: "сміх", kiss: "поцілунок у лобик", coffee: "кава", five: "«п'ять»", order: "підбір", dance: "танець", selfie: "селфі", quiz: "тест сантехніка" };
 function summary() {
   const parts = Object.keys(DONE).map(k => k === "quiz" && QZ.last ? `тест сантехніка: ${QZ.last.score}/100` : `${PAST[k]}${DONE[k] > 1 ? " ×" + DONE[k] : ""}`);
-  return parts.length ? `Тарасе, зізнаюсь: твоя 3D-моделька від мене отримала: ${parts.join(", ")} 😄` : "";
+  return parts.length ? `${CONFIG.vocative}, зізнаюсь: твоя 3D-моделька від мене отримала: ${parts.join(", ")} 😄` : "";
 }
 function renderSecret() { const s = summary(); $("secretMsg").textContent = s || "Поки що нічого. Спробуйте кнопки вище."; $("tellBtn").setAttribute("aria-disabled", !s); }
 
@@ -1546,7 +1594,7 @@ function build3D(stage) {
     J.rHold = new T.Group(); J.rHold.position.y = -.33; J.rEl.add(J.rHold);
     return J;
   }
-  const MAN = person({ skin: 0xf0c2a4, shirt: 0xc4a07f, pants: 0x4f6382, shoe: 0x2b2b2b, hair: 0x5e4838, glasses: true, badge: true });
+  const MAN = person(CONFIG.female ? { skin: 0xf1c6ad, shirt: 0xf4f1ea, pants: 0x34405a, shoe: 0x2b2b2b, hair: 0xd9c08a, female: true, longSleeve: true, badge: true } : { skin: 0xf0c2a4, shirt: 0xc4a07f, pants: 0x4f6382, shoe: 0x2b2b2b, hair: 0x5e4838, glasses: !!CONFIG.glasses3d, badge: true });
   const VIS = person({ skin: 0xf1c6ad, shirt: 0xd9677f, pants: 0x34405a, shoe: 0xffffff, hair: 0x6a3d22, longSleeve: true, female: true, scale: .95 });
   scene.add(MAN.root, VIS.root); VIS.root.position.x = -4;
   function mkCup() { const g = new T.Group(); const c = new T.Mesh(new T.CylinderGeometry(.036, .03, .09, 28), M_(0xffffff, .35)); c.castShadow = true; g.add(c);
