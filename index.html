@@ -920,19 +920,38 @@ $("saveVcf").onclick = () => saveContact();
 $("vcfBtn").onclick = e => { e.preventDefault(); saveContact(); };
 /* ---------- open the phone's own apps (Contacts, Google Maps), not a browser page ---------- */
 const UA = navigator.userAgent, IOS = /iPhone|iPad|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1), ANDROID = /Android/.test(UA);
-const IN_APP = IOS && !/Safari\//.test(UA);             // Telegram / Viber / Instagram built-in browser on iPhone
+// Built-in browser of Telegram / Viber / Instagram on iPhone: only real Safari shows the "Create contact" card
+const IN_APP = IOS && (!("standalone" in navigator) || !!window.TelegramWebviewProxy || !!window.TelegramWebview || /Telegram|Viber|Instagram|FBAN|FBAV|Line\/|GSA\/|CriOS|FxiOS|EdgiOS/.test(UA) || !/Safari\//.test(UA));
 const PAGE = "https://549343lev-ship-it.github.io/taras/";
 const SHOP_Q = "Гаряча Точка, вулиця Зелена 238, Львів";
+function contactHelp() {
+  let h = $("cHelp");
+  if (!h) { h = document.createElement("div"); h.id = "cHelp"; h.className = "lb"; h.setAttribute("role", "dialog");
+    h.innerHTML = `<p style="font-size:17px">Щоб зберегти контакт одним натиском</p>
+      <p style="font-weight:600;opacity:.9;max-width:340px">${IOS ? "Telegram і Viber на iPhone не дають сайтам відкривати Контакти. Натисніть <b>⋯</b> або <b>⤴</b> угорі → <b>Відкрити в Safari</b>, і там натисніть «Зберегти контакт» ще раз." : "Відкрийте візитівку в Chrome (⋮ → Відкрити в браузері) і натисніть «Зберегти контакт» ще раз."}</p>
+      <div class="row2"><button type="button" class="btn" data-k="file">Завантажити картку</button><button type="button" class="btn" data-k="num">Скопіювати номер</button></div>
+      <button type="button" class="btn" data-k="x">Закрити</button>`;
+    h.onclick = async e => { const b = e.target.closest("button"); if (!b && e.target !== h) return;
+      if (b && b.dataset.k === "file") location.href = PAGE + "taras.vcf";
+      else if (b && b.dataset.k === "num") { await copy(CONFIG.phones[0]); b.textContent = "Скопійовано"; return; }
+      h.hidden = true; };
+    document.body.append(h); }
+  h.hidden = false;
+}
+function leftPage(cb, ms = 1600) { let left = false; const g = () => { left = true; };
+  document.addEventListener("visibilitychange", g, { once: true }); window.addEventListener("pagehide", g, { once: true }); window.addEventListener("blur", g, { once: true });
+  setTimeout(() => { if (!left && !document.hidden) cb(); }, ms); }
 function saveContact() {
-  if (ANDROID) {   // Android: opens Contacts → "New contact" already filled in
+  if (ANDROID) {   // Android: opens Contacts → "New contact" already filled in, just press Save
     const f = { name: CONFIG.name, phone: CONFIG.viberPhone, phone_type: 2, secondary_phone: CONFIG.phones[1].replace(/[^+\d]/g, ""), secondary_phone_type: 3,
       email: CONFIG.email, company: "Гаряча Точка", job_title: CONFIG.role, postal: "Львів, вул. Зелена, 238, корпус В", notes: "Візитівка: " + PAGE };
     const extras = Object.entries(f).map(([k, v]) => (typeof v === "number" ? "i." : "S.") + k + "=" + encodeURIComponent(v)).join(";");
-    location.href = "intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/raw_contact;" + extras + ";S.browser_fallback_url=" + encodeURIComponent(PAGE + "taras.vcf") + ";end";
+    leftPage(contactHelp);
+    location.href = "intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/raw_contact;" + extras + ";end";
     return;
   }
-  // iPhone: Safari shows the contact card with "Create New Contact"; built-in app browsers would only download a file, so hand it to Safari
-  location.href = IN_APP ? "x-safari-" + PAGE + "taras.vcf" : PAGE + "taras.vcf";
+  if (IOS && IN_APP) { leftPage(contactHelp); location.href = "x-safari-" + PAGE + "taras.vcf"; return; }   // hand over to Safari
+  location.href = PAGE + "taras.vcf";   // Safari: shows the contact card → "Create New Contact"
 }
 function openMaps(mode) {
   const q = encodeURIComponent(SHOP_Q);
