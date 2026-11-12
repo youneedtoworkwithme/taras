@@ -1719,9 +1719,11 @@ renderSecret();
       if (!paused) el.play().catch(() => {}); }
     const n = CL[nextIdx(i)]; if (n.v && !c.p) prep(V[1 - cur], n); else if (n.v) prep(V[cur], n);
   }
+  const adv = el => { const n = nextIdx(k); if (CL[n].v) cur = 1 - cur; el.pause(); show(n); };
   V.forEach((el, idx) => {
     el.addEventListener("timeupdate", () => { const c = CL[k]; if (!c || !c.v || idx !== cur || paused) return;
-      if (el.currentTime >= c.b) { const n = nextIdx(k); if (CL[n].v) cur = 1 - cur; el.pause(); show(n); } });
+      if (el.currentTime >= Math.min(c.b, (el.duration || 99) - .25)) adv(el); });
+    el.addEventListener("ended", () => { if (idx === cur && CL[k] && CL[k].v) adv(el); });
     el.addEventListener("error", () => { const i = CL.findIndex(c => c.v === el.dataset.src); if (i >= 0) bad.add(i); if (idx === cur && CL[k] && CL[k].v === el.dataset.src) show(nextIdx(k)); });
   });
   const play = () => { paused = false; btn.textContent = "❚❚"; if (k < 0) return show(0); const c = CL[k]; if (c.p) timer = setTimeout(() => show(nextIdx(k)), 2000); else V[cur].play().catch(() => {}); };
