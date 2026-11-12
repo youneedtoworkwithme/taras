@@ -268,6 +268,10 @@ input[type=range]{width:100%;accent-color:var(--brand-ink)}
 .cpn-m{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted);margin-top:4px}
 .cpn-how{background:var(--bg);border-radius:14px;padding:10px 12px;font-size:14px;margin-bottom:8px}
 .cpn-how ol{margin:6px 0 0;padding-left:20px}
+.about{align-self:stretch;margin:0 18px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.about .label{width:100%;text-align:center}
+.about span{background:var(--surface-2);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+.stat-note{font-size:11.5px;color:var(--muted);text-align:center;margin:4px 0 0}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:stretch;margin:0 18px}
 .row3 .btn{flex-direction:column;gap:4px;min-height:64px;padding:8px 4px;font-size:13.5px}
 .row3 .btn svg{width:22px;height:22px}
@@ -453,6 +457,7 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
         <h1 id="mName"></h1>
         <div class="role" id="mRole"></div>
       </div>
+      <div class="about" id="mAbout" hidden></div>
       <div class="promise"><b>Рахунок за 15 хвилин</b><span>Скинули список або фото, і за 15 хвилин маєте рахунок.</span></div>
       <div class="segrow"><span class="label">Ви</span><div class="chips" id="segChips" role="group" aria-label="Хто Ви"></div></div>
       <p class="note" id="aiNote" aria-live="polite"></p>
@@ -587,6 +592,7 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
       <button type="button" class="btn primary" id="saveVcf">Зберегти в контакти телефону</button>
       <button type="button" class="btn" id="copyAll">Скопіювати всі контакти</button>
       <div class="toast" id="cToast" aria-live="polite"></div>
+      <p class="stat-note">Сайт збирає анонімну статистику переглядів, щоб ставати зручнішим. Без імен і контактів.</p>
     </div>
     <button type="button" class="bonus" data-go="3d">
       <span class="bi" aria-hidden="true">🎁</span>
@@ -627,7 +633,7 @@ const CONFIG = {
   name: "Тарас-Борис Левицький",
   short: "Тарас",
   vocative: "Тарасе", gen: "Тараса", dat: "Тарасу", ins: "Тарасом",
-  female: false, ai: true, glasses3d: true,
+  female: false, ai: true, glasses3d: true, slug: "taras", about: [],
   page: "https://youneedtoworkwithme.github.io/taras/", vcf: "taras.vcf",
   role: "Директор магазину",
   shop: "Львів, вул. Зелена, 238",
@@ -694,6 +700,7 @@ document.querySelector(".brandbar .co").onclick = () => go("me");
 $("logoSlot").innerHTML = CONFIG.logo ? `<img src="${CONFIG.logo}" alt="${esc(COMPANY.name)}">` : "";
 $("coName").innerHTML = CONFIG.logo ? "" : `${esc(COMPANY.name)}<small>${esc(COMPANY.descriptor)}</small>`;
 $("photo").src = CONFIG.photo;
+if (CONFIG.about && CONFIG.about.length) { $("mAbout").innerHTML = '<div class="label">Мої переваги</div>' + CONFIG.about.map(t => `<span>✓ ${esc(t)}</span>`).join(""); $("mAbout").hidden = false; }
 $("h3d").textContent = `Що зробите з ${CONFIG.ins}?`; $("tellBtn").textContent = `Скопіювати й надіслати ${CONFIG.dat}`;
 if (!CONFIG.ai) { const sg = document.querySelector(".hero .seg"); if (sg) sg.hidden = true; }
 $("mName").textContent = CONFIG.name;
@@ -1792,6 +1799,50 @@ renderSecret();
 (() => { const v = $("shopVid"); if (!v) return; const tile = v.parentElement;
   v.onerror = () => tile.remove();
   new IntersectionObserver(es => es.forEach(e => e.isIntersecting && !document.getElementById("s-me").hidden ? v.play().catch(() => {}) : v.pause()), { threshold: .5 }).observe(v);
+})();
+
+/* ---------- analytics: anonymous, batched, sent with sendBeacon (no effect on page speed) ---------- */
+(() => {
+  const CFG = "https://youneedtoworkwithme.github.io/track.json";
+  let URL_ = null, Q = [], t0 = Date.now(), maxScr = "me", seenScr = new Set(["me"]);
+  const ls = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+  const rid = () => Math.random().toString(36).slice(2, 10);
+  let vis = ls("gt_v"), ret = !!vis; if (!vis) { vis = rid(); ls("gt_v", vis); }
+  const ses = rid(), ua = navigator.userAgent;
+  const dev = (/iPhone|iPad/.test(ua) ? "iPhone" : /Android/.test(ua) ? "Android" : /Mac/.test(ua) ? "Mac" : /Windows/.test(ua) ? "Windows" : "інше") + (innerWidth < 700 ? " · телефон" : "");
+  const src = /Telegram/i.test(ua) || window.TelegramWebviewProxy ? "Telegram" : /Viber/i.test(ua) ? "Viber" : /Instagram/i.test(ua) ? "Instagram" : /FBAN|FBAV/.test(ua) ? "Facebook"
+    : document.referrer ? (new URL(document.referrer).hostname || "посилання") : "пряме / месенджер";
+  const T = window.track = (e, d = "") => { Q.push({ t: Date.now(), e, d: String(d).slice(0, 120) }); if (Q.length >= 12) flush(); };
+  function flush(final) {
+    if (!URL_ || !Q.length) return;
+    const body = JSON.stringify({ s: ses, v: vis, m: CONFIG.slug, dev, src, ret, ev: Q.splice(0) });
+    try { if (!navigator.sendBeacon(URL_, new Blob([body], { type: "text/plain" }))) fetch(URL_, { method: "POST", body, keepalive: true, mode: "no-cors" }); } catch (e) {}
+  }
+  const start = () => fetch(CFG, { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).then(c => { URL_ = c.url || null; flush(); }).catch(() => {});
+  (window.requestIdleCallback || (f => setTimeout(f, 1500)))(start);
+  setInterval(() => flush(), 15000);
+  addEventListener("pagehide", () => flush(true));
+  document.addEventListener("visibilitychange", () => { if (document.hidden) { T("вийшли", Math.round((Date.now() - t0) / 1000) + " с на сторінці · найдалі: " + (NAMES[maxScr] || maxScr)); flush(true); } });
+  T("відкрили", ret ? "повторно" : "вперше");
+  const NAMES = { me: "Я", brands: "Бренди", win: "Вигода", obj: "Об'єкти", write: "Написати", "3d": "3D" }, ORDER = ["me", "brands", "win", "obj", "write"];
+  const _go = go; go = function (tab, o) { if (!seenScr.has(tab)) { seenScr.add(tab); T("екран", NAMES[tab] || tab); if (ORDER.indexOf(tab) > ORDER.indexOf(maxScr)) maxScr = tab; } return _go(tab, o); };
+  const _rs = renderStep; renderStep = function () { const r = _rs.apply(this, arguments); if (!$("s-write").hidden) { const k = "wz" + $("wzTitle").textContent; if (!seenScr.has(k)) { seenScr.add(k); T("крок заявки", $("wzTitle").textContent); } } return r; };
+  const _qr = quizResult; quizResult = function () { const r = _qr.apply(this, arguments); T("тест пройшли", QZ.last.score + "/100 · купон " + QZ.code); return r; };
+  const _qs = quizStart; quizStart = function (n) { T("тест почали", n + " питань"); return _qs.apply(this, arguments); };
+  const _pl = play; play = function (n) { if (G && !cur) T("3D", n); return _pl.apply(this, arguments); };
+  const _sc = saveContact; saveContact = function () { T("контакт", IOS ? "iPhone" : ANDROID ? "Android" : "інше"); return _sc.apply(this, arguments); };
+  const _om = openMaps; openMaps = function (m) { T(m === "route" ? "маршрут" : "карти"); return _om.apply(this, arguments); };
+  document.addEventListener("click", e => {
+    const a = e.target.closest("a,button"); if (!a) return; const id = a.id || "";
+    if (/^(viberBtn|cmpViber|sendVb|cpnVb)$/.test(id)) T("viber", id === "sendVb" ? "заявка" : id === "cpnVb" ? "купон" : "");
+    else if (/^(tgBtn|cmpTg|sendTg|cpnTg|qzShare)$/.test(id)) T("telegram", id === "sendTg" ? "заявка" : id === "cpnTg" ? "купон" : "");
+    else if (id === "callCopy") T("дзвінок");
+    else if (id === "cmpBtn") T("порівняти рахунок");
+    else if (id === "offerBtn") T("знижка: дізнатись");
+    else if (id === "copyMsg") T("скопіювали заявку");
+    else if (a.closest("#brandGroups")) T("бренд", a.textContent.replace(/[↗▾]/g, "").trim());
+    else if (a.closest("#svc")) T("послуга", a.textContent.replace("→", "").replace(/^[\d♥]+/, "").trim());
+  }, true);
 })();
 </script>
 
