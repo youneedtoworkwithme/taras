@@ -400,6 +400,58 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
 .tab .dot.new::after{content:"";position:absolute;top:-2px;right:-4px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
 
 @media (max-width:370px){.ctrl{grid-template-columns:1fr}.calc{grid-template-columns:1fr}.dial{margin:0 auto}.portrait{width:120px;height:120px}.stage{height:340px}}
+
+.hero-l,.hero-r{display:contents}
+.hello{display:none}
+/* ---------- desktop ---------- */
+@media (min-width:1024px){
+  body{padding:96px 32px 48px;font-size:15.5px}
+  .wrap{max-width:1180px;gap:20px}
+  .brandbar{position:fixed;top:0;left:max(32px,calc(50% - 590px));right:auto;z-index:31;height:72px;margin:0;padding:0;background:transparent}
+  body::before{display:none}
+  #homeBtn{display:none!important}
+  .tabbar{top:0;bottom:auto;height:72px;padding:0 32px;border-top:0;border-bottom:1px solid var(--line);box-shadow:0 8px 24px -18px rgba(0,0,0,.35);z-index:30;display:flex;align-items:center}
+  .tabbar nav{max-width:1180px;width:100%;display:flex;justify-content:flex-end;gap:6px}
+  .tab{flex-direction:row;gap:8px;padding:10px 14px;font-size:14px;border-radius:12px}
+  .tab svg{width:20px;height:20px}
+  .tab:hover{background:var(--surface-2);color:var(--ink)}
+  .tab[data-tab="3d"]{border-left:0;border-radius:12px}
+  .tab[data-tab="write"] .dot{padding:2px 5px}
+  .screen{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+  .screen > *{grid-column:auto;min-width:0}
+  .screen > .card:only-of-type, .screen > .hero, .screen > .route, .screen > .btn.next, .screen > .btn.backto, .screen > .offer, #s-brands > .card.wh{grid-column:1/-1}
+  .btn.next, #s-me .btn.next{position:static;max-width:560px;justify-self:end;width:100%}
+  .route{justify-self:end}
+  .card{padding:24px;border-radius:24px}
+  h2{font-size:26px}
+  /* profile card: photo and promise on the left, actions on the right */
+  .hero{display:grid;grid-template-columns:380px 1fr;gap:0 32px;align-items:start;padding:0 32px 28px 0}
+  .hero .band{height:150px}
+  .hero-l{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 0 0 28px;position:relative}
+  .hero-r{display:flex;flex-direction:column;gap:12px;padding-top:28px;min-width:0;position:relative}
+  .hello{display:block;color:#fff;font-size:18px;line-height:1.45;min-height:110px;margin-bottom:22px;max-width:640px}
+  .hello b{display:block;font-size:30px;line-height:1.15;margin-bottom:6px}
+  .hero-r > *, .hero-l > *{margin-left:0!important;margin-right:0!important;align-self:stretch}
+  .hero-l .portrait, .hero-l .seg{align-self:center}
+  .hero .promise{align-self:stretch}
+  .gp{width:46%}
+  #whGal .gp{width:32%}
+  .offer{max-width:none}
+  /* warehouse block: video beside facts */
+  .card.wh{display:grid;grid-template-columns:1.4fr 1fr;gap:18px 24px;align-items:start}
+  .card.wh .head{grid-column:1/-1}
+  .card.wh .vid{grid-row:span 2}
+  .card.wh .gal{grid-column:1/-1}
+  .stage{height:520px}
+  #s-win > .card:nth-of-type(1){grid-column:1;grid-row:1}
+  #s-win > .card:nth-of-type(2){grid-column:2;grid-row:1 / span 2}
+  #s-win > .card:nth-of-type(3){grid-column:1;grid-row:2}
+  .acts{grid-template-columns:repeat(4,1fr)!important}
+  .quiz{align-items:center}
+  .qz-sheet{border-radius:24px;max-width:600px;max-height:88vh}
+  .lb img{max-height:80vh}
+}
+@media (min-width:1024px) and (max-width:1180px){ .hero{grid-template-columns:330px 1fr} }
 </style>
 </head>
 <body>
@@ -668,6 +720,13 @@ const COMPANY = {
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* desktop layout: split the profile card into two columns (no visual change on phones: wrappers use display:contents) */
+(() => { const h = document.querySelector(".hero"); if (!h) return;
+  const L = document.createElement("div"), Rt = document.createElement("div"); L.className = "hero-l"; Rt.className = "hero-r";
+  const left = [".seg", ".portrait", ".who", "#mAbout", ".promise"];
+  [...h.children].forEach(el => { if (el.classList.contains("band")) return; (left.some(q => el.matches(q)) ? L : Rt).append(el); });
+  const hi = document.createElement("div"); hi.className = "hello"; hi.innerHTML = CONFIG.realNote; Rt.prepend(hi);
+  h.append(L, Rt); })();
 
 /* ---------- tabs ---------- */
 const TABS = ["me", "brands", "win", "obj", "write", "3d"];
