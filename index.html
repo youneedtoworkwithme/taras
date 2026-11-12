@@ -219,6 +219,18 @@ input[type=range]{width:100%;accent-color:var(--brand-ink)}
 .cmp ol{margin:0;padding-left:20px;font-size:13.5px;font-weight:600;display:flex;flex-direction:column;gap:4px}
 .cmp .btn.viber{min-height:48px;font-size:15px}
 .cta .toast{min-height:0}
+.shop{align-self:stretch;margin:0 18px;display:flex;flex-direction:column;gap:6px}
+.shop-h{display:flex;justify-content:space-between;align-items:baseline;font-size:14px}
+.shop-h span{font-size:12px;color:var(--muted);font-weight:600}
+.gal{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gp{flex:none;width:72%;aspect-ratio:4/3;border:0;padding:0;border-radius:14px;overflow:hidden;scroll-snap-align:start;background:var(--line);cursor:zoom-in}
+.gp img{width:100%;height:100%;object-fit:cover;display:block}
+.lb{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px}
+.lb img{max-width:100%;max-height:78vh;border-radius:12px}
+.lb p{color:#fff;margin:0;font-weight:700;text-align:center}
+.lb .row2{width:100%;max-width:460px}
+.lb .btn{background:#fff;color:#1F1F1F;border-color:#fff}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:stretch;margin:0 18px}
 .row3 .btn{flex-direction:column;gap:4px;min-height:64px;padding:8px 4px;font-size:13.5px}
 .row3 .btn svg{width:22px;height:22px}
@@ -427,6 +439,10 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
         <a class="btn" id="geoBtn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Локація в Картах</span></a>
       </div>
       <div class="hours"><span><b>Пн–Пт 09:00–18:00</b> · Львів, вул. Зелена, 238, корпус «В»</span><a id="mapLink" target="_blank" rel="noopener">Маршрут ↗</a></div>
+      <div class="shop">
+        <div class="shop-h"><b>Наш магазин</b><span>Гортайте вбік →</span></div>
+        <div class="gal" id="gal"><button type="button" class="gp" data-i="0"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Rbvct8ILIglZyhi7Z5DjpA7gy-NNkuInuuqQnz_FfrdVSehs9wzJOussp7nUnS7OOlsYDOISScunhlS3mYVcF--3YVz994YaSaVpvU2cTPIK-UU2Y7KNDZk9pPaQnq7RtwG4-C=w1000-h750" referrerpolicy="no-referrer" alt="Магазин на Зеленій, 238" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="1"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QYaE5fnzbhA0bZfWYjzwqjRe0NcowGd2aXiwh2WO4nQiKED0p3m1h_skMda_0EKzf0PghXLeuYnYCs7FBBS1g8Hj6xg1vgYDKl1D0YCBPygHUxtKNGv5qv_OnTPgY3eFqBDlCprTkKJnQ=w1000-h750" referrerpolicy="no-referrer" alt="Стенди з трубами і фітингами" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="2"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9T7Y7pxgwCSuQY82IwxDc2oKTtTOc89Etj2wcOzh5F1AlnKeVUPIFsqk4ojr9FBFtUpXdGzbrcctNIqtF6CbD3LmhkY_wqzDpGc7O95EOmpS0U6AQof2AjiExUexkzeTglNzOiv=w1000-h750" referrerpolicy="no-referrer" alt="Зал чистової сантехніки" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="3"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5rRllJUrOIVoggK4nDvX4QC5bodcHmQBvt159QaZsZlTXAHtJQcUiyNZJO3tzKeYquvvWUgLefW_4X5cClmwt7v1CFTjJAR20DKpQfIjI3XYqye1HPIcG4bXxi0Uqa6jfyi8T=w1000-h750" referrerpolicy="no-referrer" alt="Котли і бойлери" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="4"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TJORJ4zcKs1vOJmkuZg4ZSqbEen3u7U1I45i3IDNzCXtOzl8zzAfjnZ3mPH4mKtx0WRDde0H1apJeX63Hk8_6HlFjMMNT08yETJQjjh6SWJ_ZhIddsBfp2AUwVr7RuqolfTltIMpC62PQW=w1000-h750" referrerpolicy="no-referrer" alt="Raftec: труби, шланги, фітинги" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="5"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q6tPT2aAuvdxhBjQUx8-yygfH_Su_nmW_x6F_CIiGJBbUETch_M879s4Y0-N2TC8AauHLGVOP76om7Ue8GlGPKZKbDa9SEqZ6yD2kDSdT4U3o9ff2hcK6rf7tyWXtaQ-_r4JbdG9D64yGW=w1000-h750" referrerpolicy="no-referrer" alt="Очищення води Ecosoft" loading="lazy" width="200" height="150"></button></div>
+      </div>
     </div>
     <button type="button" class="btn next" data-go="brands"><span>З якими виробниками працюємо</span><span aria-hidden="true">→</span></button>
   </section>
@@ -1562,6 +1578,19 @@ function build3D(stage) {
   return { resize };
 }
 renderSecret();
+
+/* ---------- shop photos ---------- */
+(() => { const G = [...document.querySelectorAll("#gal .gp")]; let lb = null, k = 0;
+  const show = i => { k = (i + G.length) % G.length; const im = G[k].querySelector("img"); lb.querySelector("img").src = im.src; lb.querySelector("img").alt = im.alt; lb.querySelector("p").textContent = im.alt + ` · ${k + 1}/${G.length}`; };
+  const open = i => { if (!lb) { lb = document.createElement("div"); lb.className = "lb"; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-label", "Фото магазину");
+      lb.innerHTML = '<img alt=""><p></p><div class="row2"><button type="button" class="btn" data-d="-1">← Назад</button><button type="button" class="btn" data-d="1">Далі →</button></div><button type="button" class="btn" data-x="1">Закрити</button>';
+      lb.onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.d) show(k + +b.dataset.d); else if ((b && b.dataset.x) || e.target === lb) lb.hidden = true; };
+      let sx = null; lb.addEventListener("touchstart", e => sx = e.touches[0].clientX, { passive: true });
+      lb.addEventListener("touchend", e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) show(k + (dx < 0 ? 1 : -1)); sx = null; });
+      document.body.append(lb); }
+    lb.hidden = false; show(i); };
+  G.forEach((g, i) => { g.onclick = () => open(i); g.querySelector("img").onerror = () => g.remove(); });
+})();
 </script>
 
 </body>
