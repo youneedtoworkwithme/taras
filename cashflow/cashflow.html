@@ -334,7 +334,11 @@ body.static .scene *,body.static .cloud,body.static #board *{animation:none!impo
 <div id="app"></div>
 <div class="toastbox" id="toasts"></div>
 <canvas id="fx"></canvas>
-<script src="enginecahsflow.js"></script>
+<script>
+/* ⬇ ОНЛАЙН-СЕРВЕР: вставте між лапками посилання веб-застосунку Apps Script (закінчується на /exec) */
+window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbyBQVYStTK5uJ4Uu-bPxDvOjqnJLVz4KoRGV4DVVIVRF9gkSt6eK4kzq4TY9Bh0ubjE_g/exec';
+</script>
+<script src="../enginecahsflow.js"></script>
 <script>
 (function () {
 'use strict';
@@ -631,6 +635,7 @@ async function boot() {
   S.db = db; S.user = user; S.room = room; S.tts = tts; S.mcp = mcp;
   if (user) { try { const me = await user.me(); S.me = { id: me.id, name: me.name || '', email: me.email || null, avatar: me.avatarUrl }; if (me.id) { S.avatars[me.id] = me.avatarUrl; if (me.name) S.names[me.id] = me.name; } } catch (e) {} }
   S.mode = db && S.me.id ? 'cloud' : null;
+  if (!S.mode && !window.claude) { netMe(); if (CF_API) { S.mode = 'srv'; S.db = SRV.db; S.room = SRV.room; } else S.mode = 'p2p'; }
   await minT; clearInterval(iv); $('#bootbar').style.width = '100%';
   setTimeout(() => $('#boot').classList.add('out'), 300);
   if (S.mode === 'cloud') subscribeLobby();
@@ -639,13 +644,185 @@ async function boot() {
   setInterval(tickLoop, 250);
 }
 
+/* ================= онлайн через сервер Google Apps Script ================= */
+const CF_API = window.CF_API || ''; // ← сюди вставляється посилання веб-застосунку Apps Script (…/exec)
+const SRV = (function () {
+  const st = { docs: {}, rev: {}, ls: {}, tm: {}, emoSeen: Date.now(), emoCb: null, fails: 0 };
+  const clone = (x) => x == null ? x : JSON.parse(JSON.stringify(x));
+  async function call(q) {
+    const r = await fetch(CF_API, { method: 'POST', body: JSON.stringify(q), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow' });
+    const j = await r.json(); if (j.err) { const e = new Error(j.err); e.code = j.err; throw e; } return j;
+  }
+  function fire(path) { const d = st.docs[path]; (st.ls[path] || []).forEach((cb) => { try { cb({ exists: d != null, data: () => clone(d), metadata: { fromCache: false } }); } catch (e) { console.error(e); } }); }
+  function handle(path, j) {
+    if (j.pres) { const np = {}; Object.keys(j.pres).forEach((u) => { np[u] = 1; }); if (JSON.stringify(np) !== JSON.stringify(S.peers)) { S.peers = np; renderStrip(); if (S.g && S.g.status === 'lobby') render(); } }
+    (j.emo || []).forEach((m) => { if (m.t > st.emoSeen) { st.emoSeen = m.t; if (m.uid !== S.me.id && st.emoCb) st.emoCb(m); } });
+    if (j.changed && j.rev > 0 && (st.rev[path] || 0) > j.rev) return;
+    if (j.changed) { st.rev[path] = j.rev; if (j.data == null) delete st.docs[path]; else st.docs[path] = j.data; fire(path); }
+  }
+  function poll(path) {
+    clearTimeout(st.tm[path]);
+    const run = async () => {
+      if (!(st.ls[path] || []).length) return;
+      try { const j = await call({ op: 'get', path, rev: st.rev[path] || 0, uid: S.me.id, since: st.emoSeen }); if (st.fails > 2) toast('Зв\'язок відновлено', 'good'); st.fails = 0; handle(path, j); }
+      catch (e) { if (++st.fails === 3) toast('Немає зв\'язку з сервером гри. Пробуємо ще…', 'bad', 3000); }
+      st.tm[path] = setTimeout(run, document.hidden ? 8000 : 1500);
+    };
+    run();
+  }
+  const local = (p) => p.startsWith('data/');
+  async function write(op, path, data) {
+    if (local(path)) { if (op === 'set') st.docs[path] = clone(data); try { localStorage.setItem('cf_d_' + path, JSON.stringify(st.docs[path] || null)); } catch (e) {} return; }
+    const j = await call({ op, path, data, uid: S.me.id });
+    if (op === 'delete') { delete st.docs[path]; st.rev[path] = -1; fire(path); return; }
+    if (j.rev) { st.rev[path] = j.rev; st.docs[path] = j.data; fire(path); }
+  }
+  const db = {
+    doc(path) {
+      return {
+        onSnapshot(cb) { (st.ls[path] = st.ls[path] || []).push(cb); if (!local(path)) { st.rev[path] = 0; poll(path); } return () => { st.ls[path] = (st.ls[path] || []).filter((x) => x !== cb); if (!st.ls[path].length) clearTimeout(st.tm[path]); }; },
+        update: (d) => write('update', path, d), set: (d) => write('set', path, d), delete: () => write('delete', path),
+        async get() { if (local(path)) { let v = null; try { v = JSON.parse(localStorage.getItem('cf_d_' + path) || 'null'); } catch (e) {} if (v) st.docs[path] = v; return { exists: !!v, data: () => clone(v) }; } const j = await call({ op: 'get', path, rev: 0, uid: S.me.id }); return { exists: j.data != null, data: () => clone(j.data) }; },
+      };
+    },
+  };
+  const room = { join(name) { const gid = name.replace(/^game-/, ''); return { on(ev, cb) { if (ev === 'emote') st.emoCb = cb; }, onPeers() {}, presence() {}, emit(ev, d) { call({ op: 'emo', path: 'games/' + gid, e: d.e, uid: S.me.id }).catch(() => {}); }, leave() { st.emoCb = null; } }; } };
+  let lt = null;
+  function lobby(on) { clearTimeout(lt); if (!on) return; const run = async () => { try { const j = await call({ op: 'list' }); S.rooms = j.rooms || []; S.roomsErr = null; } catch (e) { S.roomsErr = 'Список кімнат поки недоступний.'; } if (!S.g && !S.gid) { const el = $('#rooms'); if (el) el.innerHTML = roomsHTML(); else render(); } lt = setTimeout(run, document.hidden ? 20000 : 5000); }; run(); }
+  return { st, db, room, lobby, call };
+})();
+function roomsHTML() {
+  const rooms = S.rooms; const ago = (t) => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? 'щойно' : m < 60 ? m + ' хв тому' : Math.round(m / 60) + ' год тому'; };
+  const list = !rooms ? '<div class="note">Завантажуємо кімнати…</div>' : !rooms.length ? '<div class="note">Відкритих кімнат поки немає. Створіть першу — і вона з\'явиться тут для всіх.</div>'
+    : rooms.map((r) => '<div class="gitem"><div><b>' + esc(r.name || 'Гра') + '</b><div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap">' + (r.status === 'lobby' ? '<span class="pill o">Чекає гравців</span>' : r.status === 'active' ? '<span class="pill g">Йде гра</span>' : '<span class="pill">' + esc(r.status) + '</span>') + '<span class="muted" style="font-size:12px;font-weight:700">' + r.players + ' грав. · ' + (r.online ? '<span class="good">● ' + r.online + ' онлайн</span>' : 'ніхто не онлайн') + ' · ' + ago(r.updatedAt) + '</span></div></div><button class="btn ' + (r.status === 'lobby' ? 'go' : 'pri') + ' sm" data-open="' + esc(r.id) + '">' + (r.status === 'lobby' ? 'Приєднатися' : 'Увійти') + '</button></div>').join('');
+  return (S.roomsErr ? '<div class="note">' + esc(S.roomsErr) + '</div>' : '') + list;
+}
+function lobbySrv() {
+  return '<div class="lob"><div class="lwrap"><div class="hero"><div style="display:grid;gap:12px"><div class="blogo" style="font-size:22px">CASH<b>FLOW</b> <i>UA</i></div><h1>Вирвись із <b>щурячих перегонів</b> в українських реаліях</h1><p class="muted" style="margin:0;font-weight:600">Гривня і долар, біржа і крипта, квартири і франшизи, блекаути, війна, пандемії, ШІ, здоров\'я і стрес. Три получки за коло, дванадцять — рік життя.</p></div><div>' + ART.house.replace('<svg', '<svg style="width:100%;max-height:220px"') + '</div></div>'
+    + '<div class="lgrid"><div style="display:grid;gap:18px;align-content:start">'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">🌐 Кімнати онлайн</h2><div id="rooms" style="display:grid;gap:10px">' + roomsHTML() + '</div></div>'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Нова онлайн-гра</h2><p class="muted" style="margin:0;font-weight:600">Кімната з\'явиться в списку для всіх. Гра зберігається на сервері — можна закрити й повернутися будь-коли.</p><label class="f" for="nname">Ваше ім\'я<input type="text" id="nname" maxlength="24" placeholder="Напр. Тарас" value="' + esc(S.me.name) + '"></label><label class="f" for="gname">Назва гри<input type="text" id="gname" maxlength="40" value="Гра ' + esc(S.me.name || '') + '"></label><button class="btn go main" data-act="srvcreate">Створити кімнату</button></div>'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес не зберігається.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати</button></div></div>'
+    + '<div class="card rules"><h2 style="font-size:20px">Правила коротко</h2>' + rulesSteps() + '</div></div></div></div>';
+}
+async function srvCreate() {
+  if (!netName()) return; const name = ($('#gname') && $('#gname').value.trim()) || 'Наша гра';
+  const id = Math.random().toString(36).slice(2, 7).toUpperCase().replace(/[^A-Z0-9]/g, 'X');
+  toast('Створюємо кімнату…', 'blue', 2000);
+  try { await S.db.doc('games/' + id).set(CF.newGame(S.me.id, name)); go('g-' + id); } catch (e) { toast('Не вдалося створити кімнату (' + esc(e.code || e.message) + ').', 'bad', 6000); }
+}
+
+/* ================= онлайн без claude.ai: P2P через PeerJS ================= */
+const NET = (function () {
+  const PFX = 'cashflowua-gt-';
+  const st = { role: null, code: null, peer: null, conns: [], host: null, docs: {}, ls: {}, ackW: {}, rid: 0, uids: {}, room: null, retry: 0, ready: false, onReady: [] };
+  const clone = (x) => x == null ? x : JSON.parse(JSON.stringify(x));
+  function merge(a, d) { a = (a && typeof a === 'object' && !Array.isArray(a)) ? a : {}; Object.keys(d).forEach((k) => { const v = d[k]; if (v === null) delete a[k]; else if (v && typeof v === 'object' && !Array.isArray(v)) a[k] = merge(a[k], v); else a[k] = v; }); return a; }
+  function loadLib() { return new Promise((ok, no) => { if (window.Peer) return ok(); const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js'; sc.onload = () => ok(); sc.onerror = () => no(new Error('lib')); document.head.appendChild(sc); }); }
+  const local = (p) => p.startsWith('data/');
+  function fire(path) { const d = st.docs[path]; (st.ls[path] || []).forEach((cb) => { try { cb({ exists: d != null, data: () => clone(d), metadata: { fromCache: false } }); } catch (e) { console.error(e); } }); }
+  function save() { if (st.role === 'host') { try { localStorage.setItem('cf_host_' + st.code, JSON.stringify(st.docs)); localStorage.setItem('cf_lasthost', st.code); } catch (e) {} } }
+  function apply(op, path, data) { if (op === 'set') st.docs[path] = clone(data); else if (op === 'update') st.docs[path] = merge(st.docs[path] || {}, clone(data)); else if (op === 'delete') delete st.docs[path]; }
+  function bcast(msg, except) { const s1 = JSON.stringify(msg); st.conns.forEach((c) => { if (c !== except && c.open) { try { c.send(s1); } catch (e) {} } }); }
+  function peersMsg() { return { t: 'peers', list: Object.values(st.uids).concat([S.me.id]) }; }
+  function hostWrite(op, path, data) { apply(op, path, data); save(); fire(path); bcast({ t: 'snap', path, data: st.docs[path] == null ? null : st.docs[path] }); }
+  function onHostMsg(c, raw) {
+    let m; try { m = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (e) { return; }
+    if (m.t === 'hi') { st.uids[c.peer] = m.uid; Object.keys(st.docs).forEach((p) => c.send(JSON.stringify({ t: 'snap', path: p, data: st.docs[p] }))); c.send(JSON.stringify({ t: 'ready' })); bcast(peersMsg()); peersLocal(); }
+    else if (m.t === 'w') { if (!/^games\//.test(m.path)) return; hostWrite(m.op, m.path, m.data); c.send(JSON.stringify({ t: 'ack', rid: m.rid })); }
+    else if (m.t === 'emo') { bcast(m, c); emoLocal(m.d); }
+  }
+  function onGuestMsg(raw) {
+    let m; try { m = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (e) { return; }
+    if (m.t === 'snap') { if (m.data == null) delete st.docs[m.path]; else st.docs[m.path] = m.data; fire(m.path); }
+    else if (m.t === 'ack') { const f = st.ackW[m.rid]; if (f) { delete st.ackW[m.rid]; f(); } }
+    else if (m.t === 'ready') { st.ready = true; st.onReady.splice(0).forEach((f) => f()); }
+    else if (m.t === 'peers') { S.peers = {}; (m.list || []).forEach((u) => { S.peers[u] = 1; }); renderStrip(); if (S.g && S.g.status === 'lobby') render(); }
+    else if (m.t === 'emo') emoLocal(m.d);
+  }
+  function peersLocal() { S.peers = {}; Object.values(st.uids).forEach((u) => { S.peers[u] = 1; }); S.peers[S.me.id] = 1; renderStrip(); if (S.g && S.g.status === 'lobby') render(); }
+  let emoCb = null; function emoLocal(d) { if (emoCb && d && d.e) emoCb(d); }
+  async function host(code) {
+    await loadLib(); st.role = 'host'; st.code = code; st.ready = true;
+    try { const sv = JSON.parse(localStorage.getItem('cf_host_' + code) || 'null'); if (sv) st.docs = sv; } catch (e) {}
+    return new Promise((ok, no) => {
+      let tries = 0;
+      const start = () => {
+        const p = new Peer(PFX + code, window.CF_PEER_OPTS); st.peer = p;
+        p.on('open', () => ok());
+        p.on('connection', (c) => { st.conns.push(c); c.on('data', (d) => onHostMsg(c, d)); c.on('close', () => { st.conns = st.conns.filter((x) => x !== c); delete st.uids[c.peer]; bcast(peersMsg()); peersLocal(); }); });
+        p.on('disconnected', () => { try { p.reconnect(); } catch (e) {} });
+        p.on('error', (e) => { if (e.type === 'unavailable-id' && tries++ < 12) { try { p.destroy(); } catch (x) {} setTimeout(start, 3000); } else if (e.type === 'unavailable-id') no(e); else console.warn(e.type); });
+      };
+      start();
+    });
+  }
+  async function guest(code) {
+    await loadLib(); st.role = 'guest'; st.code = code;
+    return new Promise((ok, no) => {
+      const p = new Peer(window.CF_PEER_OPTS); st.peer = p; let first = true;
+      const conn = () => {
+        const c = p.connect(PFX + code, { reliable: true }); st.host = c;
+        c.on('open', () => { st.retry = 0; c.send(JSON.stringify({ t: 'hi', uid: S.me.id })); if (!first) toast('Зв\'язок з хостом відновлено', 'good'); first = false; ok(); });
+        c.on('data', onGuestMsg);
+        c.on('close', () => { st.ready = false; toast('Зв\'язок з хостом втрачено. Перепідключаємось…', 'bad', 3000); setTimeout(conn, 3000); });
+      };
+      p.on('open', conn);
+      p.on('error', (e) => { if (e.type === 'peer-unavailable') { if (st.retry++ < 40) setTimeout(conn, 3000); if (st.retry === 2) toast('Хост поки не в мережі. Чекаємо, поки він відкриє гру…', '', 5000); } else console.warn(e.type); });
+      setTimeout(() => no(new Error('timeout')), 120000);
+    });
+  }
+  function write(op, path, data) {
+    if (local(path)) { apply(op, path, data); try { localStorage.setItem('cf_d_' + path, JSON.stringify(st.docs[path] || null)); } catch (e) {} return Promise.resolve(); }
+    if (st.role === 'host') { hostWrite(op, path, data); return Promise.resolve(); }
+    return new Promise((ok, no) => {
+      if (!st.host || !st.host.open) { const e = new Error('offline'); e.code = 'немає зв\'язку з хостом'; return no(e); }
+      const rid = ++st.rid; st.ackW[rid] = ok; st.host.send(JSON.stringify({ t: 'w', op, path, data, rid }));
+      if (op !== 'delete') { apply(op, path, data); fire(path); }
+      setTimeout(() => { if (st.ackW[rid]) { delete st.ackW[rid]; const e = new Error('timeout'); e.code = 'хост не відповідає'; no(e); } }, 15000);
+    });
+  }
+  const db = {
+    doc(path) {
+      return {
+        onSnapshot(cb) { (st.ls[path] = st.ls[path] || []).push(cb); if (st.docs[path] != null || st.role === 'host' || st.ready) setTimeout(() => cb({ exists: st.docs[path] != null, data: () => clone(st.docs[path]), metadata: {} }), 0); return () => { st.ls[path] = (st.ls[path] || []).filter((x) => x !== cb); }; },
+        update: (d) => write('update', path, d), set: (d) => write('set', path, d), delete: () => write('delete', path),
+        async get() { if (local(path) && !(path in st.docs)) { try { const v = JSON.parse(localStorage.getItem('cf_d_' + path) || 'null'); if (v) st.docs[path] = v; } catch (e) {} } return { exists: st.docs[path] != null, data: () => clone(st.docs[path]) }; },
+      };
+    },
+  };
+  const room = { join() { return { on(ev, cb) { if (ev === 'emote') emoCb = cb; }, onPeers() {}, presence() {}, emit(ev, d) { const m = { t: 'emo', d }; if (st.role === 'host') bcast(m); else if (st.host && st.host.open) st.host.send(JSON.stringify(m)); }, leave() {} }; } };
+  return { st, db, room, host, guest, loadLib, link: (code) => location.href.split('#')[0] + '#g-' + code };
+})();
+function netMe() {
+  let id = LS.get('cf_uid'); if (!id) { id = 'u' + Math.random().toString(36).slice(2, 10); LS.set('cf_uid', id); }
+  S.me = { id, name: LS.get('cf_name') || '', email: null, avatar: '' }; if (S.me.name) S.names[id] = S.me.name;
+}
+function netName() { const el = $('#nname'); const v = el ? el.value.trim() : S.me.name; if (!v) { toast('Вкажіть своє ім\'я', 'bad'); if (el) el.focus(); return null; } S.me.name = v; S.names[S.me.id] = v; LS.set('cf_name', v); return v; }
+async function netCreate(resume) {
+  if (!resume && !netName()) return;
+  const code = resume || Math.random().toString(36).slice(2, 7).toUpperCase().replace(/[^A-Z0-9]/g, 'X');
+  toast('Відкриваємо онлайн-кімнату…', 'blue', 2500);
+  try { await NET.host(code); } catch (e) { toast('Не вдалося відкрити кімнату (' + esc(e.type || e.message) + '). Перевірте інтернет.', 'bad', 6000); return; }
+  S.db = NET.db; S.room = NET.room; S.netReady = code;
+  if (!NET.st.docs['games/' + code]) { const name = ($('#gname') && $('#gname').value.trim()) || 'Наша гра'; await NET.db.doc('games/' + code).set(CF.newGame(S.me.id, name)); }
+  go('g-' + code);
+}
+async function netJoin(code) {
+  code = String(code || '').trim().toUpperCase().replace(/.*#G-/, ''); if (!code) return;
+  if (!S.me.name) { S.pendingJoin = code; render(); return; }
+  S.gid = code; S.loadingGame = true; S.gameErr = null; render();
+  try { await NET.guest(code); } catch (e) { S.gameErr = 'Не вдалося під\'єднатися до гри ' + code + '. Хост має тримати гру відкритою.'; render(); return; }
+  S.db = NET.db; S.room = NET.room; S.netReady = code; S.gid = null; openGame(code);
+}
+
 /* ================= імена ================= */
 async function resolveNames(ids) {
   ids = [...new Set(ids.filter((x) => x && !String(x).startsWith('local')))];
   if (!S.user || !ids.length) return;
   try { const ps = await S.user.profiles(ids); let ch = false; ids.forEach((id) => { const p = ps[id]; if (!p) return; const n = p.name || 'Гравець'; if (S.names[id] !== n || S.avatars[id] !== p.avatarUrl) { S.names[id] = n; S.avatars[id] = p.avatarUrl; ch = true; } }); if (ch) render(); } catch (e) {}
 }
-const nameOf = (uid) => (S.g && S.g.local && S.g.names && S.g.names[uid]) || S.names[uid] || (uid === S.me.id ? (S.me.name || 'Ви') : 'Гравець');
+const nameOf = (uid) => (S.g && S.g.local && S.g.names && S.g.names[uid]) || S.names[uid] || (S.g && S.g.players && S.g.players[uid] && S.g.players[uid].nm) || (uid === S.me.id ? (S.me.name || 'Ви') : 'Гравець');
 const firstName = (uid) => (S.g && S.g.local) ? String(nameOf(uid)) : String(nameOf(uid)).split(' ')[0];
 const PAL = ['#2D8CFF', '#FF5A3D', '#16A34A', '#7B61FF', '#F08A24', '#E0409A'];
 function colorOf(uid) { const g = S.g; if (g) { const ids = g.order && g.order.length ? g.order : Object.keys(g.players || {}).sort((a, b) => g.players[a].joined - g.players[b].joined); const i = ids.indexOf(uid); if (i >= 0) return PAL[i % PAL.length]; } return '#2D8CFF'; }
@@ -655,6 +832,9 @@ function moodOf(p) { const s = p.stress; return s < 25 ? '😎' : s < 45 ? '🙂
 /* ================= маршрути ================= */
 function route() {
   const h = (location.hash || '').replace('#', '');
+  if (S.mode === 'srv') SRV.lobby(!h.startsWith('g-') && h !== 'local');
+  if (h.startsWith('g-') && S.mode === 'srv') { const id = h.slice(2); if (!S.me.name) { closeGame(); S.pendingJoin = id; render(); return; } if (S.gid !== id) openGame(id); else render(); return; }
+  if (h.startsWith('g-') && S.mode === 'p2p') { const id = h.slice(2); if (S.netReady === id) { if (S.gid !== id) openGame(id); else render(); } else if (NET.st.role === 'host' || S.lastHost === id || LS.get('cf_host_' + id)) { netCreate(id); } else netJoin(id); return; }
   if (h.startsWith('g-') && S.mode === 'cloud') { const id = h.slice(2); if (S.gid !== id) openGame(id); else render(); return; }
   if (h === 'local' && S.g && S.g.local) { render(); return; }
   closeGame(); closeAll(); render();
@@ -681,10 +861,22 @@ function lobbyHTML() {
     else if (!S.games.length) games = '<div class="note">Ще немає ігор. Створіть першу і надішліть колегам посилання на цю сторінку.</div>';
     else games = S.games.map((g) => { const ids = Object.keys(g.players || {}); const mine = !!(g.players || {})[S.me.id]; return '<div class="gitem"><div><b>' + esc(g.name) + '</b><div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap">' + (g.status === 'lobby' ? '<span class="pill o">Збираємось</span>' : '<span class="pill g">' + esc(CF.dateOf((g.world || {}).m || 0)) + '</span>') + '<div class="avs">' + ids.slice(0, 6).map((u) => '<img src="' + esc(avaOf(u)) + '" alt="" title="' + esc(nameOf(u)) + '">').join('') + '</div><span class="muted" style="font-size:12px;font-weight:700">' + ids.length + ' грав.</span></div></div><button class="btn ' + (mine ? 'pri' : '') + ' sm" data-open="' + esc(g.id) + '">' + (mine ? 'Продовжити' : 'Відкрити') + '</button></div>'; }).join('');
   }
+  if (S.mode === 'p2p') return lobbyP2P();
+  if (S.mode === 'srv') return lobbySrv();
   const who = signed ? '<div class="note">Ви увійшли як <b>' + esc(S.me.name || 'гравець') + '</b>' + (S.me.email ? ' (' + esc(S.me.email) + ')' : '') + ' через акаунт claude.ai. Прогрес кожної гри зберігається автоматично.</div>' : '<div class="note">Щоб грати з колегами й зберігати прогрес, відкрийте цю сторінку, увійшовши у свій акаунт claude.ai. Без входу працює тільки гра на одному пристрої.</div>';
   return '<div class="lob"><div class="lwrap"><div class="hero"><div style="display:grid;gap:12px"><div class="blogo" style="font-size:22px">CASH<b>FLOW</b> <i>UA</i></div><h1>Вирвись із <b>щурячих перегонів</b> в українських реаліях</h1><p class="muted" style="margin:0;font-weight:600">Гривня і долар, біржа і крипта, квартири і франшизи, блекаути, війна, пандемії, ШІ, здоров\'я і стрес. Три получки за коло, дванадцять — рік життя.</p>' + who + '</div><div>' + ART.house.replace('<svg', '<svg style="width:100%;max-height:220px"') + '</div></div>'
     + '<div class="lgrid"><div style="display:grid;gap:18px;align-content:start">'
     + (signed ? '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Ваші ігри</h2>' + games + '</div><div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Нова гра</h2><label class="f" for="gname">Назва<input type="text" id="gname" maxlength="40" value="Наша гра"></label><button class="btn go" data-act="create">Створити гру</button></div>' : '')
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес не зберігається.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати</button></div></div>'
+    + '<div class="card rules"><h2 style="font-size:20px">Правила коротко</h2>' + rulesSteps() + '</div></div></div></div>';
+}
+function lobbyP2P() {
+  const last = LS.get('cf_lasthost');
+  return '<div class="lob"><div class="lwrap"><div class="hero"><div style="display:grid;gap:12px"><div class="blogo" style="font-size:22px">CASH<b>FLOW</b> <i>UA</i></div><h1>Вирвись із <b>щурячих перегонів</b> в українських реаліях</h1><p class="muted" style="margin:0;font-weight:600">Гривня і долар, біржа і крипта, квартири і франшизи, блекаути, війна, пандемії, ШІ, здоров\'я і стрес. Три получки за коло, дванадцять — рік життя.</p></div><div>' + ART.house.replace('<svg', '<svg style="width:100%;max-height:220px"') + '</div></div>'
+    + '<div class="lgrid"><div style="display:grid;gap:18px;align-content:start">'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">🌐 Онлайн з різних комп\'ютерів</h2><p class="muted" style="margin:0;font-weight:600">Створіть кімнату й надішліть колегам посилання. Реєстрація не потрібна. Гру тримає ваш браузер — не закривайте вкладку, поки граєте.</p><label class="f" for="nname">Ваше ім\'я<input type="text" id="nname" maxlength="24" placeholder="Напр. Тарас" value="' + esc(S.me.name) + '"></label><label class="f" for="gname">Назва гри<input type="text" id="gname" maxlength="40" value="Наша гра"></label><button class="btn go main" data-act="netcreate">Створити онлайн-гру</button>'
+    + (last ? '<button class="btn sm" data-act="netresume">↻ Продовжити мою гру ' + esc(last) + ' (я хост)</button>' : '') + '</div>'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Приєднатися за кодом</h2><label class="f" for="jcode">Код кімнати або посилання<input type="text" id="jcode" maxlength="200" placeholder="Напр. K7Q2M"></label><button class="btn pri" data-act="netjoin">Приєднатися</button></div>'
     + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес не зберігається.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати</button></div></div>'
     + '<div class="card rules"><h2 style="font-size:20px">Правила коротко</h2>' + rulesSteps() + '</div></div></div></div>';
 }
@@ -722,7 +914,7 @@ const actor = () => { const g = S.g; if (!g) return null; if (g.local) return (g
 const myUid = () => (S.g && S.g.local) ? CF.curUid(S.g) : S.me.id;
 const isMyTurn = () => { const g = S.g; if (!g || g.status !== 'active') return false; return g.local ? true : CF.curUid(g) === S.me.id; };
 const iDecide = () => { const g = S.g; if (!g || !g.pending) return false; return g.local ? true : g.pending.owner === S.me.id; };
-const isHost = () => S.g && (S.g.local || S.g.hostId === S.me.id);
+const isHost = () => { const g = S.g; if (!g) return false; if (g.local || g.hostId === S.me.id) return true; if (S.mode === 'srv' && g.players && g.players[S.me.id] && !S.peers[g.hostId]) { const ids = (g.order && g.order.length ? g.order : Object.keys(g.players)).filter((u) => S.peers[u]); return ids[0] === S.me.id; } return false; };
 const joined = () => S.g && (S.g.local || !!(S.g.players || {})[S.me.id]);
 function diff(a, b) {
   const out = {}; let ch = false;
@@ -847,7 +1039,7 @@ async function joinOk() {
     rulesOffer(true); return;
   }
   closeAll();
-  const p = CF.newPlayer(S.me.id, JS.prof, dream, JS.av); p.email = JS.email || '';
+  const p = CF.newPlayer(S.me.id, JS.prof, dream, JS.av); p.email = JS.email || ''; if (S.me.name) p.nm = S.me.name;
   if (g.status === 'lobby') {
     try { await S.db.doc('games/' + S.gid).update({ players: { [S.me.id]: p }, ready: { [S.me.id]: Date.now() }, updatedAt: Date.now() }); toast('Ви в грі! Чекаємо на старт від хоста.', 'good'); rulesOffer(false); }
     catch (e) { toast(e.code === 'invalid_argument' ? 'Немає прав на запис. Попросіть власника гри дати доступ рівня Contributor.' : 'Не вдалося приєднатися (' + esc(e.code) + ').', 'bad', 6000); }
@@ -923,7 +1115,8 @@ function head(title, back) { return '<div class="shead">' + (back ? '<button cla
 function render() {
   const app = $('#app');
   if (!S.g) {
-    if (S.gid && S.mode === 'cloud') { app.innerHTML = '<div class="lob"><div class="lwrap"><div class="card" style="max-width:480px;margin:40px auto;display:grid;gap:12px;text-align:center">' + (S.gameErr ? '<b>' + esc(S.gameErr) + '</b><button class="btn" data-go="">До списку ігор</button>' : ART.money + '<b>Завантажуємо гру…</b>') + '</div></div></div>'; return; }
+    if ((S.mode === 'p2p' || S.mode === 'srv') && S.pendingJoin && !S.me.name) { app.innerHTML = '<div class="lob"><div class="lwrap"><div class="card" style="max-width:480px;margin:40px auto;display:grid;gap:12px"><h2 style="font-size:22px">Вас запросили в гру</h2><p class="muted" style="margin:0;font-weight:600">Кімната ' + esc(S.pendingJoin) + '. Як вас звати?</p><label class="f" for="nname">Ім\'я<input type="text" id="nname" maxlength="24" placeholder="Напр. Тарас"></label><button class="btn go main" data-act="netjoin2">Увійти в гру</button></div></div></div>'; return; }
+    if (S.gid && (S.mode === 'cloud' || S.mode === 'p2p' || S.mode === 'srv')) { app.innerHTML = '<div class="lob"><div class="lwrap"><div class="card" style="max-width:480px;margin:40px auto;display:grid;gap:12px;text-align:center">' + (S.gameErr ? '<b>' + esc(S.gameErr) + '</b><button class="btn" data-go="">До списку ігор</button>' : ART.money + '<b>Завантажуємо гру…</b>') + '</div></div></div>'; return; }
     app.innerHTML = lobbyHTML(); return;
   }
   CF.setCtx(S.g);
@@ -934,7 +1127,7 @@ function render() {
 function rollcallHTML() {
   const g = S.g; const ids = Object.keys(g.players).sort((a, b) => g.players[a].joined - g.players[b].joined); const me = !!g.players[S.me.id];
   const rd = g.ready || {}; const all = ids.length && ids.every((u) => rd[u]);
-  return '<div class="lob"><div class="lwrap" style="max-width:640px"><div class="card" style="display:grid;gap:14px"><div><span class="pill o">Збираємось</span><h1 style="font-size:26px;margin-top:10px">' + esc(g.name) + '</h1><p class="muted" style="margin:6px 0 0;font-weight:600">Надішліть колегам посилання на цю сторінку (кнопка «Поділитися» в claude.ai, рівень доступу Contributor). Кожен приєднується, тягне професію і натискає «Я тут». Коли всі на місці, хост починає гру.</p></div>'
+  return '<div class="lob"><div class="lwrap" style="max-width:640px"><div class="card" style="display:grid;gap:14px"><div><span class="pill o">Збираємось</span><h1 style="font-size:26px;margin-top:10px">' + esc(g.name) + '</h1>' + (S.mode === 'p2p' || S.mode === 'srv' ? '<p class="muted" style="margin:6px 0 0;font-weight:600">Надішліть колегам посилання або код кімнати <b class="num" style="color:var(--ink)">' + esc(g.id) + '</b>. Кожен приєднується, тягне професію і натискає «Я тут». Коли всі на місці, хост починає гру.' + (isHost() && S.mode === 'p2p' ? ' Ви хост: не закривайте цю вкладку, поки триває гра.' : S.mode === 'srv' ? ' Кімната вже є в загальному списку на головній.' : '') + '</p><div style="display:flex;gap:8px"><input type="text" readonly id="slink" value="' + esc(NET.link(g.id)) + '" aria-label="Посилання"><button class="btn pri" data-act="copylink">Копіювати</button></div>' : '<p class="muted" style="margin:6px 0 0;font-weight:600">Надішліть колегам посилання на цю сторінку (кнопка «Поділитися» в claude.ai, рівень доступу Contributor). Кожен приєднується, тягне професію і натискає «Я тут». Коли всі на місці, хост починає гру.</p>') + '</div>'
     + '<div class="plist">' + (ids.length ? ids.map((u) => { const p = g.players[u]; return '<div class="pl"><img src="' + esc(avaOf(u)) + '" alt=""><div><div class="nm">' + esc(nameOf(u)) + (u === g.hostId ? ' <span class="tag">хост</span>' : '') + '</div><div class="sub">' + esc(CF.profOf(p).n) + '</div></div>' + (rd[u] ? '<span class="pill g">✓ тут</span>' : '<span class="pill o">чекаємо</span>') + '</div>'; }).join('') : '<div class="note">Поки нікого немає.</div>') + '</div>'
     + '<div style="display:grid;gap:10px">' + (!me ? '<button class="btn go main" data-act="join">Приєднатися до гри</button>' : (!rd[S.me.id] ? '<button class="btn sun main" data-act="here">✋ Я тут — увімкнути звук</button>' : '<div class="note">Ви на місці. Звук увімкнено. Чекаємо на старт.</div>'))
     + '<button class="btn sun" data-sheet="rulesFull">📘 Повні правила гри</button>' + (isHost() ? '<button class="btn pri" data-act="start"' + (ids.length ? '' : ' disabled') + '>' + (all ? 'Всі на місці — почати гру' : 'Почати гру (не всі підтвердили)') + '</button><button class="btn sm" data-sheet="settings">Правила й таймери</button>' : '')
@@ -1377,7 +1570,7 @@ document.addEventListener('click', (e) => {
   const d = t.dataset;
   if (d.sheet) { if (d.sheet === 'fin' && !S.g) return; openSheet(d.sheet); return; }
   if (d.menu) { openMenu(); return; }
-  if (d.open) { go('g-' + d.open); return; }
+  if (d.open) { if (S.mode === 'srv' && $('#nname') && $('#nname').value.trim()) netName(); go('g-' + d.open); return; }
   if (d.player) { openSheet('player', d.player); return; }
   if (d.trade) { openSheet('trade', d.trade); return; }
   if (d.ch) { choose(d.ch); return; }
@@ -1406,6 +1599,12 @@ document.addEventListener('click', (e) => {
   if (d.rule) { commit((g) => CF.setRules(g, { [d.rule]: g.rules[d.rule] ? 0 : 1 })); return; }
   switch (d.act) {
     case 'create': createGame(); break;
+    case 'netcreate': netCreate(); break;
+    case 'netresume': S.lastHost = LS.get('cf_lasthost'); go('g-' + S.lastHost); break;
+    case 'netjoin': { if (!netName()) break; const c = ($('#jcode').value || '').trim().toUpperCase().replace(/.*#G-/, ''); if (c) go('g-' + c); break; }
+    case 'netjoin2': { if (!netName()) break; const c = S.pendingJoin; S.pendingJoin = null; if (S.mode === 'srv') { S.gid = null; route(); } else netJoin(c); break; }
+    case 'srvcreate': srvCreate(); break;
+    case 'copylink': { const el = $('#slink'); try { navigator.clipboard.writeText(el.value).then(() => toast('Посилання скопійовано', 'good')); } catch (e) { el.select(); document.execCommand('copy'); toast('Посилання скопійовано', 'good'); } break; }
     case 'local': startLocal(); break;
     case 'join': openJoin(); break;
     case 'jroll': rollProf(); break;
