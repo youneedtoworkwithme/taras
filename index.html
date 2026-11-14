@@ -527,7 +527,58 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
         <div class="role" id="mRole"></div>
       </div>
       <div class="about" id="mAbout" hidden></div>
-      <div class="promise"><b>Рахунок за 15 хвилин</b><span>Скинули список або фото, і за 15 хвилин маєте рахунок.</span></div>
+      <div class="quick" id="quick">
+        <div class="qh"><b>Скиньте список — підбір за хвилину</b><span>Фото рукопису, рахунок, Excel, PDF або текст. Точний рахунок від мене — за 15 хвилин.</span></div>
+        <textarea id="qText" rows="3" placeholder="напр.: Трійник PPR 25х20х25 — 6 шт&#10;Кран кульовий 1/2 ВВ — 4 шт"></textarea>
+        <div class="qrow"><label class="qfile"><input type="file" id="qFile" multiple accept="image/*,application/pdf,.xlsx,.xls,.csv,.txt"><span id="qFileT">📎 Додати фото чи файли (до 20)</span></label>
+          <button type="button" class="btn primary" id="qGo">Отримати підбір →</button></div>
+        <div class="qnote">Безкоштовно. ШІ «Гарячої Точки» підбере коди з нашого прайсу, а я перевірю й надішлю точний рахунок.</div>
+      </div>
+      <style>
+        .quick{margin:14px 0 4px;background:#fff;border:2px solid var(--brand,#F2673A);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;text-align:left;box-shadow:0 8px 24px rgba(242,103,58,.15)}
+        .quick .qh b{display:block;font-size:18px;line-height:1.25;color:#1F1F1F}
+        .quick .qh span{display:block;font-size:13px;color:#5C5C5C;margin-top:3px}
+        .quick textarea{font:inherit;font-size:15px;padding:10px 12px;border:1px solid #DADADA;border-radius:10px;resize:vertical;min-height:70px;background:#F7F7F6;color:#1F1F1F}
+        .quick .qrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+        .quick .qfile{flex:1 1 180px;border:1px dashed #BDBDBD;border-radius:10px;padding:10px 12px;font-size:13.5px;color:#444;cursor:pointer;position:relative;overflow:hidden}
+        .quick .qfile input{position:absolute;inset:0;opacity:0;cursor:pointer}
+        .quick #qGo{flex:1 1 160px}
+        .quick .qnote{font-size:12px;color:#777}
+        .raftec{margin-top:18px}
+        .raftec .shop-h span{color:#777}
+        .rgal{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+        .rgal button{flex:0 0 46%;max-width:220px;scroll-snap-align:start;border:0;padding:0;background:none;border-radius:12px;overflow:hidden;cursor:zoom-in}
+        .rgal img{width:100%;aspect-ratio:9/16;object-fit:cover;display:block}
+        .rbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;touch-action:pinch-zoom}
+        .rbox img{max-width:100%;max-height:100%;object-fit:contain}
+        .rbox button{position:absolute;top:12px;right:12px;font-size:22px;background:#fff;border:0;border-radius:50%;width:40px;height:40px}
+      </style>
+      <script>
+      (function(){
+        var slug = (location.pathname.split('/').filter(Boolean)[0] || 'taras').toLowerCase();
+        var APP = 'https://youneedtoworkwithme.github.io/aihotpoint/?m=' + encodeURIComponent(slug) + '&from=card';
+        var f = document.getElementById('qFile'), t = document.getElementById('qText'), go = document.getElementById('qGo'), lab = document.getElementById('qFileT');
+        f.onchange = function(){ var n = Math.min(f.files.length, 20); lab.textContent = n ? '📎 ' + n + ' файл(ів): ' + [].slice.call(f.files, 0, 3).map(function(x){ return x.name; }).join(', ') + (n > 3 ? '…' : '') : '📎 Додати фото чи файли (до 20)'; };
+        go.onclick = function(){
+          var files = [].slice.call(f.files || [], 0, 20), text = t.value.trim();
+          if(!files.length && !text){ t.focus(); t.placeholder = 'Напишіть список або додайте фото чи файл'; return; }
+          go.disabled = true; go.textContent = 'Відкриваю…';
+          var done = function(){ location.href = APP; };
+          try{
+            var r = indexedDB.open('hpcard', 1);
+            r.onupgradeneeded = function(){ r.result.createObjectStore('p'); };
+            r.onsuccess = function(){ var tx = r.result.transaction('p', 'readwrite');
+              tx.objectStore('p').put({ text: text, files: files.map(function(x){ return { blob: x, name: x.name, type: x.type }; }) }, 'pending');
+              tx.oncomplete = done; tx.onerror = done; };
+            r.onerror = done;
+          }catch(e){ done(); }
+        };
+        // Викладка RAFTEC: перегляд на весь екран
+        document.addEventListener('click', function(e){ var b = e.target.closest('.rgal button'); if(!b) return;
+          var d = document.createElement('div'); d.className = 'rbox'; d.innerHTML = '<img src="' + b.querySelector('img').src + '" alt=""><button aria-label="Закрити">✕</button>';
+          d.onclick = function(){ d.remove(); }; document.body.appendChild(d); });
+      })();
+      </script>
       <div class="segrow"><span class="label">Ви</span><div class="chips" id="segChips" role="group" aria-label="Хто Ви"></div></div>
       <p class="note" id="aiNote" aria-live="polite"></p>
       <div class="cta">
@@ -554,6 +605,11 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
         <div class="shop-h"><b>Наш магазин</b><span>Гортайте вбік →</span></div>
         <div class="gal" id="gal"><div class="gp gv" aria-label="Відео: шоурум мережі"><video id="shopVid" src="https://dus-level.com/storage/pages/tbz6ewUyr74f4gtwKDTBtAFkMWKSb2HrHkE61Tkm.mp4#t=0.2" poster="" muted loop playsinline preload="metadata"></video><span class="gvb">▶ Шоурум мережі</span></div><button type="button" class="gp" data-i="0"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Rbvct8ILIglZyhi7Z5DjpA7gy-NNkuInuuqQnz_FfrdVSehs9wzJOussp7nUnS7OOlsYDOISScunhlS3mYVcF--3YVz994YaSaVpvU2cTPIK-UU2Y7KNDZk9pPaQnq7RtwG4-C=w1000-h750" referrerpolicy="no-referrer" alt="Магазин на Зеленій, 238" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="1"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QYaE5fnzbhA0bZfWYjzwqjRe0NcowGd2aXiwh2WO4nQiKED0p3m1h_skMda_0EKzf0PghXLeuYnYCs7FBBS1g8Hj6xg1vgYDKl1D0YCBPygHUxtKNGv5qv_OnTPgY3eFqBDlCprTkKJnQ=w1000-h750" referrerpolicy="no-referrer" alt="Стенди з трубами і фітингами" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="2"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9T7Y7pxgwCSuQY82IwxDc2oKTtTOc89Etj2wcOzh5F1AlnKeVUPIFsqk4ojr9FBFtUpXdGzbrcctNIqtF6CbD3LmhkY_wqzDpGc7O95EOmpS0U6AQof2AjiExUexkzeTglNzOiv=w1000-h750" referrerpolicy="no-referrer" alt="Зал чистової сантехніки" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="3"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5rRllJUrOIVoggK4nDvX4QC5bodcHmQBvt159QaZsZlTXAHtJQcUiyNZJO3tzKeYquvvWUgLefW_4X5cClmwt7v1CFTjJAR20DKpQfIjI3XYqye1HPIcG4bXxi0Uqa6jfyi8T=w1000-h750" referrerpolicy="no-referrer" alt="Котли і бойлери" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="4"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TJORJ4zcKs1vOJmkuZg4ZSqbEen3u7U1I45i3IDNzCXtOzl8zzAfjnZ3mPH4mKtx0WRDde0H1apJeX63Hk8_6HlFjMMNT08yETJQjjh6SWJ_ZhIddsBfp2AUwVr7RuqolfTltIMpC62PQW=w1000-h750" referrerpolicy="no-referrer" alt="Raftec: труби, шланги, фітинги" loading="lazy" width="200" height="150"></button><button type="button" class="gp" data-i="5"><img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q6tPT2aAuvdxhBjQUx8-yygfH_Su_nmW_x6F_CIiGJBbUETch_M879s4Y0-N2TC8AauHLGVOP76om7Ue8GlGPKZKbDa9SEqZ6yD2kDSdT4U3o9ff2hcK6rf7tyWXtaQ-_r4JbdG9D64yGW=w1000-h750" referrerpolicy="no-referrer" alt="Очищення води Ecosoft" loading="lazy" width="200" height="150"></button></div>
       </div>
+    </div>
+    <div class="raftec card" id="raftec">
+      <div class="shop-h"><b>Викладка RAFTEC у нашому магазині</b><span>Гортайте вбік → натисніть, щоб збільшити</span></div>
+      <div class="rgal"><button type="button"><img src="https://youneedtoworkwithme.github.io/taras/photos/raftec-1.jpg" alt="Викладка RAFTEC 1" loading="lazy" width="562" height="1000"></button><button type="button"><img src="https://youneedtoworkwithme.github.io/taras/photos/raftec-2.jpg" alt="Викладка RAFTEC 2" loading="lazy" width="562" height="1000"></button><button type="button"><img src="https://youneedtoworkwithme.github.io/taras/photos/raftec-3.jpg" alt="Викладка RAFTEC 3" loading="lazy" width="562" height="1000"></button><button type="button"><img src="https://youneedtoworkwithme.github.io/taras/photos/raftec-4.jpg" alt="Викладка RAFTEC 4" loading="lazy" width="562" height="1000"></button><button type="button"><img src="https://youneedtoworkwithme.github.io/taras/photos/raftec-5.jpg" alt="Викладка RAFTEC 5" loading="lazy" width="562" height="1000"></button></div>
+      <div class="qnote" style="font-size:12.5px;color:#666;margin-top:6px">Труби PPR і PEX, фітинги Push і Compress, колектори, змішувальні вузли, обв’язка котла, крани Black/Gold/Silver. Усе можна подивитись на Зеленій, 238.</div>
     </div>
     <button type="button" class="offer" id="offerBtn">
       <span class="of-ic" aria-hidden="true">🎁</span>
@@ -595,7 +651,7 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
         <span class="vcap" id="whCap"></span>
         <button type="button" class="vsnd" id="whSnd" aria-label="Пауза або відтворення">❚❚</button></div>
       <div class="stats4 whs"><div class="stat"><b>10 тис. м²</b><span>складів</span></div><div class="stat"><b>15 тис.+</b><span>товарів</span></div><div class="stat"><b>22</b><span>центри комплектації</span></div><div class="stat"><b>20 років</b><span>на ринку</span></div></div>
-      <div class="gal" id="whGal"><button type="button" class="gp" data-g="wh" data-i="0"><img src="photos/sklad1.jpg" alt="Логістичний центр мережі" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="1"><img src="photos/sklad2.jpg" alt="Комплектація замовлень" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="2"><img src="photos/sklad3.jpg" alt="Стелажі з трубами і фітингами" loading="lazy" width="300" height="200"></button></div>
+      <div class="gal" id="whGal"><button type="button" class="gp" data-g="wh" data-i="0"><img src="https://youneedtoworkwithme.github.io/taras/photos/sklad1.jpg" alt="Логістичний центр мережі" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="1"><img src="https://youneedtoworkwithme.github.io/taras/photos/sklad2.jpg" alt="Комплектація замовлень" loading="lazy" width="300" height="200"></button><button type="button" class="gp" data-g="wh" data-i="2"><img src="https://youneedtoworkwithme.github.io/taras/photos/sklad3.jpg" alt="Стелажі з трубами і фітингами" loading="lazy" width="300" height="200"></button></div>
     </div>
     <div class="card">
       <div class="head"><div class="eyebrow">Імпортер і офіційний представник</div><h2>Виробники, з якими працюємо</h2>
