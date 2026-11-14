@@ -440,6 +440,10 @@ window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbxAJtz
 (function () {
 'use strict';
 const CF = window.CF;
+CF.CUR = 'uah';
+const _origSetCtx = CF.setCtx;
+CF.setCtx = function (g) { if (_origSetCtx) _origSetCtx(g); CF.CUR = 'uah'; if (g && g.rules) g.rules.cur = 'uah'; };
+CF.fmtUsd = function (n) { return CF.fmt(Math.round((n || 0) * (CF.FX || 45.5))); };
 const fmt = (n) => CF.fmt(n);
 const $ = (s, r) => (r || document).querySelector(s);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1075,7 +1079,7 @@ function openGame(id) {
     if (!snap.exists) { S.gameErr = 'Гру не знайдено або її видалено.'; S.g = null; render(); return; }
     const d = JSON.parse(JSON.stringify(snap.data()));
     if (S.g && S.writing && (d.seq || 0) < (S.g.seq || 0)) return;
-    d.rules = Object.assign({ roll: 30, dec: 180, timers: 1, cur: 'usd', news: 'norm', voice: 1 }, d.rules || {}); d.trades = d.trades || {}; d.ready = d.ready || {}; d.order = d.order || []; if (d.world && !d.world.tk) { d.world.tk = {}; Object.keys(CF.TK).forEach((k) => { d.world.tk[k] = 10; }); }
+    d.rules = Object.assign({ roll: 30, dec: 180, timers: 1, cur: 'uah', news: 'norm', voice: 1 }, d.rules || {}); d.trades = d.trades || {}; d.ready = d.ready || {}; d.order = d.order || []; if (d.world && !d.world.tk) { d.world.tk = {}; Object.keys(CF.TK).forEach((k) => { d.world.tk[k] = 10; }); }
     const prev = S.g; d.id = id; S.g = d; S.gameErr = null;
     resolveNames(Object.keys(d.players || {}).concat([d.hostId]));
     onState(prev);
@@ -1776,7 +1780,7 @@ function brokerHTML(p, g) {
   h += '<div class="amt"><label class="f" for="bsum">Сума, ' + (CF.CUR === 'usd' ? '$' : '₴') + '<input type="number" id="bsum" min="0" step="10" value="' + Math.max(0, Math.floor((CF.CUR === 'usd' ? p.cash / w.fx : p.cash) * .25)) + '"></label><div class="q"><button class="btn sm" data-q="0.1">10%</button><button class="btn sm" data-q="0.25">25%</button><button class="btn sm" data-q="0.5">50%</button><button class="btn sm" data-q="1">Усе</button></div><div class="muted" style="font-size:12.5px;font-weight:700">Вільно: ' + fmt(p.cash) + ' · курс ' + w.fx.toFixed(2) + ' ₴/$</div></div>';
   h += '<div class="sect"><h3>Гривня без ризику</h3><div style="display:grid;gap:8px"><div class="mkt"><div><b>ОВДП</b><div class="muted" style="font-size:12.5px">' + (w.rate - .5).toFixed(1) + '% річних, без податку</div></div><span></span><button class="btn sm pri" data-buy="bond"' + (mine ? '' : ' disabled') + '>Купити</button></div><div class="mkt"><div><b>Депозит</b><div class="muted" style="font-size:12.5px">' + (w.rate - 3).toFixed(1) + '% річних, податок 23%</div></div><span></span><button class="btn sm pri" data-buy="dep"' + (mine ? '' : ' disabled') + '>Відкрити</button></div></div></div>';
   h += '<div class="sect"><h3>Брокер і криптобіржа</h3><div style="display:grid;gap:8px">';
-  Object.keys(CF.SYM).forEach((k) => { const s = CF.SYM[k]; const hist = (w.pxHist || {})[k]; const ch = hist && hist.length > 1 ? (w.px[k] / hist[hist.length - 2] - 1) * 100 : 0; h += '<div class="mkt"><div><b>' + esc(s.n) + '</b><div class="muted" style="font-size:12.5px"><span class="num">' + (k === 'MEME' ? '$' + w.px[k].toFixed(4) : CF.fmtUsd(w.px[k])) + '</span>' + (hist && hist.length > 1 ? ' <span class="' + (ch >= 0 ? 'good' : 'bad') + '">' + (ch >= 0 ? '▲' : '▼') + Math.abs(ch).toFixed(1) + '%</span>' : '') + '</div></div>' + (hist ? spark(hist, ch >= 0 ? '#16A34A' : '#E5484D') : '<span></span>') + '<button class="btn sm pri" data-buy="' + k + '"' + (mine ? '' : ' disabled') + '>Купити</button></div>'; });
+  Object.keys(CF.SYM).forEach((k) => { const s = CF.SYM[k]; const hist = (w.pxHist || {})[k]; const ch = hist && hist.length > 1 ? (w.px[k] / hist[hist.length - 2] - 1) * 100 : 0; h += '<div class="mkt"><div><b>' + esc(s.n) + '</b><div class="muted" style="font-size:12.5px"><span class="num">' + (k === 'MEME' ? (w.px[k] * (w.fx || 45.5)).toFixed(2) + ' ₴' : CF.fmtUsd(w.px[k])) + '</span>' + (hist && hist.length > 1 ? ' <span class="' + (ch >= 0 ? 'good' : 'bad') + '">' + (ch >= 0 ? '▲' : '▼') + Math.abs(ch).toFixed(1) + '%</span>' : '') + '</div></div>' + (hist ? spark(hist, ch >= 0 ? '#16A34A' : '#E5484D') : '<span></span>') + '<button class="btn sm pri" data-buy="' + k + '"' + (mine ? '' : ' disabled') + '>Купити</button></div>'; });
   h += '</div></div><div class="note">Акції окремих компаній (AGRX, DNTK та інші) купуються й продаються тільки тоді, коли на біржі з\'являється їхня ціна — на клітинках 💼. Комісія: ETF 0,5%, крипта 1%. З прибутку — 23% податку.</div>';
   return h + '</div>';
 }
@@ -1841,7 +1845,7 @@ function settingsHTML() {
     h += '<div class="sect"><h3>Правила гри (хост)</h3><div style="display:grid;gap:10px"><div class="toggle"><div><b>Таймери</b></div><button class="sw ' + (r.timers ? 'on' : '') + '" role="switch" aria-checked="' + !!r.timers + '" aria-label="Таймери" data-rule="timers"></button></div>'
       + '<label class="f" for="r_roll">Час на кидок' + sel('r_roll', r.roll, [[15, '15 с'], [30, '30 с'], [45, '45 с'], [60, '1 хв']]) + '</label>'
       + '<label class="f" for="r_dec">Час на рішення' + sel('r_dec', r.dec, [[60, '1 хв'], [120, '2 хв'], [180, '3 хв'], [300, '5 хв']]) + '</label>'
-      + '<label class="f" for="r_cur">Показувати гроші' + sel('r_cur', r.cur, [['usd', 'у доларах'], ['uah', 'у гривнях']]) + '</label>'
+      + '<label class="f" for="r_cur">Показувати гроші' + sel('r_cur', r.cur, [['uah', 'у гривнях (₴)']]) + '</label>'
       + '<label class="f" for="r_news">Новини світу' + sel('r_news', r.news, [['rare', 'рідко'], ['norm', 'звично'], ['often', 'часто']]) + '</label>'
       + '<button class="btn pri" data-act="saveRules">Зберегти правила</button></div></div>';
     if (g.status === 'active') h += '<div class="sect"><h3>Керування</h3><div style="display:grid;gap:8px"><button class="btn" data-act="pause">' + (g.paused ? '▶ Продовжити таймер' : '⏸ Пауза для всіх') + '</button><button class="btn" data-act="skip">Пропустити хід гравця ' + esc(firstName(CF.curUid(g))) + '</button><div class="note">Банкір: натисніть на гравця у верхньому рядку, щоб дати чи забрати гроші за домашніми правилами.</div></div></div>';
