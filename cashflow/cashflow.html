@@ -1799,7 +1799,7 @@ function coursesHTML(p, g) {
     + Object.keys(SK).map((k) => meter(SK[k], p.skills[k] || 0, '#3B82F6')).join('')
     + meter('ШІ-навички', p.ai || 0, '#8B5CF6')
     + meter('Медійність', p.media || 0, '#F59E0B')
-    + meter('Держзв''язки', p.gov || 0, '#10B981')
+    + meter("Держзв'язки", p.gov || 0, '#10B981')
     + '</div></div>';
 
   h += '<div class="sect"><h3>🚀 Власна справа (за рекомендаціями)</h3><div style="display:grid;gap:8px">';
@@ -1831,14 +1831,14 @@ function lifeHTML(p, g) {
   h += '<div class="sect"><h3>Тіло й голова</h3><div style="display:grid;gap:8px">' + tog('gym', p.well.gym, 'Спортзал', 'Здоров\'я росте, стрес падає', fmt(K.GYM) + '/міс', 'well') + tog('psy', p.well.psy, 'Психотерапія', '4 сесії на місяць', fmt(K.PSY) + '/міс', 'well') + '</div></div>';
   if ((p.gigs || []).length || (p.recur || []).length) { h += '<div class="sect"><h3>Регулярне</h3><div style="display:grid;gap:8px">'; (p.gigs || []).forEach((x, i) => { h += '<div class="toggle"><div><b>' + esc(x.n) + '</b><div class="num good" style="font-size:12.5px">+' + fmt(x.a) + '/міс · стрес +' + x.s + '</div></div><button class="btn sm" data-a="quitgig" data-i="' + i + '"' + (mine ? '' : ' disabled') + '>Кинути</button></div>'; }); (p.recur || []).forEach((x, i) => { h += '<div class="toggle"><div><b>' + esc(x.n) + '</b><div class="num bad" style="font-size:12.5px">' + fmt(x.a) + '/міс</div></div><button class="btn sm" data-a="quitrecur" data-i="' + i + '"' + (mine ? '' : ' disabled') + '>Скасувати</button></div>'; }); h += '</div></div>'; }
   CF.ensureStats(p);
-  const tckTxt = p.kids >= 3 ? 'Відстрочка (3+ дітей)' : (p.tckShield > 0 ? 'Бронь: ' + p.tckShield + ' міс.' : (p.gov >= 45 ? 'Прикриття через зв''язки' : 'Без бронювання'));
+  const tckTxt = p.kids >= 3 ? 'Відстрочка (3+ дітей)' : (p.tckShield > 0 ? 'Бронь: ' + p.tckShield + ' міс.' : (p.gov >= 45 ? "Прикриття через зв'язки" : 'Без бронювання'));
   h += '<div class="sect"><h3>Вплив, медійність та ТЦК</h3><div class="meters">'
     + meter('Медійність', p.media || 0, '#F59E0B')
-    + meter('Держзв''язки', p.gov || 0, '#10B981')
+    + meter("Держзв'язки", p.gov || 0, '#10B981')
     + '</div><div class="note" style="margin-top:8px">ТЦК статус: <b>' + tckTxt + '</b> · Дітей: <b>' + p.kids + '/3</b></div>'
     + '<div style="display:grid;gap:8px;margin-top:8px">'
     + '<button class="btn sm" data-a="pr"' + (mine ? '' : ' disabled') + '>📣 Запустити PR (+14 медійності · 25 000 ₴)</button>'
-    + '<button class="btn sm" data-a="gr"' + (mine ? '' : ' disabled') + '>🏛 Зв''язки в органах (+12 · 35 000 ₴)</button>'
+    + '<button class="btn sm" data-a="gr"' + (mine ? '' : ' disabled') + ">🏛 Зв'язки в органах (+12 · 35 000 ₴)</button>"
     + '<button class="btn sm pri" data-a="shield"' + (mine ? '' : ' disabled') + '>🛡 Оформити бронювання 6 міс. (' + fmt(p.gov >= 40 ? 25000 : 45000) + ')</button>'
     + '</div></div>';
   return h + '</div>';
@@ -1870,8 +1870,8 @@ function tradesHTML() {
 function tradeComposeHTML(to) {
   const g = S.g; const me = g.players[actor()], him = g.players[to]; const cur = CF.CUR === 'usd' ? '$' : '₴';
   const list = (p, pre) => p.assets.length ? p.assets.map((a) => '<label class="chk"><input type="checkbox" data-' + pre + '="' + a.id + '">' + esc(a.n) + (a.kind === 'tk' ? ' × ' + a.qty : '') + ' <span class="muted num" style="margin-left:auto">' + fmt(CF.assetValue(a, g.world)) + '</span></label>').join('') : '<div class="muted" style="font-weight:700">Немає активів</div>';
-  return '<div class="sbody"><label class="f" for="tkind">Формат домовленості<select id="tkind"><option value="swap">🔄 Обмін активами / грошима</option><option value="partner">🤝 Спільна «точка» (частка прибутку ₴/міс)</option><option value="loan">💸 Приватна позика під %/міс</option><option value="service">🛡 Послуга впливу (зв''язки / PR / прикриття)</option></select></label>'
-    + '<div class="card" style="padding:12px;display:grid;gap:8px"><label class="f" for="tshare">Для «точки»: щомісячна частка партнеру, ₴/міс<input type="number" id="tshare" min="0" step="1000" value="0"></label><label class="f" for="tloan">Для позики: сума позики (₴) / ставка (%/міс)<div style="display:grid;grid-template-columns:1fr 90px;gap:6px"><input type="number" id="tloan" min="0" step="5000" value="0"><input type="number" id="trate" min="1" max="25" value="5"></div></label><label class="f" for="tsvc">Для послуги впливу<select id="tsvc"><option value="">— не вибрано —</option><option value="gov">Передати +12 держзв''язків (потрібно >=15)</option><option value="media">Передати +14 медійності (потрібно >=15)</option><option value="shield">Оформити партнеру бронь 4 міс. (потрібно >=25 зв''язків)</option></select></label></div>'
+  return '<div class="sbody"><label class="f" for="tkind">Формат домовленості<select id="tkind"><option value="swap">🔄 Обмін активами / грошима</option><option value="partner">🤝 Спільна «точка» (частка прибутку ₴/міс)</option><option value="loan">💸 Приватна позика під %/міс</option><option value="service">🛡 Послуга впливу (зв&#39;язки / PR / прикриття)</option></select></label>'
+    + '<div class="card" style="padding:12px;display:grid;gap:8px"><label class="f" for="tshare">Для «точки»: щомісячна частка партнеру, ₴/міс<input type="number" id="tshare" min="0" step="1000" value="0"></label><label class="f" for="tloan">Для позики: сума позики (₴) / ставка (%/міс)<div style="display:grid;grid-template-columns:1fr 90px;gap:6px"><input type="number" id="tloan" min="0" step="5000" value="0"><input type="number" id="trate" min="1" max="25" value="5"></div></label><label class="f" for="tsvc">Для послуги впливу<select id="tsvc"><option value="">— не вибрано —</option><option value="gov">Передати +12 держзв&#39;язків (потрібно >=15)</option><option value="media">Передати +14 медійності (потрібно >=15)</option><option value="shield">Оформити партнеру бронь 4 міс. (потрібно >=25 зв&#39;язків)</option></select></label></div>'
     + '<div class="sect"><h3>Ви віддаєте зараз</h3><div style="display:grid;gap:6px"><label class="f" for="tgc">Гроші, ' + cur + '<input type="number" id="tgc" min="0" value="0"></label>' + list(me, 'tg') + '</div></div>'
     + '<div class="sect"><h3>' + esc(firstName(to)) + ' віддає зараз</h3><div style="display:grid;gap:6px"><label class="f" for="trc">Гроші, ' + cur + '<input type="number" id="trc" min="0" value="0"></label>' + list(him, 'tr2') + '</div></div>'
     + '<label class="f" for="tnote">Умови домовленості словами<input type="text" id="tnote" maxlength="200" placeholder="Напр.: спільна точка 50/50 або відкат за тендер"></label>'
