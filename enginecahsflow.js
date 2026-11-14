@@ -115,6 +115,73 @@
   /* ---------- допоміжні для гравця ---------- */
   const profOf = (p) => PROF.find((x) => x.id === p.prof) || PROF[0];
   CF.profOf = profOf;
+
+  const PROF_BASE = {
+    dev:   { tech: 45, biz: 15, mkt: 15, fin: 20, neg: 20, law: 10, media: 15, gov: 12 },
+    smm:   { tech: 20, biz: 20, mkt: 50, fin: 15, neg: 30, law: 10, media: 38, gov: 10 },
+    law:   { tech:  5, biz: 20, mkt: 15, fin: 20, neg: 35, law: 50, media: 22, gov: 30 },
+    dir:   { tech: 10, biz: 42, mkt: 25, fin: 25, neg: 35, law: 15, media: 18, gov: 22 },
+    sales: { tech: 10, biz: 22, mkt: 30, fin: 15, neg: 45, law: 10, media: 16, gov: 12 },
+    acc:   { tech: 15, biz: 20, mkt:  5, fin: 48, neg: 15, law: 28, media:  8, gov: 18 },
+    doc:   { tech: 22, biz: 12, mkt: 10, fin: 12, neg: 20, law: 15, media: 12, gov: 16 },
+    nurse: { tech: 18, biz:  8, mkt: 10, fin: 10, neg: 18, law: 10, media: 10, gov: 12 },
+    plumb: { tech: 38, biz: 18, mkt: 10, fin: 12, neg: 25, law:  8, media:  8, gov: 10 },
+    truck: { tech: 32, biz: 15, mkt:  5, fin: 12, neg: 22, law: 10, media:  6, gov: 12 },
+    taxi:  { tech: 25, biz: 14, mkt: 10, fin: 10, neg: 25, law:  8, media: 10, gov:  9 },
+    teach: { tech: 15, biz: 10, mkt: 20, fin: 12, neg: 25, law: 15, media: 14, gov: 12 },
+  };
+  function ensureStats(p) {
+    if (!p) return p;
+    const b = PROF_BASE[p.prof] || { tech: 15, biz: 15, mkt: 15, fin: 15, neg: 15, law: 15, media: 10, gov: 10 };
+    if (!p.skills) p.skills = { tech: b.tech, biz: b.biz, mkt: b.mkt, fin: b.fin, neg: b.neg, law: b.law };
+    if (p.media == null) p.media = b.media;
+    if (p.gov == null) p.gov = b.gov;
+    if (!p.courses) p.courses = [];
+    if (!p.ventures) p.ventures = [];
+    if (p.tckShield == null) p.tckShield = 0;
+    if (p.fastMonths == null) p.fastMonths = 0;
+    if (!p.royalties) p.royalties = [];
+    if (p.kids > 3) p.kids = 3;
+    return p;
+  }
+  CF.ensureStats = ensureStats;
+
+  const COURSES = [
+    { id: 'c_ai', n: 'AI & Автоматизація бізнесу', sphere: 'tech', base: 24000, fit: ['dev', 'smm', 'acc', 'dir'], desc: 'Нейромережі, автоматизація процесів і зниження ризику втратити роботу.', eff: { ai: 22, tech: 18, biz: 8 }, sal: 0.10 },
+    { id: 'c_mkt', n: 'Вірусний маркетинг та PR', sphere: 'mkt', base: 22000, fit: ['smm', 'sales', 'dir', 'teach'], desc: 'Просування бренду в соцмережах. Сильно піднімає медійність (і ризик хейту).', eff: { mkt: 24, neg: 8, media: 20 }, sal: 0.06 },
+    { id: 'c_biz', n: 'Операційний менеджмент та масштабування', sphere: 'biz', base: 34000, fit: ['dir', 'sales', 'plumb', 'dev'], desc: 'Систематизація бізнесу, делегування та вихід на мережу точок.', eff: { biz: 26, fin: 10, neg: 10 }, sal: 0.08 },
+    { id: 'c_neg', n: 'Жорсткі переговори та продажі B2B', sphere: 'neg', base: 19000, fit: ['sales', 'law', 'dir', 'smm', 'taxi'], desc: 'Допомагає вибивати кращі умови, знижки та контракти.', eff: { neg: 26, mkt: 10, media: 6 }, sal: 0.08 },
+    { id: 'c_fin', n: 'Корпоративні фінанси й аудит', sphere: 'fin', base: 28000, fit: ['acc', 'dir', 'law', 'dev'], desc: 'Управління капіталом, податкова оптимізація та оцінка активів.', eff: { fin: 28, law: 10, biz: 8 }, sal: 0.07 },
+    { id: 'c_gr', n: 'Право, GR та держзакупівлі', sphere: 'law', base: 38000, fit: ['law', 'dir', 'acc', 'doc'], desc: 'Взаємодія з органами, тендери, перевірки та юридичний захист.', eff: { law: 25, gov: 22, neg: 10 }, sal: 0.05 },
+    { id: 'c_tech', n: 'Інженерія, автосервіс та діагностика', sphere: 'tech', base: 21000, fit: ['plumb', 'truck', 'taxi', 'dev'], desc: 'Прикладна технічна база для власної майстерні, СТО або логістики.', eff: { tech: 26, biz: 10 }, sal: 0.07 },
+    { id: 'c_hype', n: 'Марафон «Успішний успіх» від блогера', sphere: 'mkt', base: 15000, fit: ['smm'], desc: 'Гучна обіцянка мільйонів за тиждень. Користь сумнівна, але додає медійності.', eff: { media: 14, mkt: 5, biz: 2 }, sal: 0 },
+  ];
+  CF.COURSES = COURSES;
+  CF.courseQuote = function (p, c) {
+    ensureStats(p);
+    const isFit = c.fit.includes(p.prof);
+    const price = Math.round(c.base * (isFit ? 0.85 : 1.25) / 500) * 500;
+    const mult = isFit ? 1.25 : (c.id === 'c_hype' ? 0.5 : 0.75);
+    return { price, isFit, mult, bought: (p.courses || []).includes(c.id) };
+  };
+
+  const VENTURES = [
+    { id: 'v_it', n: 'IT-аутсорс мікростудія', req: { tech: 50, biz: 25 }, cost: 45000, cf: 34000, stress: 5, rec: 'Колеги з ринку рекомендують зібрати невелику команду під закордонні замовлення.' },
+    { id: 'v_mkt', n: 'PR та SMM-агенція повного циклу', req: { mkt: 50, neg: 30 }, cost: 35000, cf: 29000, stress: 5, rec: 'Бренди готові платити вам напряму за ведення медійності й реклами.' },
+    { id: 'v_sto', n: 'Приватна майстерня / міні-СТО', req: { tech: 48, neg: 25 }, cost: 65000, cf: 42000, stress: 6, rec: 'Постійні клієнти радять відкрити власний бокс — попит на ремонт стабільний.' },
+    { id: 'v_gr', n: 'Консалтинг з тендерів та бронювання', req: { law: 45, neg: 30 }, cost: 50000, cf: 46000, stress: 4, rec: 'Підприємці шукають фахівця, який допоможе з держтендерами та перевірками.' },
+    { id: 'v_fin', n: 'Аутсорс-бухгалтерія та фінрадник', req: { fin: 52, law: 25 }, cost: 30000, cf: 31000, stress: 4, rec: 'Малий бізнес готовий віддати вам облік і фінансове планування на абонплату.' },
+    { id: 'v_biz', n: 'Операційний консалтинг для мереж', req: { biz: 52, fin: 25 }, cost: 55000, cf: 48000, stress: 5, rec: 'Власники кав''ярень і магазинів просять налагодити їм процеси за частку прибутку.' },
+    { id: 'v_ai', n: 'ШІ-інтегратор для компаній', req: { tech: 45, mkt: 30 }, cost: 40000, cf: 44000, stress: 4, rec: 'Рекомендація від партнерів: автоматизуйте відділи продажів за допомогою ШІ.' },
+  ];
+  CF.VENTURES = VENTURES;
+  CF.ventureStatus = function (p, v) {
+    ensureStats(p);
+    const active = (p.ventures || []).includes(v.id);
+    const missing = [];
+    Object.keys(v.req).forEach((k) => { if ((p.skills[k] || 0) < v.req[k]) missing.push([k, p.skills[k] || 0, v.req[k]]); });
+    return { active, unlocked: missing.length === 0, missing };
+  };
   function L(g, text, kind, uid) { g.log = g.log || []; g.log.push({ t: Date.now(), m: g.world.m, text, kind: kind || 'info', uid: uid || null }); if (g.log.length > 90) g.log.splice(0, g.log.length - 90); }
   CF.L = L;
   const eff = (w, k) => (w.effects || []).find((e) => e.k === k);
@@ -147,18 +214,24 @@
     }
   }
   CF.assetValue = assetValue;
-  function bizMult(a, w) {
+  function bizMult(a, w, p) {
     let m = 1;
     if (eff(w, 'blackout')) { if (a.power) m *= 1.6; else if (a.solar) m *= 1.3; else if (a.offline) m *= 0.65; }
     if (eff(w, 'lockdown')) { if (a.online) m *= 1.3; else if (a.offline) m *= 0.45; }
     if (eff(w, 'grantboom') && a.offline) m *= 1.0;
+    if (p) {
+      ensureStats(p);
+      if (p.track === 'fast') m *= (1.30 + Math.min(0.60, Math.floor((p.fastMonths || 0) / 3) * 0.06));
+      if (p.media >= 35) m *= (1 + Math.min(0.25, (p.media - 30) * 0.004));
+      if (p.gov >= 40) m *= (1 + Math.min(0.15, (p.gov - 35) * 0.0025));
+    }
     return m;
   }
   function rentTax(p) { return p.emp === 'fop3' ? K.FOP3 : K.INV_TAX; }
   function assetIncome(a, w, p) {
     switch (a.kind) {
       case 're': { let r = a.rent * (eff(w, 'lockdown') ? 0.9 : 1) * (w.peace ? 1.15 : 1); return Math.round(r * (1 - rentTax(p)) - (a.maint || 0)); }
-      case 'biz': return Math.round(a.cf * bizMult(a, w));
+      case 'biz': return Math.round(a.cf * bizMult(a, w, p));
       case 'deposit': return Math.round(a.amt * a.rate / 12 * (1 - K.INV_TAX));
       case 'bond': return Math.round(a.amt * a.rate / 12);
       case 'bondusd': return Math.round(a.usd * a.rate / 12 * w.fx);
@@ -188,7 +261,10 @@
       else inc.push([(p.emp === 'emp' ? 'Зарплата (брутто)' : 'Дохід ФОП') + (p.cut && p.cut.left > 0 ? ' — знижено' : ''), s]);
     }
     if (p.partner) inc.push(['Дохід партнера (на руки)', p.partner]);
+    ensureStats(p);
     (p.gigs || []).forEach((gg) => inc.push(['Підробіток: ' + gg.n, Math.round(gg.a * (eff(w, 'digitax') ? 0.8 : 1))]));
+    (p.ventures || []).forEach((vid) => { const vn = VENTURES.find((x) => x.id === vid); if (vn) { const boost = 1 + (p.media >= 30 ? (p.media - 25) * 0.004 : 0) + (p.gov >= 35 ? (p.gov - 30) * 0.003 : 0) + (p.track === 'fast' ? 0.35 : 0); inc.push(['Власна справа: ' + vn.n, Math.round(vn.cf * boost)]); } });
+    (p.royalties || []).forEach((ry) => { if (ry.amt > 0) pas.push(['Частка в точці: ' + ry.n, ry.amt]); else exp.push(['Виплата партнеру: ' + ry.n, -ry.amt]); });
     p.assets.forEach((a) => { const v = assetIncome(a, w, p); if (v) pas.push([a.n, v, a.id]); });
     if (p.kb && p.kb.length) pas.push(['Допомога на дітей від держави', p.kb.length * K.BIRTH_M]);
     const tx = taxOf(p, w); if (tx) exp.push([p.emp === 'emp' ? 'Податки (ПДФО 18% + ВЗ 5%)' : (p.emp === 'fop3' ? 'Податки ФОП (6% + ЄСВ)' : 'Податки ФОП 2 гр. + ЄСВ'), tx]);
@@ -257,6 +333,10 @@
       kids: pr.kids, partner: pr.partner || 0, kb: [], liabs: pr.liabs.map((l) => ({ id: 'l' + uid6(), n: l[0], bal: l[1], pay: l[2], kind: l[3], apr: l[4] })),
       assets: [], ins: { dms: 0, life: 0, kasko: 0, prop: 0 }, well: { gym: 0, psy: 0 }, health: 80, stress: pr.stress, ai: pr.ai, aiRisk: pr.aiRisk,
       av: av || null, unemp: 0, cut: null, charity: 0, gigs: [], recur: [], age: pr.age, car: pr.car, cpiAt: 1, months: 0, hist: [], ftGoal: 0, won: 0, gen: 0, joined: Date.now(),
+      skills: Object.assign({}, PROF_BASE[pr.id] || { tech: 15, biz: 15, mkt: 15, fin: 15, neg: 15, law: 15 }),
+      media: (PROF_BASE[pr.id] && PROF_BASE[pr.id].media) || 10,
+      gov: (PROF_BASE[pr.id] && PROF_BASE[pr.id].gov) || 10,
+      courses: [], ventures: [], tckShield: 0, fastMonths: 0, royalties: [],
     };
   }
   CF.newPlayer = newPlayer;
@@ -291,10 +371,30 @@
     // фактичні надходження: бізнес коливається
     const st = statement(p, w);
     let actual = st.cf;
+    ensureStats(p);
+    if (p.track === 'fast') {
+      p.fastMonths = (p.fastMonths || 0) + 1;
+      if (st.passive > 0 && !p.liabs.some((l) => l.kind === 'bank' || l.kind === 'micro')) {
+        const ftBonus = Math.round(st.passive * 0.10);
+        actual += ftBonus;
+        notes.push('Велике коло: бонус масштабування капіталу +' + fmt(ftBonus));
+      }
+    }
+    if (p.tckShield > 0) p.tckShield--;
     p.assets.forEach((a) => {
       if (a.kind === 'biz' && a.vol) { const exp = assetIncome(a, w, p); const real = Math.round(exp * (1 + randn() * a.vol * 0.6)); actual += real - exp; }
       if (a.kind === 're' && a.vac > 0) { actual -= Math.round(a.rent * (1 - rentTax(p))); a.vac--; notes.push(a.n + ': немає орендаря'); }
     });
+    if (p.media >= 30 && p.assets.some((a) => a.kind === 'biz') && rnd() < 0.32) {
+      const bizSum = p.assets.filter((a) => a.kind === 'biz').reduce((s, a) => s + assetIncome(a, w, p), 0);
+      if (bizSum > 0) {
+        const goodSwing = rnd() < (0.55 + (p.gov >= 40 ? 0.1 : 0));
+        const delta = Math.round(bizSum * (goodSwing ? (0.20 + rnd() * 0.25) : -(0.20 + rnd() * 0.22)));
+        actual += delta;
+        if (goodSwing) { p.media = clamp(p.media + 3, 0, 100); notes.push('Вірусний хайп у медіа! Бізнес дав +' + fmt(delta)); }
+        else { p.media = clamp(p.media - 5, 0, 100); notes.push('Хейт / негатив у медіа: бізнес просів на ' + fmt(-delta)); }
+      }
+    }
     if (p.cut && p.cut.left > 0) { p.cut.left--; if (!p.cut.left) p.cut = null; }
     p.cash += actual;
     const pd = { m: w.m, inc: st.income, out: st.out, net: actual, cf: st.cf, notes };
@@ -814,10 +914,13 @@
 
   /* ===== ДИТИНА / БЛАГОДІЙНІСТЬ / ЗВІЛЬНЕННЯ ===== */
   deck('child', [EV('c_baby', { t: 'Поповнення в родині', draw: (c) => ({ baby: c.p.kids < 3 && c.p.age < 45 && (c.p.partner || c.p.kids) && rnd() < 0.55 }), text: (c, P) => !P.baby ? 'Хрестини у друзів, ви — хрещений. Подарунок і стіл — 5 000 ₴.' : 'У вас народилася дитина! Держава виплачує допомогу: 10 320 ₴ одразу і 860 ₴ щомісяця 3 роки. Витрати на дитину — ~5 200 ₴/міс.', rows: (c, P) => !P.baby ? [] : [['Пакунок малюка, візок, ліжечко', fmt(25000)], ['Нові витрати', fmt(c.p.base.kid) + '/міс']],
-    act: (c, P) => { if (!P.baby) return 'Витрачено 5 000 ₴ на подарунки.' + spend(c.g, c.p, 5000); c.p.kids++; c.p.kb = (c.p.kb || []).concat([36]); c.p.cash += K.BIRTH_ONCE; c.p.stress = clamp(c.p.stress + 6, 0, 100); return 'Вітаємо! Дітей: ' + c.p.kids + '.' + spend(c.g, c.p, 25000); }, tip: 'З народженням дитини варто подумати про страхування життя — це захист для родини.' })]);
+    act: (c, P) => { if (!P.baby) return 'Витрачено 5 000 ₴ на подарунки.' + spend(c.g, c.p, 5000); if (c.p.kids < 3) c.p.kids++; c.p.kb = (c.p.kb || []).concat([36]); c.p.cash += K.BIRTH_ONCE; c.p.stress = clamp(c.p.stress + 6, 0, 100); return 'Вітаємо! Дітей: ' + c.p.kids + '.' + spend(c.g, c.p, 25000); }, tip: 'З народженням дитини варто подумати про страхування життя — це захист для родини.' })]);
   deck('charity', [EV('ch_give', { t: 'Благодійність', draw: (c) => ({ amt: r100(statement(c.p, c.w).income * 0.1) }), text: 'Донат на ЗСУ або благодійний фонд — 10% місячного доходу. Добро повертається: наступні 3 ходи можна кидати 2 кубики, а стрес знизиться.', rows: (c, P) => [['10% доходу', fmt(P.amt)]], opts: (c, P) => [{ k: 'ok', label: 'Задонатити ' + fmt(P.amt), cls: 'pri' }, { k: 'pass', label: 'Не цього разу' }], def: 'pass',
-    act: (c, P, k) => { if (k === 'pass') return 'Ви не донатили цього місяця.'; c.p.charity = 3; c.p.stress = clamp(c.p.stress - 10, 0, 100); return 'Задоначено ' + fmt(P.amt) + '. 3 ходи з двома кубиками.' + spend(c.g, c.p, P.amt); }, tip: 'Благодійні внески до 4% річного доходу можна вказати в податковій знижці.' })]);
-  deck('layoff', [EV('l_cut', { t: 'Звільнення', text: (c) => c.p.emp === 'emp' ? 'Компанія скорочує штат через падіння продажів. Пошук нової роботи займе 2 місяці. Держава платить допомогу по безробіттю.' : 'Ключовий клієнт пішов. 2 місяці без доходу, поки знайдете нових. ФОП не має допомоги по безробіттю.',
+    act: (c, P, k) => { if (k === 'pass') return 'Ви не донатили цього місяця.'; ensureStats(c.p); c.p.charity = 3; c.p.stress = clamp(c.p.stress - 10, 0, 100); c.p.media = clamp(c.p.media + 4, 0, 100); c.p.gov = clamp(c.p.gov + 3, 0, 100); return 'Задоначено ' + fmt(P.amt) + '. 3 ходи з двома кубиками.' + spend(c.g, c.p, P.amt); }, tip: 'Благодійні внески до 4% річного доходу можна вказати в податковій знижці.' })]);
+  deck('layoff', [
+    EV('l_tck', { t: 'Перевірка ТЦК та бронювання', text: (c) => { ensureStats(c.p); return c.p.kids >= 3 ? 'Вас зупинили для перевірки документів, але як багатодітний батько (3 дітей) ви маєте законну відстрочку.' : (c.p.tckShield > 0 ? 'Перевірка ТЦК: у вас оформлене дійсне бронювання (' + c.p.tckShield + ' міс.), усе гаразд.' : (c.p.gov >= 45 ? 'Перевірка ТЦК: завдяки вашим зв''язкам у структурах документи оновили без затримок.' : 'Перевірка ТЦК: потрібне термінове оновлення даних / ВЛК або юридичне бронювання. Без цього можлива пауза в роботі на 1 міс.')); },
+      opts: (c) => { ensureStats(c.p); if (c.p.kids >= 3 || c.p.tckShield > 0 || c.p.gov >= 45) return [{ k: 'ok', label: 'Пройти перевірку без втрат', cls: 'pri' }]; return [{ k: 'shield', label: 'Терміновий юрсупровід та бронювання (35 000 ₴)', cls: 'pri' }, { k: 'pass', label: 'Випасти з роботи на 1 міс (ВЛК/оформлення)' }]; },
+      act: (c, P, k) => { ensureStats(c.p); if (k === 'ok') return 'Документи в порядку, без втрат.'; if (k === 'shield') { c.p.tckShield = Math.max(c.p.tckShield, 6); return 'Оформлено бронювання на 6 місяців.' + spend(c.g, c.p, 35000); } c.p.unemp = Math.max(c.p.unemp, 1); c.p.stress = clamp(c.p.stress + 8, 0, 100); return 'Пауза в роботі на 1 місяць для проходження комісії.'; } }),EV('l_cut', { t: 'Звільнення', text: (c) => c.p.emp === 'emp' ? 'Компанія скорочує штат через падіння продажів. Пошук нової роботи займе 2 місяці. Держава платить допомогу по безробіттю.' : 'Ключовий клієнт пішов. 2 місяці без доходу, поки знайдете нових. ФОП не має допомоги по безробіттю.',
     act: (c) => { if (c.p.track === 'fast') return 'Вас це не стосується.'; c.p.unemp = 2; c.p.stress = clamp(c.p.stress + 15, 0, 100); return '2 місяці без зарплати.' + (c.p.cash < statement(c.p, c.w).out * 2 ? ' Подушки безпеки замало — доведеться позичати.' : ' Подушка безпеки рятує.'); }, tip: 'Саме для таких випадків потрібна подушка безпеки.' })]);
 
   deck('pay', [EV('pay_day', { t: 'Получка', art: 'money', def: 'ok', draw: (c) => { const pd = (c.g.pay || {})[c.uid] || {}; return { net: pd.net || 0, inc: pd.inc || 0, out: pd.out || 0, n: pd.n || 0 }; },
@@ -879,7 +982,13 @@
     L(g, 'НОВИНИ · ' + n.t + '. ' + eff2, 'news');
     return n;
   }
-  deck('news', [EV('n_news', { t: 'Новини', draw: (c) => { const n = applyNews(c.g); return { t: n.t, d: n.d, e: c.w.news[c.w.news.length - 1].e }; }, view: (c, P) => ({ t: P.t, text: P.d, rows: [['Наслідки', P.e]], opts: OK }), act: () => 'Наслідки вже враховано для всіх гравців.' })]);
+  deck('news', [
+    EV('n_audit', { t: 'Перевірка податкової та органів', draw: (c) => { ensureStats(c.p); return { fine: Math.max(15000, Math.round(statement(c.p, c.w).passive * 0.45)) }; },
+      text: (c, P) => { ensureStats(c.p); return c.p.gov >= 45 ? 'Прийшла позапланова перевірка, але знайомі в органах попередили й допомогли закрити акт без штрафу.' : (c.p.skills.law >= 45 ? 'Податкова ініціювала перевірку, але ваші юридичні знання дозволили відбити 70% претензій.' : 'Позапланова перевірка через високу активність/медійність. Можливий штраф ' + fmt(P.fine) + '.'); },
+      act: (c, P) => { ensureStats(c.p); if (c.p.gov >= 45) return 'Перевірку пройдено чисто завдяки зв''язкам у держструктурах.'; const f = c.p.skills.law >= 45 ? Math.round(P.fine * 0.3) : P.fine; return 'Сплачено штраф/аудит: ' + fmt(f) + '.' + spend(c.g, c.p, f); } }),
+    EV('n_media_wave', { t: 'Медійний резонанс', draw: () => ({ up: rnd() < 0.55 }),
+      text: (c, P) => P.up ? 'Про ваш бізнес і підхід вийшов позитивний сюжет! Медійність росте, приходять нові клієнти.' : 'У мережі рознесли негативний відгук / хейт. Медійність падає, потрібна репутаційна стабілізація.',
+      act: (c, P) => { ensureStats(c.p); if (P.up) { c.p.media = clamp(c.p.media + 12, 0, 100); c.p.cash += 25000; return 'Медійність +12, додатковий прибуток +25 000 ₴.'; } c.p.media = clamp(c.p.media - 10, 0, 100); return 'Медійність -10, витрати на кризовий PR 15 000 ₴.' + spend(c.g, c.p, 15000); } }),EV('n_news', { t: 'Новини', draw: (c) => { const n = applyNews(c.g); return { t: n.t, d: n.d, e: c.w.news[c.w.news.length - 1].e }; }, view: (c, P) => ({ t: P.t, text: P.d, rows: [['Наслідки', P.e]], opts: OK }), act: () => 'Наслідки вже враховано для всіх гравців.' })]);
   DECKS.news[0].nolog = 1;
 
   /* ===== ШВИДКА ДОРІЖКА ===== */
@@ -937,6 +1046,57 @@
       case 'well': { const k = x.k; p.well[k] = p.well[k] ? 0 : 1; m = (p.well[k] ? 'Підключено: ' : 'Скасовано: ') + (k === 'gym' ? 'спортзал' : 'психотерапія') + '.'; break; }
       case 'quitgig': { p.gigs = (p.gigs || []).filter((_, i) => i !== +x.i); m = 'Підробіток припинено.'; break; }
       case 'quitrecur': { p.recur = (p.recur || []).filter((_, i) => i !== +x.i); m = 'Витрату скасовано.'; break; }
+      case 'course': {
+        ensureStats(p);
+        const c = COURSES.find((y) => y.id === x.id); if (!c) return 'Курс не знайдено.';
+        const q = CF.courseQuote(p, c);
+        if (q.bought) return 'Ви вже пройшли цей курс.';
+        if (p.cash < q.price) return 'Не вистачає готівки: потрібно ' + fmt(q.price) + '.';
+        p.cash -= q.price; p.courses.push(c.id);
+        Object.keys(c.eff).forEach((k) => {
+          const val = Math.max(1, Math.round(c.eff[k] * q.mult));
+          if (k === 'ai') p.ai = clamp((p.ai || 0) + val, 0, 100);
+          else if (k === 'media') p.media = clamp((p.media || 0) + val, 0, 100);
+          else if (k === 'gov') p.gov = clamp((p.gov || 0) + val, 0, 100);
+          else if (k in p.skills) p.skills[k] = clamp((p.skills[k] || 0) + val, 0, 100);
+        });
+        if (c.sal && p.track === 'rat') { p.sal = Math.round(p.sal * (1 + c.sal * (q.isFit ? 1 : 0.4))); }
+        m = 'Пройдено курс «' + c.n + '» (' + (q.isFit ? 'профільний максимум!' : 'загальний ефект') + ').';
+        break;
+      }
+      case 'venture': {
+        ensureStats(p);
+        const vn = VENTURES.find((y) => y.id === x.id); if (!vn) return 'Проєкт не знайдено.';
+        const st = CF.ventureStatus(p, vn);
+        if (st.active) return 'Ця власна справа вже працює.';
+        if (!st.unlocked) return 'Ще бракує навичок для рекомендації.';
+        if (p.cash < vn.cost) return 'Не вистачає стартового капіталу: ' + fmt(vn.cost) + '.';
+        p.cash -= vn.cost; p.ventures.push(vn.id); p.stress = clamp(p.stress + vn.stress, 0, 100);
+        m = 'Запущено власну справу «' + vn.n + '» (+' + fmt(vn.cf) + '/міс база).';
+        break;
+      }
+      case 'pr': {
+        ensureStats(p);
+        if (p.cash < 25000) return 'Потрібно 25 000 ₴ на PR-кампанію.';
+        p.cash -= 25000; p.media = clamp(p.media + 14, 0, 100);
+        m = 'PR-кампанія запущена: медійність +14 (зараз ' + p.media + ').';
+        break;
+      }
+      case 'gr': {
+        ensureStats(p);
+        if (p.cash < 35000) return 'Потрібно 35 000 ₴ на нетворкінг і зв''язки.';
+        p.cash -= 35000; p.gov = clamp(p.gov + 12, 0, 100);
+        m = 'Зв''язки в держструктурах +12 (зараз ' + p.gov + ').';
+        break;
+      }
+      case 'shield': {
+        ensureStats(p);
+        const cost = p.gov >= 40 ? 25000 : 45000;
+        if (p.cash < cost) return 'Потрібно ' + fmt(cost) + ' на оформлення бронювання.';
+        p.cash -= cost; p.tckShield = Math.max(p.tckShield, 6);
+        m = 'Оформлено бронювання / юрзахист на 6 міс.';
+        break;
+      }
       default: return 'Невідома дія.';
     }
     const ens = ensureCash(g, p); if (ens) m += ens;
@@ -984,10 +1144,10 @@
     if (a.liab) { const l = from.liabs.find((x) => x.id === a.liab); if (l) { from.liabs = from.liabs.filter((x) => x.id !== l.id); to.liabs.push(l); } }
     return true;
   }
-  CF.propose = function (g, from, to, give, get, note) {
+  CF.propose = function (g, from, to, give, get, note, extra) {
     if (!g.players[from] || !g.players[to] || from === to) return 'Оберіть гравця.';
     const id = 't' + uid6(); g.trades = g.trades || {};
-    g.trades[id] = { id, from, to, give: { cash: Math.max(0, Math.round(+give.cash || 0)), assets: give.assets || [] }, get: { cash: Math.max(0, Math.round(+get.cash || 0)), assets: get.assets || [] }, note: String(note || '').slice(0, 200), t: Date.now(), status: 'open' };
+    g.trades[id] = Object.assign({ id, from, to, kind: 'swap', give: { cash: Math.max(0, Math.round(+give.cash || 0)), assets: give.assets || [] }, get: { cash: Math.max(0, Math.round(+get.cash || 0)), assets: get.assets || [] }, note: String(note || '').slice(0, 200), t: Date.now(), status: 'open' }, extra || {});
     return 'Пропозицію надіслано.';
   };
   CF.tradeAnswer = function (g, uid, id, yes) {
@@ -998,10 +1158,25 @@
     if (A.cash < tr.give.cash) return 'У гравця-ініціатора вже не вистачає грошей.';
     if (B.cash < tr.get.cash) return 'Вам не вистачає грошей.';
     if (!tr.give.assets.every((id2) => A.assets.some((x) => x.id === id2)) || !tr.get.assets.every((id2) => B.assets.some((x) => x.id === id2))) return 'Частини активів уже немає — угода неможлива.';
+    ensureStats(A); ensureStats(B);
     A.cash -= tr.give.cash; B.cash += tr.give.cash; B.cash -= tr.get.cash; A.cash += tr.get.cash;
     tr.give.assets.forEach((x) => moveAsset(A, B, x)); tr.get.assets.forEach((x) => moveAsset(B, A, x));
+    if (tr.kind === 'partner' && tr.shareAmt > 0) {
+      const pn = tr.shareName || 'Спільна точка';
+      A.royalties.push({ n: pn, amt: -tr.shareAmt });
+      B.royalties.push({ n: pn, amt: tr.shareAmt });
+    } else if (tr.kind === 'loan' && tr.loanAmt > 0) {
+      const rate = Math.max(0.01, Math.min(0.25, (+tr.loanRate || 5) / 100));
+      A.cash -= tr.loanAmt; B.cash += tr.loanAmt;
+      A.assets.push({ id: 'a' + uid6(), kind: 'loanout', n: 'Позика гравцю (' + Math.round(rate * 100) + '%/міс)', amt: tr.loanAmt, rate, m: g.world.m });
+      B.liabs.push({ id: 'l' + uid6(), n: 'Приватна позика (' + Math.round(rate * 100) + '%/міс)', bal: tr.loanAmt, pay: Math.round(tr.loanAmt * rate), kind: 'priv', apr: rate * 12 });
+    } else if (tr.kind === 'service') {
+      if (tr.svc === 'gov' && A.gov >= 15) { B.gov = clamp(B.gov + 12, 0, 100); }
+      if (tr.svc === 'media' && A.media >= 15) { B.media = clamp(B.media + 14, 0, 100); }
+      if (tr.svc === 'shield' && A.gov >= 25) { B.tckShield = Math.max(B.tckShield, 4); }
+    }
     g.trades[id] = null;
-    L(g, 'Угода між гравцями укладена.' + (tr.note ? ' «' + tr.note + '»' : ''), 'good', uid);
+    L(g, 'Домовленість між гравцями укладена.' + (tr.note ? ' «' + tr.note + '»' : ''), 'good', uid);
     return 'Угоду укладено.';
   };
   /* ---------- перекличка, правила, банкір ---------- */
