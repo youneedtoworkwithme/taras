@@ -307,6 +307,187 @@ table.dt th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:v
 #board .tree-sw{transform-box:fill-box;transform-origin:50% 100%;animation:scSway 5s ease-in-out infinite alternate}
 body.static .scene *,body.static .cloud,body.static #board *{animation:none!important}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ==========================================================================
+   TITANIUM EXECUTIVE & PHOTOREALISTIC CARD MODAL THEME
+   ========================================================================== */
+:root {
+  --bg-app: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 60%, #020617 100%);
+  --sheet-bg: rgba(15, 23, 42, 0.94);
+  --sheet-border: rgba(255, 255, 255, 0.14);
+  --glass-top: rgba(15, 23, 42, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body, #app {
+  background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 60%, #020617 100%) !important;
+  color: #f8fafc !important;
+}
+
+.top, .bottom {
+  background: var(--glass-top) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-color: var(--glass-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.ib, .pchip {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #f8fafc !important;
+}
+
+.sheet {
+  background: var(--sheet-bg) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid var(--sheet-border) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 32px 80px -16px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+  color: #f1f5f9 !important;
+  overflow: hidden !important;
+}
+
+.shead {
+  background: rgba(15, 23, 42, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+}
+
+.sbody {
+  color: #e2e8f0 !important;
+}
+
+.sbody p {
+  color: #cbd5e1 !important;
+  font-size: 14.5px !important;
+  line-height: 1.55 !important;
+}
+
+.card-media-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #090d16;
+}
+
+.card-bg-video, .card-bg-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%) scale(1.02);
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  filter: brightness(0.9) contrast(1.05);
+}
+
+.card-media-wrap:hover .card-bg-video,
+.card-media-wrap:hover .card-bg-img {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.card-video-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(9, 13, 22, 0.15) 0%, rgba(9, 13, 22, 0.5) 50%, rgba(15, 23, 42, 0.98) 100%);
+  pointer-events: none;
+}
+
+.card-live-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.card-live-badge .live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: liveDotPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
+.card-svg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0.3;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.card-svg-layer svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rows {
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 16px !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  overflow: hidden !important;
+}
+
+.rows div {
+  background: rgba(15, 23, 42, 0.5) !important;
+  color: #94a3b8 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 10px 14px !important;
+}
+
+.rows div:nth-child(even) {
+  background: rgba(30, 41, 59, 0.55) !important;
+}
+
+.rows span:last-child {
+  color: #f8fafc !important;
+  font-weight: 700 !important;
+}
+
+.btn.pri {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4) !important;
+  color: #fff !important;
+}
+
+.btn.go {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4) !important;
+  color: #fff !important;
+}
 </style>
 </head>
 <body>
@@ -1392,6 +1573,158 @@ function renderBanner() {
 
 /* ---------- картка ---------- */
 function openCard() { S.sheet = 'card'; renderCard(true); }
+
+/* ==========================================================================
+   РЕАЛІСТИЧНІ ВІДЕОФОНИ ТА МЕДІА КАРТОК
+   ========================================================================== */
+const CARD_REALISTIC_MEDIA = {
+  garage: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-mechanic-working-underneath-a-car-41656-large.mp4',
+    local: 'assets/videos/garage.mp4',
+    poster: 'https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1000&q=80',
+    label: 'Автосервіс · Ремонтна зона & СТО'
+  },
+  wash: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-car-going-through-a-car-wash-34676-large.mp4',
+    local: 'assets/videos/wash.mp4',
+    poster: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=1000&q=80',
+    label: 'Автомийка самообслуговування'
+  },
+  charge: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-electric-car-charging-at-a-station-43229-large.mp4',
+    local: 'assets/videos/charge.mp4',
+    poster: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1000&q=80',
+    label: 'Зарядна станція EV & Енергетика'
+  },
+  flat: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-and-buildings-4623-large.mp4',
+    local: 'assets/videos/flat.mp4',
+    poster: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80',
+    label: 'Житловий комплекс · Нерухомість'
+  },
+  build: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-construction-site-with-cranes-and-workers-43301-large.mp4',
+    local: 'assets/videos/build.mp4',
+    poster: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1000&q=80',
+    label: 'Будівельний майданчик · Новобудова'
+  },
+  cottage: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-modern-suburban-houses-in-a-residential-area-43307-large.mp4',
+    local: 'assets/videos/cottage.mp4',
+    poster: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1000&q=80',
+    label: 'Приватний будинок & Котедж'
+  },
+  warehouse: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-packages-moving-on-a-conveyor-belt-in-a-warehouse-43312-large.mp4',
+    local: 'assets/videos/warehouse.mp4',
+    poster: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80',
+    label: 'Логістичний склад класу B'
+  },
+  shopfront: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-people-walking-in-a-busy-commercial-street-43309-large.mp4',
+    local: 'assets/videos/shopfront.mp4',
+    poster: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=80',
+    label: 'Комерційне приміщення · Торгівля'
+  },
+  cafe: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-barista-making-coffee-in-a-coffee-machine-42415-large.mp4',
+    local: 'assets/videos/cafe.mp4',
+    poster: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1000&q=80',
+    label: 'Кав\'ярня & Франшиза'
+  },
+  solar: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-solar-panels-in-a-field-42475-large.mp4',
+    local: 'assets/videos/solar.mp4',
+    poster: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1000&q=80',
+    label: 'Сонячна електростанція 50 кВт'
+  },
+  factory: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-drone-flying-over-a-city-43285-large.mp4',
+    local: 'assets/videos/factory.mp4',
+    poster: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80',
+    label: 'Виробництво FPV-дронів & 3D'
+  },
+  laundry: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-washing-machines-running-in-a-laundromat-43315-large.mp4',
+    local: 'assets/videos/laundry.mp4',
+    poster: 'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=1000&q=80',
+    label: 'Пральня самообслуговування'
+  },
+  exchange: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-financial-charts-and-graphs-on-a-screen-42398-large.mp4',
+    local: 'assets/videos/exchange.mp4',
+    poster: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1000&q=80',
+    label: 'Фінансова біржа · Трейдинг & S&P'
+  },
+  ai: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-server-room-with-blinking-lights-42511-large.mp4',
+    local: 'assets/videos/ai.mp4',
+    poster: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1000&q=80',
+    label: 'Дата-центр · ШІ-кластер'
+  },
+  office: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-modern-office-space-with-desks-and-computers-43318-large.mp4',
+    local: 'assets/videos/office.mp4',
+    poster: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=80',
+    label: 'Головний офіс & IT-бізнес'
+  },
+  money: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-hands-counting-money-42456-large.mp4',
+    local: 'assets/videos/money.mp4',
+    poster: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1000&q=80',
+    label: 'Получка · Грошовий потік'
+  },
+  city: {
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-and-buildings-4623-large.mp4',
+    local: 'assets/videos/city.mp4',
+    poster: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=80',
+    label: 'Діловий центр міста'
+  }
+};
+
+function realisticMediaFor(v, scn) {
+  const id = (v && v.id) || '';
+  let sk = 'city';
+  if (id === 'd_vac') sk = 'mountains';
+  else if (v.deck === 'dream') sk = 'beach';
+  else if (id === 'choose') sk = 'city';
+  else if (v.deck === 'pay' || v.deck === 'luck') sk = 'money';
+  else if (v.art === 'tk' || /^s_(spx|ai_|gold|btc|eth|meme)|^m_(bump|split|bust|crypto|fxjump)/.test(id)) sk = 'exchange';
+  else if (/^(s_ovdp|s_usdbond|s_dep|s_friend|m_friend)/.test(id)) sk = 'bankhall';
+  else if (/^(b_sto|s_tools|d_car_repair|d_tires|d_pothole)/.test(id)) sk = 'garage';
+  else if (/^b_wash/.test(id)) sk = 'wash';
+  else if (/^(s_ev|s_gen|d_fuel)/.test(id)) sk = 'charge';
+  else if (/^(s_vend|s_kiosk|b_coffee|b_vend6|b_pizza|m_compet|d_latte)/.test(id)) sk = 'cafe';
+  else if (/^b_santeh/.test(id)) sk = 'shopfront';
+  else if (/^(b_solar|f_ses)/.test(id)) sk = 'solar';
+  else if (/^(b_fpv|s_3d|f_drone)/.test(id)) sk = 'factory';
+  else if (/^b_laundry/.test(id)) sk = 'laundry';
+  else if (/^(b_house)/.test(id)) sk = 'cottage';
+  else if (/^(s_land|m_land|f_agro)/.test(id)) sk = 'cottage';
+  else if (/^(s_garage|s_park|m_garage)/.test(id)) sk = 'garage';
+  else if (/^(s_newbuild|m_nb)/.test(id)) sk = 'build';
+  else if (/^(b_sklad|f_wh)/.test(id)) sk = 'warehouse';
+  else if (/^(b_comm|m_comm|f_mall)/.test(id)) sk = 'shopfront';
+  else if (/^(s_smart|s_stryi|b_flat|b_dohid|m_flat|m_tenant|m_rentup|m_osbb|m_missile|f_rebuild|f_hotel)/.test(id)) sk = 'flat';
+  else if (v.deck === 'ai' || /^b_aischool/.test(id)) sk = 'ai';
+  else if (/^(s_prom|s_tg|m_biz|u_bonus|u_raise|u_client|fr_|g_gig)/.test(id) || v.deck === 'gig') sk = 'office';
+  else {
+    const BYDECK = { health: 'clinic', psy: 'family', child: 'family', news: 'office', ftnews: 'office', spend: 'street', charity: 'office', layoff: 'office', ftrisk: 'office', market: 'city', small: 'city', big: 'city', ftdeal: 'flat' };
+    if (BYDECK[v.deck]) sk = BYDECK[v.deck];
+  }
+
+  const m = CARD_REALISTIC_MEDIA[sk] || CARD_REALISTIC_MEDIA.city;
+  return '<div class="art sc card-media-wrap" data-scene="' + sk + '">'
+    + '<video class="card-bg-video" autoplay loop muted playsinline preload="auto" poster="' + m.poster + '" oncanplay="this.classList.add(\'playing\')">'
+    + '<source src="' + m.local + '" type="video/mp4">'
+    + '<source src="' + m.video + '" type="video/mp4">'
+    + '</video>'
+    + '<img class="card-bg-img" src="' + m.poster + '" alt="' + (v && v.t ? esc(v.t) : '') + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;" />'
+    + '<div class="card-video-gradient"></div>'
+    + '<div class="card-live-badge"><span class="live-dot"></span> НАЖИВО · ' + m.label + '</div>'
+    + '<div class="card-svg-layer">' + (scn || '') + '</div>'
+    + '</div>';
+}
 function renderCard(force) {
   const g = S.g; if (!g) return; const v = g.pending ? CF.view(g) : null;
   if (!v) { if (S.sheet === 'card') closeAll(); return; }
@@ -1399,7 +1732,7 @@ function renderCard(force) {
   const visible = decide || offerMe || v.pub || !v.priv || g.local;
   const col = { pay: '#16A34A', luck: '#65A30D', small: '#2D8CFF', big: '#2D8CFF', choose: '#2D8CFF', market: '#16A34A', spend: '#F08A24', health: '#E5484D', psy: '#E0409A', gig: '#8B5CF6', ai: '#7B61FF', child: '#E0409A', charity: '#B07A00', layoff: '#6B5A3A', news: '#B07A00', ftdeal: '#2D8CFF', ftrisk: '#E5484D', ftnews: '#B07A00', dream: '#B07A00' }[v.deck] || '#2D8CFF';
   const DN = { pay: 'Получка', luck: 'Удача', small: 'Мала угода', big: 'Велика угода', choose: 'Можливість', market: 'Ринок', spend: 'Витрата', health: 'Здоров\'я', psy: 'Психологія', gig: 'Підробіток', ai: 'Штучний інтелект', child: 'Родина', charity: 'Благодійність', layoff: 'Робота', news: 'Новини', ftdeal: 'Швидка доріжка', ftrisk: 'Ризик', ftnews: 'Новини', dream: 'Мрія' };
-  const scn = sceneFor(v); let h = '<div class="art' + (scn ? ' sc' : '') + '">' + (scn || artFor(v)) + '</div>' + head('<span class="kicker" style="color:' + col + ';display:block">' + esc(v.tk ? 'Біржа' : (DN[v.deck] || 'Подія')) + ' · ' + esc(firstName(g.pending.owner || CF.curUid(g))) + '</span>' + esc(visible ? v.t : 'Угода'));
+  const scn = sceneFor(v); let h = realisticMediaFor(v, scn) + head('<span class="kicker" style="color:' + col + ';display:block">' + esc(v.tk ? 'Біржа' : (DN[v.deck] || 'Подія')) + ' · ' + esc(firstName(g.pending.owner || CF.curUid(g))) + '</span>' + esc(visible ? v.t : 'Угода'));
   h += '<div class="sbody">';
   if (!visible) h += '<p>' + esc(firstName(g.pending.owner)) + ' розглядає можливість. Подробиці бачить тільки він — якщо захоче, запропонує її вам.</p>';
   else {
