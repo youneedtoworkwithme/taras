@@ -1259,7 +1259,7 @@ function tickLoop() {
   const acting = isMyTurn() || iDecide();
   if (acting && left > 0) {
     const fast = sec <= 10; const iv = fast ? 500 : 1000;
-    if (now - S.lastTick >= iv - 20) { S.lastTick = now; SND.tick(fast); }
+    if (isMyTurn() && now - S.lastTick >= iv - 20) { S.lastTick = now; SND.tick(fast); }
     [60, 30, 10].forEach((w) => { if (sec <= w && sec > w - 2 && !S.warned[w] && total > w * 1000 + 2000) { S.warned[w] = 1; SND.warn(w); toast(w === 60 ? 'Залишилась 1 хвилина' : 'Залишилось ' + w + ' секунд', w === 10 ? 'bad' : '', 2200); } });
   }
   if (left <= 0 && S.autoFired !== dl) {
