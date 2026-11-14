@@ -1713,7 +1713,7 @@ function openMenu() {
   const it = (k, ic, t, sub, extra) => '<button class="mi" data-sheet="' + k + '"><span class="ic">' + ic + '</span><span>' + t + (sub ? '<span class="sub">' + sub + '</span>' : '') + '</span>' + (extra || '') + '</button>';
   const d = document.createElement('div'); d.className = 'drawer'; d.id = 'drawer';
   d.innerHTML = '<nav aria-label="Меню гри"><div class="blogo" style="font-size:20px;padding:4px 12px 10px">CASH<b>FLOW</b> <i>UA</i></div>'
-    + '<div class="mhd">Я</div>' + it('fin', '📊', 'Мої фінанси', 'доходи, витрати, стан') + it('assets', '🏠', 'Активи й борги', 'продати, погасити') + it('diary', '📔', 'Щоденник', 'ціни, новини, нотатки')
+    + '<div class="mhd">Я</div>' + it('fin', '📊', 'Мої фінанси', 'доходи, витрати, стан') + it('assets', '🏠', 'Активи й борги', 'продати, погасити') + it('courses', '🎓', 'Курси та Власна справа', 'навчання, навички, рекомендації') + it('diary', '📔', 'Щоденник', 'ціни, новини, нотатки')
     + '<div class="mhd">Гроші</div>' + it('broker', '📈', 'Біржа й крипта', 'ETF, біткоїн, ОВДП, депозит') + it('bank', '🏦', 'Банк', 'кредити') + it('life', '🛡️', 'Страхування й здоров\'я', 'ДМС, спорт, психолог')
     + '<div class="mhd">Гравці</div>' + it('players', '👥', 'Гравці', 'натисніть, щоб побачити статки') + it('trades', '🤝', 'Угоди з гравцями', 'обмін грошима й активами', inTr ? '<span class="pill b" style="margin-left:auto">' + inTr + '</span>' : '') + it('log', '🗒️', 'Журнал подій')
     + '<div class="mhd">Гра</div>' + it('rules', '📘', 'Правила гри') + it('settings', '⚙️', isHost() ? 'Налаштування (хост)' : 'Налаштування', isHost() ? 'таймери, валюта, банкір' : 'звук і озвучка')
@@ -1729,10 +1729,10 @@ function refreshSheet(force) {
   if (!force && ['trade', 'diary', 'settings'].includes(k)) return;
   const m = $('#scrim'); if (m && !force && m.contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
   const g = S.g; const uid = actor(); const p = g.players[uid];
-  const F = { fin: () => finHTML(p, g), assets: () => assetsHTML(p, g), broker: () => brokerHTML(p, g), bank: () => bankHTML(p, g), life: () => lifeHTML(p, g), diary: () => diaryHTML(), players: () => playersHTML(), player: () => playerHTML(S.sheetArg), trades: () => tradesHTML(), trade: () => tradeComposeHTML(S.sheetArg), log: () => logHTML(), rules: () => rulesFull(), rulesFull: () => rulesFull() + (S.g && S.g.local && S.g.status === 'lobby' ? '<div class="sbody"><button class="btn go main" data-act="localStart">Почати гру</button></div>' : ''), settings: () => settingsHTML() };
-  const TT = { fin: 'Мої фінанси', assets: 'Активи й борги', broker: 'Біржа й крипта', bank: 'Банк', life: 'Страхування й здоров\'я', diary: 'Щоденник', players: 'Гравці', player: esc(nameOf(S.sheetArg)), trades: 'Угоди з гравцями', trade: 'Нова пропозиція', log: 'Журнал подій', rules: 'Повні правила', rulesFull: 'Повні правила', settings: 'Налаштування' };
+  const F = { fin: () => finHTML(p, g), assets: () => assetsHTML(p, g), broker: () => brokerHTML(p, g), bank: () => bankHTML(p, g), life: () => lifeHTML(p, g), courses: () => coursesHTML(p, g), diary: () => diaryHTML(), players: () => playersHTML(), player: () => playerHTML(S.sheetArg), trades: () => tradesHTML(), trade: () => tradeComposeHTML(S.sheetArg), log: () => logHTML(), rules: () => rulesFull(), rulesFull: () => rulesFull() + (S.g && S.g.local && S.g.status === 'lobby' ? '<div class="sbody"><button class="btn go main" data-act="localStart">Почати гру</button></div>' : ''), settings: () => settingsHTML() };
+  const TT = { fin: 'Мої фінанси', assets: 'Активи й борги', broker: 'Біржа й крипта', bank: 'Банк', life: 'Вплив, ТЦК та здоров\'я', courses: 'Курси та Власна справа', diary: 'Щоденник', players: 'Гравці', player: esc(nameOf(S.sheetArg)), trades: 'Угоди з гравцями', trade: 'Нова пропозиція', log: 'Журнал подій', rules: 'Повні правила', rulesFull: 'Повні правила', settings: 'Налаштування' };
   if (!F[k]) return;
-  if (!p && ['fin', 'assets', 'broker', 'bank', 'life'].includes(k)) { modal(head(TT[k], true) + '<div class="sbody"><div class="note">Ви ще не в грі.</div></div>', k); return; }
+  if (!p && ['fin', 'assets', 'broker', 'bank', 'life', 'courses'].includes(k)) { modal(head(TT[k], true) + '<div class="sbody"><div class="note">Ви ще не в грі.</div></div>', k); return; }
   modal(head(TT[k], k !== 'player' && k !== 'trade') + F[k](), k);
   if (k === 'diary') { const ta = $('#dnotes'); if (ta) ta.addEventListener('input', () => { S.diary.notes = ta.value; S.diaryDirty = true; saveDiary(); }); }
 }
@@ -1790,6 +1790,39 @@ function bankHTML(p, g) {
     + '<div class="amt"><label class="f" for="lsum">Кредит готівкою, ' + (CF.CUR === 'usd' ? '$' : '₴') + '<input type="number" id="lsum" min="0" step="' + (CF.CUR === 'usd' ? 100 : 5000) + '" value="' + Math.round((CF.CUR === 'usd' ? Math.min(avail, 50000) / g.world.fx : Math.min(avail, 50000))) + '"></label><div class="muted" style="font-size:12.5px;font-weight:700">48% річних — щомісяця платите 4% від суми, поки не погасите.</div><button class="btn pri" data-act="loan"' + (mine && avail >= 5000 ? '' : ' disabled') + '>Взяти кредит</button></div>'
     + '<div class="note">Якщо гроші закінчаться, а ліміт вичерпано, — мікрокредит під 15% на місяць. Понад 300 000 ₴ мікрокредитів — банкрутство.</div>' + debtsHTML(p) + '</div>';
 }
+function coursesHTML(p, g) {
+  CF.ensureStats(p);
+  const mine = isMyTurn();
+  const SK = { tech: 'Техніка/IT', biz: 'Бізнес', mkt: 'Маркетинг', fin: 'Фінанси', neg: 'Переговори', law: 'Право/GR' };
+  let h = '<div class="sbody">' + (mine ? '' : '<div class="note">Купувати курси та запускати власну справу можна у свій хід.</div>');
+  h += '<div class="sect"><h3>Ваші навички та вплив</h3><div class="meters">'
+    + Object.keys(SK).map((k) => meter(SK[k], p.skills[k] || 0, '#3B82F6')).join('')
+    + meter('ШІ-навички', p.ai || 0, '#8B5CF6')
+    + meter('Медійність', p.media || 0, '#F59E0B')
+    + meter('Держзв''язки', p.gov || 0, '#10B981')
+    + '</div></div>';
+
+  h += '<div class="sect"><h3>🚀 Власна справа (за рекомендаціями)</h3><div style="display:grid;gap:8px">';
+  (CF.VENTURES || []).forEach((v) => {
+    const st = CF.ventureStatus(p, v);
+    const reqTxt = Object.keys(v.req).map((k) => (SK[k] || k) + ' ' + (p.skills[k] || 0) + '/' + v.req[k]).join(' · ');
+    h += '<div class="asset"><div class="h"><span>' + esc(v.n) + '</span><span class="num good">+' + fmt(v.cf) + '/міс</span></div>'
+      + '<div class="muted" style="font-size:12.5px">' + esc(v.rec) + '</div>'
+      + '<div class="s"><span>Внесок: <b>' + fmt(v.cost) + '</b></span><span>' + reqTxt + '</span></div>'
+      + '<div class="a">' + (st.active ? '<span class="pill g">✓ Працює</span>' : (st.unlocked ? '<button class="btn sm go" data-a="venture" data-id="' + v.id + '"' + (mine ? '' : ' disabled') + '>Запустити справу</button>' : '<span class="pill">Потрібні навички</span>')) + '</div></div>';
+  });
+  h += '</div></div>';
+
+  h += '<div class="sect"><h3>🎓 Курси та освіта (ціна й користь залежать від сфери)</h3><div style="display:grid;gap:8px">';
+  (CF.COURSES || []).forEach((c) => {
+    const q = CF.courseQuote(p, c);
+    h += '<div class="asset"><div class="h"><span>' + esc(c.n) + '</span><span class="num">' + fmt(q.price) + '</span></div>'
+      + '<div class="muted" style="font-size:12.5px">' + esc(c.desc) + '</div>'
+      + '<div class="s"><span class="tag">' + (q.isFit ? '★ Профільний максимум' : 'Інша сфера') + '</span><span>' + (c.sal ? 'Зарплата +' + Math.round(c.sal * (q.isFit ? 100 : 40)) + '%' : 'Навички/вплив') + '</span></div>'
+      + '<div class="a">' + (q.bought ? '<span class="pill g">✓ Пройдено</span>' : '<button class="btn sm pri" data-a="course" data-id="' + c.id + '"' + (mine ? '' : ' disabled') + '>Купити курс</button>') + '</div></div>';
+  });
+  return h + '</div></div></div>';
+}
 function lifeHTML(p, g) {
   const mine = isMyTurn(); const K = CF.K; const propV = p.assets.filter((a) => a.kind === 're').reduce((s, a) => s + CF.assetValue(a, g.world), 0);
   const tog = (k, on, n, d, price, kind) => '<div class="toggle"><div><b>' + n + '</b><div class="muted" style="font-size:12.5px;font-weight:600">' + d + '</div><div class="num" style="font-size:12.5px">' + price + '</div></div><button class="sw ' + (on ? 'on' : '') + '" role="switch" aria-checked="' + (on ? 'true' : 'false') + '" aria-label="' + esc(n) + '" data-' + kind + '="' + k + '"' + (mine ? '' : ' disabled') + '></button></div>';
@@ -1797,6 +1830,17 @@ function lifeHTML(p, g) {
   h += '<div class="sect"><h3>Страхування</h3><div style="display:grid;gap:8px">' + tog('dms', p.ins.dms, 'ДМС', 'Покриває 80% лікування, 50% стоматології', fmt(K.DMS) + '/міс', 'ins') + tog('life', p.ins.life, 'Страхування життя', 'Виплата при критичній хворобі й травмі', fmt(K.LIFE) + '/міс', 'ins') + (p.car ? tog('kasko', p.ins.kasko, 'КАСКО', 'Ремонт авто після ям і ДТП', fmt(K.KASKO) + '/міс', 'ins') : '') + tog('prop', p.ins.prop, 'Майно з воєнними ризиками', 'Ремонт після обстрілів', propV ? fmt(propV * K.PROP) + '/міс' : 'поки 0 — немає нерухомості', 'ins') + '</div></div>';
   h += '<div class="sect"><h3>Тіло й голова</h3><div style="display:grid;gap:8px">' + tog('gym', p.well.gym, 'Спортзал', 'Здоров\'я росте, стрес падає', fmt(K.GYM) + '/міс', 'well') + tog('psy', p.well.psy, 'Психотерапія', '4 сесії на місяць', fmt(K.PSY) + '/міс', 'well') + '</div></div>';
   if ((p.gigs || []).length || (p.recur || []).length) { h += '<div class="sect"><h3>Регулярне</h3><div style="display:grid;gap:8px">'; (p.gigs || []).forEach((x, i) => { h += '<div class="toggle"><div><b>' + esc(x.n) + '</b><div class="num good" style="font-size:12.5px">+' + fmt(x.a) + '/міс · стрес +' + x.s + '</div></div><button class="btn sm" data-a="quitgig" data-i="' + i + '"' + (mine ? '' : ' disabled') + '>Кинути</button></div>'; }); (p.recur || []).forEach((x, i) => { h += '<div class="toggle"><div><b>' + esc(x.n) + '</b><div class="num bad" style="font-size:12.5px">' + fmt(x.a) + '/міс</div></div><button class="btn sm" data-a="quitrecur" data-i="' + i + '"' + (mine ? '' : ' disabled') + '>Скасувати</button></div>'; }); h += '</div></div>'; }
+  CF.ensureStats(p);
+  const tckTxt = p.kids >= 3 ? 'Відстрочка (3+ дітей)' : (p.tckShield > 0 ? 'Бронь: ' + p.tckShield + ' міс.' : (p.gov >= 45 ? 'Прикриття через зв''язки' : 'Без бронювання'));
+  h += '<div class="sect"><h3>Вплив, медійність та ТЦК</h3><div class="meters">'
+    + meter('Медійність', p.media || 0, '#F59E0B')
+    + meter('Держзв''язки', p.gov || 0, '#10B981')
+    + '</div><div class="note" style="margin-top:8px">ТЦК статус: <b>' + tckTxt + '</b> · Дітей: <b>' + p.kids + '/3</b></div>'
+    + '<div style="display:grid;gap:8px;margin-top:8px">'
+    + '<button class="btn sm" data-a="pr"' + (mine ? '' : ' disabled') + '>📣 Запустити PR (+14 медійності · 25 000 ₴)</button>'
+    + '<button class="btn sm" data-a="gr"' + (mine ? '' : ' disabled') + '>🏛 Зв''язки в органах (+12 · 35 000 ₴)</button>'
+    + '<button class="btn sm pri" data-a="shield"' + (mine ? '' : ' disabled') + '>🛡 Оформити бронювання 6 міс. (' + fmt(p.gov >= 40 ? 25000 : 45000) + ')</button>'
+    + '</div></div>';
   return h + '</div>';
 }
 function playersHTML() {
@@ -1826,7 +1870,12 @@ function tradesHTML() {
 function tradeComposeHTML(to) {
   const g = S.g; const me = g.players[actor()], him = g.players[to]; const cur = CF.CUR === 'usd' ? '$' : '₴';
   const list = (p, pre) => p.assets.length ? p.assets.map((a) => '<label class="chk"><input type="checkbox" data-' + pre + '="' + a.id + '">' + esc(a.n) + (a.kind === 'tk' ? ' × ' + a.qty : '') + ' <span class="muted num" style="margin-left:auto">' + fmt(CF.assetValue(a, g.world)) + '</span></label>').join('') : '<div class="muted" style="font-weight:700">Немає активів</div>';
-  return '<div class="sbody"><div class="sect"><h3>Ви віддаєте</h3><div style="display:grid;gap:6px"><label class="f" for="tgc">Гроші, ' + cur + '<input type="number" id="tgc" min="0" value="0"></label>' + list(me, 'tg') + '</div></div><div class="sect"><h3>' + esc(firstName(to)) + ' віддає</h3><div style="display:grid;gap:6px"><label class="f" for="trc">Гроші, ' + cur + '<input type="number" id="trc" min="0" value="0"></label>' + list(him, 'tr2') + '</div></div><label class="f" for="tnote">Умови словами (необов\'язково)<input type="text" id="tnote" maxlength="200" placeholder="Напр.: позика на 3 місяці, поверну $1 200"></label><button class="btn pri main" data-propose="' + esc(to) + '">Надіслати пропозицію</button></div>';
+  return '<div class="sbody"><label class="f" for="tkind">Формат домовленості<select id="tkind"><option value="swap">🔄 Обмін активами / грошима</option><option value="partner">🤝 Спільна «точка» (частка прибутку ₴/міс)</option><option value="loan">💸 Приватна позика під %/міс</option><option value="service">🛡 Послуга впливу (зв''язки / PR / прикриття)</option></select></label>'
+    + '<div class="card" style="padding:12px;display:grid;gap:8px"><label class="f" for="tshare">Для «точки»: щомісячна частка партнеру, ₴/міс<input type="number" id="tshare" min="0" step="1000" value="0"></label><label class="f" for="tloan">Для позики: сума позики (₴) / ставка (%/міс)<div style="display:grid;grid-template-columns:1fr 90px;gap:6px"><input type="number" id="tloan" min="0" step="5000" value="0"><input type="number" id="trate" min="1" max="25" value="5"></div></label><label class="f" for="tsvc">Для послуги впливу<select id="tsvc"><option value="">— не вибрано —</option><option value="gov">Передати +12 держзв''язків (потрібно >=15)</option><option value="media">Передати +14 медійності (потрібно >=15)</option><option value="shield">Оформити партнеру бронь 4 міс. (потрібно >=25 зв''язків)</option></select></label></div>'
+    + '<div class="sect"><h3>Ви віддаєте зараз</h3><div style="display:grid;gap:6px"><label class="f" for="tgc">Гроші, ' + cur + '<input type="number" id="tgc" min="0" value="0"></label>' + list(me, 'tg') + '</div></div>'
+    + '<div class="sect"><h3>' + esc(firstName(to)) + ' віддає зараз</h3><div style="display:grid;gap:6px"><label class="f" for="trc">Гроші, ' + cur + '<input type="number" id="trc" min="0" value="0"></label>' + list(him, 'tr2') + '</div></div>'
+    + '<label class="f" for="tnote">Умови домовленості словами<input type="text" id="tnote" maxlength="200" placeholder="Напр.: спільна точка 50/50 або відкат за тендер"></label>'
+    + '<button class="btn pri main" data-propose="' + esc(to) + '">Надіслати пропозицію</button></div>';
 }
 function logHTML() {
   const g = S.g; const L = (g.log || []).slice().reverse().slice(0, 80);
@@ -1916,7 +1965,9 @@ document.addEventListener('click', (e) => {
     const give = { cash: (+($('#tgc').value) || 0) * k, assets: [...document.querySelectorAll('[data-tg]:checked')].map((x) => x.dataset.tg) };
     const get = { cash: (+($('#trc').value) || 0) * k, assets: [...document.querySelectorAll('[data-tr2]:checked')].map((x) => x.dataset.tr2) };
     const note = $('#tnote').value; const to = d.propose; const uid = actor();
-    commit((g) => { toast(esc(CF.propose(g, uid, to, give, get, note)), 'good'); }); openSheet('trades'); return;
+    const kind = $('#tkind') ? $('#tkind').value : 'swap';
+    const extra = { kind, shareAmt: +($('#tshare') ? $('#tshare').value : 0), shareName: note || 'Спільна точка', loanAmt: +($('#tloan') ? $('#tloan').value : 0), loanRate: +($('#trate') ? $('#trate').value : 5), svc: $('#tsvc') ? $('#tsvc').value : '' };
+    commit((g) => { toast(esc(CF.propose(g, uid, to, give, get, note, extra)), 'good'); }); openSheet('trades'); return;
   }
   if (d.adj) { const k = CF.CUR === 'usd' ? S.g.world.fx : 1; const v = (+($('#adjv').value) || 0) * k; const n = $('#adjn').value; commit((g) => { CF.adjust(g, d.adj, v, n); }); toast('Готово', 'good'); return; }
   if (d.cq) { const el = $('#cinp'); const v = CF.view(S.g); if (el && v && v.input) { const mx = +el.max; const st = +el.step || 1; el.value = Math.floor(mx * +d.cq / st) * st; const r = $('#crng'); if (r) r.value = el.value; el.dispatchEvent(new Event('input')); } return; }
