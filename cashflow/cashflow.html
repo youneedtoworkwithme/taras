@@ -459,11 +459,31 @@ const SND = {
   dice() { for (let i = 0; i < 7; i++) this.tone(300 + Math.random() * 500, 0.04, 'square', 0.04, i * 0.07); },
   win() { [523, 659, 784, 1047, 1319].forEach((f, i) => this.tone(f, 0.3, 'triangle', 0.15, i * 0.12)); },
 };
+let UK_VOICE = null;
+function pickUkVoice() {
+  try {
+    const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
+    const uks = vs.filter((v) => /^uk/i.test(v.lang || ''));
+    if (!uks.length) return null;
+    return uks.find((v) => /natural|online|google|ostap|polina|lesya/i.test(v.name || '')) || uks[0];
+  } catch (e) { return null; }
+}
+if (window.speechSynthesis) {
+  UK_VOICE = pickUkVoice();
+  speechSynthesis.onvoiceschanged = () => { UK_VOICE = pickUkVoice(); };
+}
 function speak(text) {
   if (!SND.voice || !SND.on) return;
-  if (S.tts) { S.tts.speak(text, { language: 'uk', voice: 'airy' }).catch((e) => { if (e && e.code === 'not_granted') { S.tts = null; S.ttsOff = true; } }); return; }
-  if (S.ttsOff) return;
-  try { const u = new SpeechSynthesisUtterance(text); u.lang = 'uk-UA'; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {}
+  const clean = String(text || '').replace(/\b1\b/g, 'один').replace(/\b2\b/g, 'два').replace(/\b3\b/g, 'три').replace(/\b4\b/g, 'чотири');
+  if (S.tts) { S.tts.speak(clean, { language: 'uk', voice: 'airy' }).catch((e) => { if (e && e.code === 'not_granted') { S.tts = null; S.ttsOff = true; } }); return; }
+  if (S.ttsOff || !window.speechSynthesis) return;
+  const v = UK_VOICE || pickUkVoice();
+  if (!v) return; // Never fall back to English voice (which reads "1" as "ван")
+  try {
+    const u = new SpeechSynthesisUtterance(clean);
+    u.voice = v; u.lang = v.lang || 'uk-UA'; u.rate = 1.02; u.pitch = 1.0; u.volume = 0.85;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  } catch (e) {}
 }
 
 /* ================= ефекти ================= */
