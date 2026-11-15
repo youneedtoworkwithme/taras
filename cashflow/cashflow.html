@@ -435,7 +435,7 @@ body.static .scene *,body.static .cloud,body.static #board *{animation:none!impo
 /* ⬇ ОНЛАЙН-СЕРВЕР: вставте між лапками посилання веб-застосунку Apps Script (закінчується на /exec) */
 window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbxAJtzy86WUwg5NUtcgwJrw9sBlfgzp7EFGr77-LYomjbOalYan6y1jahGy9spLFyLJ/exec';
 </script>
-<script src="../enginecahsflow.js?v=ee4a8b0"></script>
+<script src="../enginecahsflow.js?v=20261115c"></script>
 <script>
 (function () {
 'use strict';
@@ -452,7 +452,7 @@ const S = { mode: null, db: null, user: null, room: null, tts: null, me: { id: n
 
 /* ================= звук ================= */
 const SND = {
-  ctx: null, on: LS.get('cf_snd') !== '0', voice: LS.get('cf_voice') !== '0',
+  ctx: null, on: LS.get('cf_snd') !== '0', voice: false,
   init() { if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(() => {}); },
   tone(f, d, type, vol, at) { if (!this.on || !this.ctx) return; try { const t = this.ctx.currentTime + (at || 0); const o = this.ctx.createOscillator(), g = this.ctx.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.1, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t + d + 0.02); } catch (e) {} },
   tick(fast) { this.tone(fast ? 1600 : 1150, 0.035, 'square', fast ? 0.07 : 0.035); this.tone(fast ? 900 : 700, 0.03, 'triangle', 0.03, 0.01); },
@@ -476,7 +476,7 @@ if (window.speechSynthesis) {
   UK_VOICE = pickUkVoice();
   speechSynthesis.onvoiceschanged = () => { UK_VOICE = pickUkVoice(); };
 }
-function speak(text) {
+function speak(text) { return;
   if (!SND.voice || !SND.on) return;
   const clean = String(text || '').replace(/\b1\b/g, 'один').replace(/\b2\b/g, 'два').replace(/\b3\b/g, 'три').replace(/\b4\b/g, 'чотири');
   if (S.tts) { S.tts.speak(clean, { language: 'uk', voice: 'airy' }).catch((e) => { if (e && e.code === 'not_granted') { S.tts = null; S.ttsOff = true; } }); return; }
@@ -881,7 +881,7 @@ function lobbySrv() {
     + '<div class="lgrid"><div style="display:grid;gap:18px;align-content:start">'
     + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">🌐 Кімнати онлайн</h2><div id="rooms" style="display:grid;gap:10px">' + roomsHTML() + '</div></div>'
     + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Нова онлайн-гра</h2><p class="muted" style="margin:0;font-weight:600">Кімната з\'явиться в списку для всіх. Гра зберігається на сервері — можна закрити й повернутися будь-коли.</p><div class="note">Ви граєте як <b>' + esc(S.me.name) + '</b>' + (S.me.admin ? ' · адміністратор' : '') + '. <button class="btn sm ghost" data-act="rereg" style="min-height:0;padding:0 4px;text-decoration:underline">Змінити</button></div><label class="f" for="gname">Назва гри<input type="text" id="gname" maxlength="40" value="Гра ' + esc(String(S.me.name || '').split(' ')[0]) + '"></label><button class="btn go main" data-act="srvcreate">Створити кімнату</button></div>' + '<div id="adminbox">' + adminHTML() + '</div>'
-    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес не зберігається.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати</button></div></div>'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес автоматично зберігається у браузері.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати нову гру</button>' + (LS.get('cf_local_save') ? '<button class="btn go" data-act="resumeLocal">▶ Продовжити збережену гру</button>' : '') + '</div></div>'
     + '<div class="card rules"><h2 style="font-size:20px">Правила коротко</h2>' + rulesSteps() + '</div></div></div></div>';
 }
 async function srvCreate() {
@@ -1046,7 +1046,7 @@ function lobbyHTML() {
   return '<div class="lob"><div class="lwrap"><div class="hero"><div style="display:grid;gap:12px"><div class="blogo" style="font-size:22px">CASH<b>FLOW</b> <i>UA</i></div><h1>Вирвись із <b>щурячих перегонів</b> в українських реаліях</h1><p class="muted" style="margin:0;font-weight:600">Гривня і долар, біржа і крипта, квартири і франшизи, блекаути, війна, пандемії, ШІ, здоров\'я і стрес. Три получки за коло, дванадцять — рік життя.</p>' + who + '</div><div>' + ART.house.replace('<svg', '<svg style="width:100%;max-height:220px"') + '</div></div>'
     + '<div class="lgrid"><div style="display:grid;gap:18px;align-content:start">'
     + (signed ? '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Ваші ігри</h2>' + games + '</div><div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Нова гра</h2><label class="f" for="gname">Назва<input type="text" id="gname" maxlength="40" value="Наша гра"></label><button class="btn go" data-act="create">Створити гру</button></div>' : '')
-    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес не зберігається.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати</button></div></div>'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес автоматично зберігається у браузері.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати нову гру</button>' + (LS.get('cf_local_save') ? '<button class="btn go" data-act="resumeLocal">▶ Продовжити збережену гру</button>' : '') + '</div></div>'
     + '<div class="card rules"><h2 style="font-size:20px">Правила коротко</h2>' + rulesSteps() + '</div></div></div></div>';
 }
 function lobbyP2P() {
@@ -1056,7 +1056,7 @@ function lobbyP2P() {
     + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">🌐 Онлайн з різних комп\'ютерів</h2><p class="muted" style="margin:0;font-weight:600">Створіть кімнату й надішліть колегам посилання. Реєстрація не потрібна. Гру тримає ваш браузер — не закривайте вкладку, поки граєте.</p><label class="f" for="nname">Ваше ім\'я<input type="text" id="nname" maxlength="24" placeholder="Напр. Тарас" value="' + esc(S.me.name) + '"></label><label class="f" for="gname">Назва гри<input type="text" id="gname" maxlength="40" value="Наша гра"></label><button class="btn go main" data-act="netcreate">Створити онлайн-гру</button>'
     + (last ? '<button class="btn sm" data-act="netresume">↻ Продовжити мою гру ' + esc(last) + ' (я хост)</button>' : '') + '</div>'
     + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Приєднатися за кодом</h2><label class="f" for="jcode">Код кімнати або посилання<input type="text" id="jcode" maxlength="200" placeholder="Напр. K7Q2M"></label><button class="btn pri" data-act="netjoin">Приєднатися</button></div>'
-    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес не зберігається.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати</button></div></div>'
+    + '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">На одному пристрої</h2><p class="muted" style="margin:0;font-weight:600">Передавайте телефон по колу. Прогрес автоматично зберігається у браузері.</p><label class="f" for="lcount">Гравців<select id="lcount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><button class="btn" data-act="local">Почати нову гру</button>' + (LS.get('cf_local_save') ? '<button class="btn go" data-act="resumeLocal">▶ Продовжити збережену гру</button>' : '') + '</div></div>'
     + '<div class="card rules"><h2 style="font-size:20px">Правила коротко</h2>' + rulesSteps() + '</div></div></div></div>';
 }
 function rulesSteps() {
@@ -1114,7 +1114,7 @@ async function commit(fn) {
   try { ret = fn(g); } catch (e) { console.error(e); toast('Помилка гри: ' + esc(e.message), 'bad'); return; }
   g.seq = (g.seq || 0) + 1; g.updatedAt = Date.now();
   S.g = g; onState(base);
-  if (g.local) return ret;
+  if (g.local) { try { LS.set('cf_local_save', JSON.stringify({ g, seat: S.localSeat || 0 })); } catch (e) {} return ret; }
   const d = diff(base, g); if (!d) return ret;
   S.writing++;
   try { await S.db.doc('games/' + S.gid).update(d); }
@@ -1165,6 +1165,19 @@ async function createGame() {
   const g = CF.newGame(S.me.id, name);
   try { await S.db.doc('games/' + id).set(g); go('g-' + id); }
   catch (e) { toast(e.code === 'invalid_argument' ? 'Немає прав створювати ігри. Власник сторінки має дати вам доступ рівня Contributor.' : 'Не вдалося створити гру (' + esc(e.code) + ').', 'bad', 6000); }
+}
+function resumeLocal() {
+  try {
+    const raw = LS.get('cf_local_save');
+    if (!raw) { toast('Збереженої гри не знайдено.', 'bad'); return; }
+    const saved = JSON.parse(raw);
+    if (!saved || !saved.g) { toast('Пошкоджене збереження.', 'bad'); return; }
+    S.g = saved.g; S.gid = 'local'; S.localSeat = saved.seat || 0; S.lastDice = 0; S.turnKey = null;
+    CF.setCtx(S.g);
+    go('local');
+    render();
+    toast('Продовжено збережену гру!', 'good');
+  } catch (e) { toast('Не вдалося завантажити збереження.', 'bad'); }
 }
 function startLocal() {
   const n = +($('#lcount') ? $('#lcount').value : 2);
@@ -1793,8 +1806,23 @@ function bankHTML(p, g) {
 function coursesHTML(p, g) {
   CF.ensureStats(p);
   const mine = isMyTurn();
+  const tu = CF.timeUsage(p);
+  const curM = (g && g.world && g.world.m) || 0;
   const SK = { tech: 'Техніка/IT', biz: 'Бізнес', mkt: 'Маркетинг', fin: 'Фінанси', neg: 'Переговори', law: 'Право/GR' };
   let h = '<div class="sbody">' + (mine ? '' : '<div class="note">Купувати курси та запускати власну справу можна у свій хід.</div>');
+
+  h += '<div class="sect"><h3>⏱ Шкала зайнятості та часу</h3><div class="meters">'
+    + meter('Зайнято часу (' + tu.used + '%)', tu.used, tu.used >= 100 ? '#EF4444' : '#3B82F6')
+    + '</div><div class="note" style="margin-top:8px">Робота: <b>' + tu.jobPct + '%</b> · Підробітки: <b>' + tu.gigsPct + '%</b> · Власні справи: <b>' + tu.ventPct + '%</b> · Вільно: <b>' + tu.free + '%</b></div>';
+  if (p.track === 'rat') {
+    h += '<div style="margin-top:8px">'
+      + (!p.voluntaryQuit
+        ? '<button class="btn sm" data-a="quitjob"' + (mine ? '' : ' disabled') + '>🚪 Звільнитися з основної роботи (+60% вільного часу)</button>'
+        : '<button class="btn sm pri" data-a="resumejob"' + (mine && tu.free >= 60 ? '' : ' disabled') + '>💼 Повернутися на основну роботу (потрібно 60% часу)</button>')
+      + '</div>';
+  }
+  h += '</div>';
+
   h += '<div class="sect"><h3>Ваші навички та вплив</h3><div class="meters">'
     + Object.keys(SK).map((k) => meter(SK[k], p.skills[k] || 0, '#3B82F6')).join('')
     + meter('ШІ-навички', p.ai || 0, '#8B5CF6')
@@ -1802,24 +1830,26 @@ function coursesHTML(p, g) {
     + meter("Держзв'язки", p.gov || 0, '#10B981')
     + '</div></div>';
 
-  h += '<div class="sect"><h3>🚀 Власна справа (за рекомендаціями)</h3><div style="display:grid;gap:8px">';
+  h += '<div class="sect"><h3>🚀 Власна справа (потрібно 20% часу кожна)</h3><div style="display:grid;gap:8px">';
   (CF.VENTURES || []).forEach((v) => {
     const st = CF.ventureStatus(p, v);
     const reqTxt = Object.keys(v.req).map((k) => (SK[k] || k) + ' ' + (p.skills[k] || 0) + '/' + v.req[k]).join(' · ');
+    const canTime = tu.free >= 20;
     h += '<div class="asset"><div class="h"><span>' + esc(v.n) + '</span><span class="num good">+' + fmt(v.cf) + '/міс</span></div>'
       + '<div class="muted" style="font-size:12.5px">' + esc(v.rec) + '</div>'
       + '<div class="s"><span>Внесок: <b>' + fmt(v.cost) + '</b></span><span>' + reqTxt + '</span></div>'
-      + '<div class="a">' + (st.active ? '<span class="pill g">✓ Працює</span>' : (st.unlocked ? '<button class="btn sm go" data-a="venture" data-id="' + v.id + '"' + (mine ? '' : ' disabled') + '>Запустити справу</button>' : '<span class="pill">Потрібні навички</span>')) + '</div></div>';
+      + '<div class="a">' + (st.active ? '<span class="pill g">✓ Працює (20% часу)</span>' : (st.unlocked ? (canTime ? '<button class="btn sm go" data-a="venture" data-id="' + v.id + '"' + (mine ? '' : ' disabled') + '>Запустити справу (20% часу)</button>' : '<span class="pill r">Не вистачає часу (вільно ' + tu.free + '%)</span>') : '<span class="pill">Потрібні навички</span>')) + '</div></div>';
   });
   h += '</div></div>';
 
-  h += '<div class="sect"><h3>🎓 Курси та освіта (ціна й користь залежать від сфери)</h3><div style="display:grid;gap:8px">';
+  h += '<div class="sect"><h3>🎓 Курси та освіта (ліміт: 1 курс на 3 місяці)</h3><div class="note" style="margin-bottom:8px">Реальна користь курсу стає відомою лише після проходження — на ринку є як сильні програми, так і порожні марафони.</div><div style="display:grid;gap:8px">';
   (CF.COURSES || []).forEach((c) => {
-    const q = CF.courseQuote(p, c);
+    const q = CF.courseQuote(p, c, curM);
+    const waitTxt = q.cooldownLeft > 0 ? 'Пауза ще ' + q.cooldownLeft + ' міс.' : '';
     h += '<div class="asset"><div class="h"><span>' + esc(c.n) + '</span><span class="num">' + fmt(q.price) + '</span></div>'
       + '<div class="muted" style="font-size:12.5px">' + esc(c.desc) + '</div>'
-      + '<div class="s"><span class="tag">' + (q.isFit ? '★ Профільний максимум' : 'Інша сфера') + '</span><span>' + (c.sal ? 'Зарплата +' + Math.round(c.sal * (q.isFit ? 100 : 40)) + '%' : 'Навички/вплив') + '</span></div>'
-      + '<div class="a">' + (q.bought ? '<span class="pill g">✓ Пройдено</span>' : '<button class="btn sm pri" data-a="course" data-id="' + c.id + '"' + (mine ? '' : ' disabled') + '>Купити курс</button>') + '</div></div>';
+      + (q.bought && q.reveal ? '<div class="s"><span class="tag">' + esc(q.reveal) + '</span></div>' : '')
+      + '<div class="a">' + (q.bought ? '<span class="pill g">✓ Пройдено</span>' : (q.cooldownLeft > 0 ? '<span class="pill">' + waitTxt + '</span>' : '<button class="btn sm pri" data-a="course" data-id="' + c.id + '"' + (mine ? '' : ' disabled') + '>Купити курс</button>')) + '</div></div>';
   });
   return h + '</div></div></div>';
 }
@@ -1831,15 +1861,19 @@ function lifeHTML(p, g) {
   h += '<div class="sect"><h3>Тіло й голова</h3><div style="display:grid;gap:8px">' + tog('gym', p.well.gym, 'Спортзал', 'Здоров\'я росте, стрес падає', fmt(K.GYM) + '/міс', 'well') + tog('psy', p.well.psy, 'Психотерапія', '4 сесії на місяць', fmt(K.PSY) + '/міс', 'well') + '</div></div>';
   if ((p.gigs || []).length || (p.recur || []).length) { h += '<div class="sect"><h3>Регулярне</h3><div style="display:grid;gap:8px">'; (p.gigs || []).forEach((x, i) => { h += '<div class="toggle"><div><b>' + esc(x.n) + '</b><div class="num good" style="font-size:12.5px">+' + fmt(x.a) + '/міс · стрес +' + x.s + '</div></div><button class="btn sm" data-a="quitgig" data-i="' + i + '"' + (mine ? '' : ' disabled') + '>Кинути</button></div>'; }); (p.recur || []).forEach((x, i) => { h += '<div class="toggle"><div><b>' + esc(x.n) + '</b><div class="num bad" style="font-size:12.5px">' + fmt(x.a) + '/міс</div></div><button class="btn sm" data-a="quitrecur" data-i="' + i + '"' + (mine ? '' : ' disabled') + '>Скасувати</button></div>'; }); h += '</div></div>'; }
   CF.ensureStats(p);
-  const tckTxt = p.kids >= 3 ? 'Відстрочка (3+ дітей)' : (p.tckShield > 0 ? 'Бронь: ' + p.tckShield + ' міс.' : (p.gov >= 45 ? "Прикриття через зв'язки" : 'Без бронювання'));
+  const curM = (g && g.world && g.world.m) || 0;
+  const govWait = Math.max(0, 2 - (curM - (p.lastGovM ?? -99)));
+  const hasBiz = (p.ventures || []).length > 0 || (p.assets || []).some((a) => a.kind === 'biz');
+  const bookCost = p.gov >= 60 ? 95000 : 135000;
+  const tckTxt = p.kids >= 3 ? 'Відстрочка (3+ дітей)' : (p.tckShield > 0 ? 'Бронь: ' + p.tckShield + ' міс.' : (p.pendingShieldM > 0 ? 'На розгляді (ще ' + p.pendingShieldM + ' міс.)' : (p.gov >= 50 ? "Прикриття через зв'язки" : 'Без бронювання')));
   h += '<div class="sect"><h3>Вплив, медійність та ТЦК</h3><div class="meters">'
     + meter('Медійність', p.media || 0, '#F59E0B')
     + meter("Держзв'язки", p.gov || 0, '#10B981')
     + '</div><div class="note" style="margin-top:8px">ТЦК статус: <b>' + tckTxt + '</b> · Дітей: <b>' + p.kids + '/3</b></div>'
     + '<div style="display:grid;gap:8px;margin-top:8px">'
-    + '<button class="btn sm" data-a="pr"' + (mine ? '' : ' disabled') + '>📣 Запустити PR (+14 медійності · 25 000 ₴)</button>'
-    + '<button class="btn sm" data-a="gr"' + (mine ? '' : ' disabled') + ">🏛 Зв'язки в органах (+12 · 35 000 ₴)</button>"
-    + '<button class="btn sm pri" data-a="shield"' + (mine ? '' : ' disabled') + '>🛡 Оформити бронювання 6 міс. (' + fmt(p.gov >= 40 ? 25000 : 45000) + ')</button>'
+    + '<button class="btn sm" data-a="pr"' + (mine ? '' : ' disabled') + '>📣 Запустити PR (+12 медійності · 25 000 ₴)</button>'
+    + '<button class="btn sm" data-a="gr"' + (mine && govWait === 0 ? '' : ' disabled') + '>' + (govWait > 0 ? '🏛 Нетворкінг у структурах (через ' + govWait + ' міс.)' : '🏛 Закритий бізнес-клуб / нетворкінг (45 000 ₴ · шанс +5..10)') + '</button>'
+    + '<button class="btn sm pri" data-a="shield"' + (mine && p.gov >= 35 && hasBiz && !p.tckShield && !p.pendingShieldM ? '' : ' disabled') + '>🛡 Бронювання 6 міс. (' + fmt(bookCost) + (p.gov < 35 ? ' · треба зв&#39;язки 35+' : (!hasBiz ? ' · треба бізнес' : ' · розгляд 1–2 міс.')) + ')</button>'
     + '</div></div>';
   return h + '</div>';
 }
@@ -1991,7 +2025,7 @@ document.addEventListener('click', (e) => {
     case 'closeall': modal(head('Закрити всі кімнати?') + '<div class="sbody"><p>Усі ігри зникнуть для всіх гравців. Скасувати не можна.</p><button class="btn red" data-act="closeallyes">Так, закрити всі</button><button class="btn" data-act="close">Ні</button></div>', 'confirm'); break;
     case 'closeallyes': SRV.call({ op: 'closeall' }).then((j) => { closeAll(); toast('Закрито кімнат: ' + j.closed, 'good'); S.rooms = []; render(); }).catch((er) => toast('Не вдалося (' + esc(er.code) + ').', 'bad')); break;
     case 'copylink': { const el = $('#slink'); try { navigator.clipboard.writeText(el.value).then(() => toast('Посилання скопійовано', 'good')); } catch (e) { el.select(); document.execCommand('copy'); toast('Посилання скопійовано', 'good'); } break; }
-    case 'local': startLocal(); break;
+    case 'local': startLocal(); break; case 'resumeLocal': resumeLocal(); break;
     case 'join': openJoin(); break;
     case 'jroll': rollProf(); break;
     case 'jok': joinOk(); break;
