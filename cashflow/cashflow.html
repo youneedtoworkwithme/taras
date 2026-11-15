@@ -435,7 +435,7 @@ body.static .scene *,body.static .cloud,body.static #board *{animation:none!impo
 /* ⬇ ОНЛАЙН-СЕРВЕР: вставте між лапками посилання веб-застосунку Apps Script (закінчується на /exec) */
 window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbxAJtzy86WUwg5NUtcgwJrw9sBlfgzp7EFGr77-LYomjbOalYan6y1jahGy9spLFyLJ/exec';
 </script>
-<script src="../enginecahsflow.js?v=20261115c"></script>
+<script src="../enginecahsflow.js?v=20261115d"></script>
 <script>
 (function () {
 'use strict';
@@ -1793,7 +1793,21 @@ function brokerHTML(p, g) {
   h += '<div class="amt"><label class="f" for="bsum">Сума, ' + (CF.CUR === 'usd' ? '$' : '₴') + '<input type="number" id="bsum" min="0" step="10" value="' + Math.max(0, Math.floor((CF.CUR === 'usd' ? p.cash / w.fx : p.cash) * .25)) + '"></label><div class="q"><button class="btn sm" data-q="0.1">10%</button><button class="btn sm" data-q="0.25">25%</button><button class="btn sm" data-q="0.5">50%</button><button class="btn sm" data-q="1">Усе</button></div><div class="muted" style="font-size:12.5px;font-weight:700">Вільно: ' + fmt(p.cash) + ' · курс ' + w.fx.toFixed(2) + ' ₴/$</div></div>';
   h += '<div class="sect"><h3>Гривня без ризику</h3><div style="display:grid;gap:8px"><div class="mkt"><div><b>ОВДП</b><div class="muted" style="font-size:12.5px">' + (w.rate - .5).toFixed(1) + '% річних, без податку</div></div><span></span><button class="btn sm pri" data-buy="bond"' + (mine ? '' : ' disabled') + '>Купити</button></div><div class="mkt"><div><b>Депозит</b><div class="muted" style="font-size:12.5px">' + (w.rate - 3).toFixed(1) + '% річних, податок 23%</div></div><span></span><button class="btn sm pri" data-buy="dep"' + (mine ? '' : ' disabled') + '>Відкрити</button></div></div></div>';
   h += '<div class="sect"><h3>Брокер і криптобіржа</h3><div style="display:grid;gap:8px">';
-  Object.keys(CF.SYM).forEach((k) => { const s = CF.SYM[k]; const hist = (w.pxHist || {})[k]; const ch = hist && hist.length > 1 ? (w.px[k] / hist[hist.length - 2] - 1) * 100 : 0; h += '<div class="mkt"><div><b>' + esc(s.n) + '</b><div class="muted" style="font-size:12.5px"><span class="num">' + (k === 'MEME' ? (w.px[k] * (w.fx || 45.5)).toFixed(2) + ' ₴' : CF.fmtUsd(w.px[k])) + '</span>' + (hist && hist.length > 1 ? ' <span class="' + (ch >= 0 ? 'good' : 'bad') + '">' + (ch >= 0 ? '▲' : '▼') + Math.abs(ch).toFixed(1) + '%</span>' : '') + '</div></div>' + (hist ? spark(hist, ch >= 0 ? '#16A34A' : '#E5484D') : '<span></span>') + '<button class="btn sm pri" data-buy="' + k + '"' + (mine ? '' : ' disabled') + '>Купити</button></div>'; });
+  Object.keys(CF.SYM).forEach((k) => {
+    const s = CF.SYM[k]; const hist = (w.pxHist || {})[k] || [w.px[k]];
+    const ch = hist.length > 1 ? (w.px[k] / hist[hist.length - 2] - 1) * 100 : 0;
+    const fpx = (v) => k === 'MEME' ? (v * (w.fx || 45.5)).toFixed(2) + ' ₴' : CF.fmtUsd(v);
+    const openH = S.histSym === k;
+    h += '<div class="mkt" style="cursor:pointer" data-hist="' + k + '"><div><b>' + esc(s.n) + ' <span class="muted" style="font-size:11px;font-weight:600">📊 історія</span></b><div class="muted" style="font-size:12.5px"><span class="num">' + fpx(w.px[k]) + '</span>' + (hist.length > 1 ? ' <span class="' + (ch >= 0 ? 'good' : 'bad') + '">' + (ch >= 0 ? '▲' : '▼') + Math.abs(ch).toFixed(1) + '%</span>' : '') + '</div></div>' + spark(hist, ch >= 0 ? '#16A34A' : '#E5484D') + '<button class="btn sm pri" data-buy="' + k + '"' + (mine ? '' : ' disabled') + '>Купити</button></div>';
+    if (openH) {
+      const mn = Math.min(...hist), mx = Math.max(...hist);
+      const first = hist[0] || w.px[k], totCh = first ? (w.px[k] / first - 1) * 100 : 0;
+      const recent = hist.slice(-12).map((v, idx, arr) => 'М' + Math.max(1, (w.m || 0) - arr.length + idx + 1) + ': <b>' + fpx(v) + '</b>').join(' · ');
+      h += '<div class="card" style="padding:10px 12px;font-size:12.5px;display:grid;gap:6px;background:rgba(15,23,42,0.85)">'
+        + '<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span>Мін: <b>' + fpx(mn) + '</b></span><span>Макс: <b>' + fpx(mx) + '</b></span><span>За весь час: <b class="' + (totCh >= 0 ? 'good' : 'bad') + '">' + (totCh >= 0 ? '+' : '') + totCh.toFixed(1) + '%</b></span></div>'
+        + '<div class="muted" style="line-height:1.5">' + recent + '</div></div>';
+    }
+  });
   h += '</div></div><div class="note">Акції окремих компаній (AGRX, DNTK та інші) купуються й продаються тільки тоді, коли на біржі з\'являється їхня ціна — на клітинках 💼. Комісія: ETF 0,5%, крипта 1%. З прибутку — 23% податку.</div>';
   return h + '</div>';
 }
@@ -1898,7 +1912,7 @@ function tradesHTML() {
   let h = '<div class="sbody"><div class="note">Домовляйтеся вголос або в чаті, а тут фіксуйте угоду: гроші, акції, квартири, бізнеси. Угода виконується, коли інший гравець її приймає.</div>';
   if (!tr.length) h += '<div class="muted" style="font-weight:700">Відкритих пропозицій немає.</div>';
   tr.forEach((t) => { const inc = t.to === uid; h += '<div class="asset"><div class="h"><span>' + (inc ? esc(firstName(t.from)) + ' → вам' : 'Ви → ' + esc(firstName(t.to))) + '</span></div><div style="font-size:14px"><b>' + (inc ? 'Ви отримаєте' : 'Ви віддасте') + ':</b> ' + desc(t.give, t.from) + '<br><b>' + (inc ? 'Ви віддасте' : 'Ви отримаєте') + ':</b> ' + desc(t.get, t.to) + (t.note ? '<br><span class="muted">«' + esc(t.note) + '»</span>' : '') + '</div><div class="a">' + (inc ? '<button class="btn sm go" data-tr="' + t.id + '" data-yes="1">Прийняти</button><button class="btn sm" data-tr="' + t.id + '">Відхилити</button>' : '<button class="btn sm" data-tr="' + t.id + '">Скасувати</button>') + '</div></div>'; });
-  if (!g.local) h += '<div class="sect"><h3>Нова пропозиція</h3><div class="plist">' + g.order.filter((u) => u !== uid).map((u) => '<button class="pl" data-trade="' + esc(u) + '"><img src="' + esc(avaOf(u)) + '" alt=""><div class="nm">' + esc(nameOf(u)) + '</div><span>→</span></button>').join('') + '</div></div>';
+  if (g.order.length > 1) { h += '<div class="sect"><h3>Нова пропозиція</h3><div class="plist">' + g.order.filter((u) => u !== uid).map((u) => '<button class="pl" data-trade="' + esc(u) + '"><img src="' + esc(avaOf(u)) + '" alt=""><div class="nm">' + esc(nameOf(u)) + '</div><span>→</span></button>').join('') + '</div></div>'; } else { h += '<div class="note">У соло-режимі (1 гравець) немає інших гравців для P2P-угод. Щоб домовлятися між собою (спільні точки, позики, обмін активами чи послуги впливу), запустіть гру на 2+ гравців (локально або онлайн).</div>'; }
   return h + '</div>';
 }
 function tradeComposeHTML(to) {
@@ -2006,6 +2020,7 @@ document.addEventListener('click', (e) => {
   if (d.adj) { const k = CF.CUR === 'usd' ? S.g.world.fx : 1; const v = (+($('#adjv').value) || 0) * k; const n = $('#adjn').value; commit((g) => { CF.adjust(g, d.adj, v, n); }); toast('Готово', 'good'); return; }
   if (d.cq) { const el = $('#cinp'); const v = CF.view(S.g); if (el && v && v.input) { const mx = +el.max; const st = +el.step || 1; el.value = Math.floor(mx * +d.cq / st) * st; const r = $('#crng'); if (r) r.value = el.value; el.dispatchEvent(new Event('input')); } return; }
   if (d.q) { const el = $('#bsum'); const p = S.g.players[actor()]; if (el && p) el.value = Math.max(0, Math.floor((CF.CUR === 'usd' ? p.cash / S.g.world.fx : p.cash) * +d.q)); return; }
+  const histEl = e.target.closest('[data-hist]'); if (histEl && !d.buy) { S.histSym = (S.histSym === histEl.dataset.hist ? null : histEl.dataset.hist); refreshSheet(); return; }
   if (d.buy) { const k = CF.CUR === 'usd' ? S.g.world.fx : 1; const sum = (+($('#bsum') ? $('#bsum').value : 0)) * k; if (d.buy === 'bond') doAct('bond', { sum }); else if (d.buy === 'dep') doAct('dep', { sum }); else doAct('buy', { sym: d.buy, sum }); return; }
   if (d.a) { doAct(d.a, { id: d.id, frac: d.frac, amt: d.amt, i: d.i }); return; }
   if (d.ins) { doAct('ins', { k: d.ins }); return; }
