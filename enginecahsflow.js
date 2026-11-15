@@ -383,7 +383,8 @@
   CF.newWorld = function () {
     const px = {}; Object.keys(SYM).forEach((k) => { px[k] = SYM[k].p; });
     const tk = {}; Object.keys(TK).forEach((k) => { tk[k] = 10; });
-    return { m: 0, fx: 45.5, rate: 16.5, cpi: 1, infl: 0.10, re: 1, mw: 1, px, tk, tkh: {}, effects: [], peace: 0, news: [], pxHist: { SPX: [px.SPX], AI: [px.AI], BTC: [px.BTC], fx: [45.5] } };
+    const pxHist = { fx: [45.5] }; Object.keys(px).forEach((k) => { pxHist[k] = [px[k]]; });
+    return { m: 0, fx: 45.5, rate: 16.5, cpi: 1, infl: 0.10, re: 1, mw: 1, px, tk, tkh: {}, effects: [], peace: 0, news: [], pxHist };
   };
   CF.newGame = function (hostUid, name) {
     return { v: 2, rules: { roll: 30, dec: 180, timers: 1, cur: 'usd', news: 'norm', voice: 1, loans: 1 }, ready: {}, trades: {}, deadline: null, paused: null, name: name || 'Нова гра', hostId: hostUid, status: 'lobby', createdAt: Date.now(), updatedAt: Date.now(), order: [], turn: 0, phase: 'roll', world: CF.newWorld(), players: {}, pending: null, pay: {}, log: [], winner: null, seq: 0, round: 0, last: null };
@@ -536,7 +537,7 @@
     w.fx = +(w.fx * Math.exp(0.0025 + randn() * 0.009)).toFixed(2);
     w.infl = +((w.infl || 0.1) + 0.03 * (0.07 - (w.infl || 0.1))).toFixed(4);
     const mi = w.infl / 12 + randn() * 0.002; w.cpi = +(w.cpi * (1 + mi)).toFixed(4);
-    ['SPX', 'AI', 'BTC'].forEach((k) => { w.pxHist[k] = (w.pxHist[k] || []).concat([w.px[k]]).slice(-36); });
+    Object.keys(SYM).forEach((k) => { w.pxHist[k] = (w.pxHist[k] || []).concat([w.px[k]]).slice(-36); });
     w.pxHist.fx = (w.pxHist.fx || []).concat([w.fx]).slice(-36);
     w.effects = (w.effects || []).map((e) => Object.assign({}, e, { left: e.left - 1 })).filter((e) => e.left > 0);
     // раз на рік: інфляція і індексація
