@@ -473,15 +473,23 @@ body.static .scene *,body.static .cloud,body.static #board *{animation:none!impo
 /* ⬇ ОНЛАЙН-СЕРВЕР: вставте між лапками посилання веб-застосунку Apps Script (закінчується на /exec) */
 window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbxAJtzy86WUwg5NUtcgwJrw9sBlfgzp7EFGr77-LYomjbOalYan6y1jahGy9spLFyLJ/exec';
 </script>
-<script src="../enginecahsflow.js?v=20261115j"></script>
+<script src="../enginecahsflow.js?v=20261115k"></script>
 <script>
 (function () {
 'use strict';
 const CF = window.CF;
 CF.CUR = 'uah';
 const _origSetCtx = CF.setCtx;
-CF.setCtx = function (g) { if (_origSetCtx) _origSetCtx(g); CF.CUR = 'uah'; if (g && g.rules) g.rules.cur = 'uah'; };
-CF.fmtUsd = function (n) { return CF.fmt(Math.round((n || 0) * (CF.FX || 45.5))); };
+const _origFmtUsd = CF.fmtUsd;
+CF.setCtx = function (g) {
+  if (_origSetCtx) _origSetCtx(g);
+  CF.CUR = (g && g.rules && g.rules.cur) || 'uah';
+  if (g && g.rules && !g.rules.cur) g.rules.cur = 'uah';
+};
+CF.fmtUsd = function (n) {
+  return CF.CUR === 'usd' ? _origFmtUsd(n) : CF.fmt(Math.round((n || 0) * (CF.FX || 45.5)));
+};
+CF.fmtUah = function (n) { return CF.fmt(n); };
 const fmt = (n) => CF.fmt(n);
 const $ = (s, r) => (r || document).querySelector(s);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1835,7 +1843,7 @@ function brokerHTML(p, g) {
   Object.keys(CF.SYM).forEach((k) => {
     const s = CF.SYM[k]; const hist = (w.pxHist || {})[k] || [w.px[k]];
     const ch = hist.length > 1 ? (w.px[k] / hist[hist.length - 2] - 1) * 100 : 0;
-    const fpx = (v) => k === 'MEME' ? (v * (w.fx || 45.5)).toFixed(2) + ' ₴' : CF.fmtUsd(v);
+    const fpx = (v) => k === 'MEME' ? (CF.CUR === 'usd' ? '$' + v.toFixed(4) : (v * (w.fx || 45.5)).toFixed(2) + ' ₴') : CF.fmtUsd(v);
     const openH = S.histSym === k;
     h += '<div class="mkt" style="cursor:pointer" data-hist="' + k + '"><div><b>' + esc(s.n) + ' <span class="muted" style="font-size:11px;font-weight:600">📊 історія</span></b><div class="muted" style="font-size:12.5px"><span class="num">' + fpx(w.px[k]) + '</span>' + (hist.length > 1 ? ' <span class="' + (ch >= 0 ? 'good' : 'bad') + '">' + (ch >= 0 ? '▲' : '▼') + Math.abs(ch).toFixed(1) + '%</span>' : '') + '</div></div>' + spark(hist, ch >= 0 ? '#16A34A' : '#E5484D') + '<button class="btn sm pri" data-buy="' + k + '"' + (mine ? '' : ' disabled') + '>Купити</button></div>';
     if (openH) {
@@ -1981,7 +1989,7 @@ function settingsHTML() {
     h += '<div class="sect"><h3>Правила гри (хост)</h3><div style="display:grid;gap:10px"><div class="toggle"><div><b>Таймери</b></div><button class="sw ' + (r.timers ? 'on' : '') + '" role="switch" aria-checked="' + !!r.timers + '" aria-label="Таймери" data-rule="timers"></button></div>'
       + '<label class="f" for="r_roll">Час на кидок' + sel('r_roll', r.roll, [[15, '15 с'], [30, '30 с'], [45, '45 с'], [60, '1 хв']]) + '</label>'
       + '<label class="f" for="r_dec">Час на рішення' + sel('r_dec', r.dec, [[60, '1 хв'], [120, '2 хв'], [180, '3 хв'], [300, '5 хв']]) + '</label>'
-      + '<label class="f" for="r_cur">Показувати гроші' + sel('r_cur', r.cur, [['uah', 'у гривнях (₴)']]) + '</label>'
+      + '<label class="f" for="r_cur">Валюта гри (усе в ₴ або $)' + sel('r_cur', r.cur, [['uah', 'у гривнях (₴)'], ['usd', 'у доларах ($)']]) + '</label>'
       + '<label class="f" for="r_news">Новини світу' + sel('r_news', r.news, [['rare', 'рідко'], ['norm', 'звично'], ['often', 'часто']]) + '</label>'
       + '<button class="btn pri" data-act="saveRules">Зберегти правила</button></div></div>';
     if (g.status === 'active') h += '<div class="sect"><h3>Керування</h3><div style="display:grid;gap:8px"><button class="btn" data-act="pause">' + (g.paused ? '▶ Продовжити таймер' : '⏸ Пауза для всіх') + '</button><button class="btn" data-act="skip">Пропустити хід гравця ' + esc(firstName(CF.curUid(g))) + '</button><div class="note">Банкір: натисніть на гравця у верхньому рядку, щоб дати чи забрати гроші за домашніми правилами.</div></div></div>';
@@ -2018,7 +2026,7 @@ function diaryHTML() {
   let h = '<div class="sbody"><div class="dtab">' + [['tk', 'Біржа: акції'], ['mk', 'Ринки й курс'], ['news', 'Новини'], ['notes', 'Мої нотатки']].map((x) => '<button class="' + (t === x[0] ? 'on' : '') + '" data-dtab="' + x[0] + '">' + x[1] + '</button>').join('') + '</div>';
   if (t === 'tk') {
     const syms = Object.keys(D.tk); if (!syms.length) h += '<div class="note">Тут з\'являтимуться всі ціни акцій, які ви побачите на біржі.</div>';
-    else { h += '<div class="tw"><table class="dt"><thead><tr><th>Акція</th><th>Бачили</th><th>Мін</th><th>Макс</th><th>Найчастіше</th><th>Останні ціни</th></tr></thead><tbody>' + syms.map((s) => { const a = D.tk[s].map((x) => x[1]); const freq = {}; a.forEach((x) => { freq[x] = (freq[x] || 0) + 1; }); const top = Object.keys(freq).sort((x, y) => freq[y] - freq[x])[0]; return '<tr><td><b>' + s + '</b></td><td>' + a.length + '</td><td>$' + Math.min(...a) + '</td><td>$' + Math.max(...a) + '</td><td>$' + top + '</td><td>' + D.tk[s].slice(-6).map((x) => '$' + x[1]).join(' · ') + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
+    else { h += '<div class="tw"><table class="dt"><thead><tr><th>Акція</th><th>Бачили</th><th>Мін</th><th>Макс</th><th>Найчастіше</th><th>Останні ціни</th></tr></thead><tbody>' + syms.map((s) => { const a = D.tk[s].map((x) => x[1]); const freq = {}; a.forEach((x) => { freq[x] = (freq[x] || 0) + 1; }); const top = Object.keys(freq).sort((x, y) => freq[y] - freq[x])[0]; return '<tr><td><b>' + s + '</b></td><td>' + a.length + '</td><td>$' + Math.min(...a) + '</td><td>$' + Math.max(...a) + '</td><td>$' + top + '</td><td>' + D.tk[s].slice(-6).map((x) => CF.fmtUsd(x[1])).join(' · ') + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
   } else if (t === 'mk') {
     h += D.mk.length ? '<div class="tw"><table class="dt"><thead><tr><th>Місяць</th><th>$/₴</th><th>НБУ</th><th>Інфл.</th><th>S&amp;P</th><th>BTC</th><th>ETH</th><th>Золото</th><th>PAPUGA</th></tr></thead><tbody>' + D.mk.slice().reverse().map((x) => '<tr><td>' + esc(CF.dateOf(x[0])) + '</td><td>' + x[1] + '</td><td>' + x[2] + '%</td><td>' + (x[8] != null ? x[8] + '%' : '') + '</td><td>$' + x[3] + '</td><td>$' + x[4] + '</td><td>$' + x[5] + '</td><td>$' + x[6] + '</td><td>$' + x[7] + '</td></tr>').join('') + '</tbody></table></div>' : '<div class="note">Порожньо.</div>';
   } else if (t === 'news') {
@@ -2028,6 +2036,14 @@ function diaryHTML() {
 }
 
 /* ================= події ================= */
+document.addEventListener('change', (e) => {
+  if (e.target && e.target.id === 'r_cur' && S.g) {
+    commit((g) => { g.rules.cur = e.target.value; });
+    CF.setCtx(S.g);
+    render();
+    toast(e.target.value === 'usd' ? 'Усі суми тепер у доларах ($)' : 'Усі суми тепер у гривнях (₴)', 'good');
+  }
+});
 document.addEventListener('click', (e) => {
   const t = e.target.closest('button, [data-go], [data-sheet], [data-hist], .tile'); if (!t) return;
   SND.init();
