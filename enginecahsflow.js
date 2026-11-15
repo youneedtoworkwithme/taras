@@ -130,7 +130,7 @@
 
   /* ---------- поле ---------- */
   const RAT = ['pay', 'deal', 'spend', 'market', 'deal', 'luck', 'news', 'deal', 'gig', 'health', 'ai', 'pay', 'deal', 'psy', 'spend', 'market', 'deal', 'child', 'news', 'deal', 'charity', 'layoff', 'pay', 'deal', 'luck', 'market', 'deal', 'gig', 'deal', 'news', 'luck', 'ai'];
-  const FAST = ['pay', 'ftdeal', 'dream', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'charity', 'ftdeal', 'dream', 'pay', 'ftdeal', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'dream', 'ftdeal', 'ftrisk', 'ftdeal'];
+  const FAST = ['pay', 'ftdeal', 'dream', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'charity', 'ftdeal', 'dream', 'pay', 'ftdeal', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'dream', 'ftdeal', 'ftrisk', 'ftdeal', 'pay', 'ftdeal', 'dream', 'ftnews', 'ftdeal', 'charity', 'ftdeal', 'ftrisk', 'ftdeal', 'dream', 'ftnews', 'ftdeal'];
   CF.RAT = RAT; CF.FAST = FAST;
   CF.CELL = {
     pay: { n: 'Получка', ic: '$', c: 'pay' }, luck: { n: 'Удача', ic: '✧', c: 'luck' }, deal: { n: 'Можливість', ic: '◆', c: 'deal' }, spend: { n: 'Витрата', ic: '▼', c: 'spend' }, health: { n: 'Здоров\'я', ic: '✚', c: 'health' },
@@ -574,8 +574,10 @@
   CF.canExit = function (g, uid) { const p = g.players[uid]; if (!p || p.track !== 'rat') return false; const st = statement(p, g.world); return st.passive > 0 && st.passive >= st.out; };
   CF.exitRat = function (g) {
     const p = g.players[CF.curUid(g)]; const st = statement(p, g.world);
+    const bonus = Math.max(0, st.passive * 100);
+    p.cash += bonus;
     p.track = 'fast'; p.pos = 0; p.ftGoal = Math.round((st.passive + 300000) / 10000) * 10000; p.unemp = 0; p.cut = null; p.gigs = [];
-    L(g, 'ФІНАНСОВА СВОБОДА! Пасивний дохід ' + fmt(st.passive) + ' перевищив витрати ' + fmt(st.out) + '. Звільнився з найму й вийшов на Швидку доріжку. Ціль: ' + fmt(p.ftGoal) + '/міс або купити мрію.', 'win', p.uid);
+    L(g, 'ФІНАНСОВА СВОБОДА! Пасивний дохід ' + fmt(st.passive) + ' перевищив витрати ' + fmt(st.out) + '. Вихід на Велике коло: стартовий капітал ×100 (+' + fmt(bonus) + ')! Ціль: ' + fmt(p.ftGoal) + '/міс або купити мрію.', 'win', p.uid);
     g.fx = { k: 'exit', uid: p.uid, t: Date.now() };
   };
   function win(g, p, how) {
