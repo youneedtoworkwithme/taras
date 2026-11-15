@@ -1990,7 +1990,7 @@ function diaryHTML() {
 
 /* ================= події ================= */
 document.addEventListener('click', (e) => {
-  const t = e.target.closest('button, [data-go], [data-sheet], .tile'); if (!t) return;
+  const t = e.target.closest('button, [data-go], [data-sheet], [data-hist], .tile'); if (!t) return;
   SND.init();
   if (t.classList.contains('tile')) { const k = t.getAttribute('data-tile'); const fast = k.startsWith('fast'); const c = (fast ? CF.FAST : CF.RAT)[+k.replace(/\D/g, '')]; toast(esc(CNAME[c] || CF.CELL[c].n) + (fast ? ' · Швидка доріжка' : ''), '', 1800); return; }
   if (t.hasAttribute('data-go')) { go(t.getAttribute('data-go')); return; }
@@ -2020,7 +2020,7 @@ document.addEventListener('click', (e) => {
   if (d.adj) { const k = CF.CUR === 'usd' ? S.g.world.fx : 1; const v = (+($('#adjv').value) || 0) * k; const n = $('#adjn').value; commit((g) => { CF.adjust(g, d.adj, v, n); }); toast('Готово', 'good'); return; }
   if (d.cq) { const el = $('#cinp'); const v = CF.view(S.g); if (el && v && v.input) { const mx = +el.max; const st = +el.step || 1; el.value = Math.floor(mx * +d.cq / st) * st; const r = $('#crng'); if (r) r.value = el.value; el.dispatchEvent(new Event('input')); } return; }
   if (d.q) { const el = $('#bsum'); const p = S.g.players[actor()]; if (el && p) el.value = Math.max(0, Math.floor((CF.CUR === 'usd' ? p.cash / S.g.world.fx : p.cash) * +d.q)); return; }
-  const histEl = e.target.closest('[data-hist]'); if (histEl && !d.buy) { S.histSym = (S.histSym === histEl.dataset.hist ? null : histEl.dataset.hist); refreshSheet(); return; }
+  if (d.hist) { S.histSym = (S.histSym === d.hist ? null : d.hist); refreshSheet(true); return; }
   if (d.buy) { const k = CF.CUR === 'usd' ? S.g.world.fx : 1; const sum = (+($('#bsum') ? $('#bsum').value : 0)) * k; if (d.buy === 'bond') doAct('bond', { sum }); else if (d.buy === 'dep') doAct('dep', { sum }); else doAct('buy', { sym: d.buy, sum }); return; }
   if (d.a) { doAct(d.a, { id: d.id, frac: d.frac, amt: d.amt, i: d.i }); return; }
   if (d.ins) { doAct('ins', { k: d.ins }); return; }
