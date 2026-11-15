@@ -100,6 +100,22 @@
       liabs: [['Стоматобладнання в кредит', 420000, 14000, 'inst', .12], ['Авто в кредит', 450000, 12500, 'car', .16]] },
     { id: 'bizowner', n: 'Власник міні-мережі', sub: 'ФОП 3 група, 2 торгові точки', emp: 'fop3', sal: 145000, partner: 25000, housing: ['Комуналка + охорона (власний будинок)', 12000, 0], food: 24000, transport: 9000, comm: 2500, kids: 2, cash: 220000, ai: 25, aiRisk: .15, age: 40, car: 1, stress: 58,
       liabs: [['Бізнес-кредит на оборотку', 950000, 32000, 'biz', .19], ['Лізинг позашляховика', 780000, 22000, 'car', .17]] },
+    { id: 'courier', n: 'Кур’єр доставки', sub: 'Glovo / Нова Пошта, власний скутер', emp: 'fop2', sal: 26000, housing: ['Оренда кімнати', 8000, 1], food: 6000, transport: 3500, comm: 700, kids: 0, cash: 8000, ai: 5, aiRisk: .25, age: 24, car: 0, stress: 40,
+      liabs: [['Розстрочка на смартфон', 16000, 1400, 'inst', 0]] },
+    { id: 'mechanic', n: 'Автомеханік СТО', sub: 'Приватний автосервіс у Львові', emp: 'emp', sal: 45000, partner: 16000, housing: ['Оренда 1к на Сихові', 15500, 1], food: 9000, transport: 2500, comm: 800, kids: 1, cash: 18000, ai: 5, aiRisk: .05, age: 32, car: 1, stress: 38,
+      liabs: [['Набір інструменту в кредит', 45000, 2500, 'inst', 0]] },
+    { id: 'designer', n: 'UI/UX Дизайнер', sub: 'ФОП 3 група, продуктова студія', emp: 'fop3', sal: 62000, housing: ['Оренда 1к у Франківському', 19000, 1], food: 12000, transport: 2500, comm: 1600, kids: 0, cash: 32000, ai: 35, aiRisk: .45, age: 27, car: 0, stress: 40,
+      liabs: [['Розстрочка на MacBook Pro', 65000, 5400, 'inst', 0]] },
+    { id: 'pharmacist', n: 'Фармацевт', sub: 'Мережа аптек у Львові', emp: 'emp', sal: 25000, partner: 18000, housing: ['Комуналка (своя квартира)', 3600, 0], food: 7500, transport: 1200, comm: 700, kids: 1, cash: 11000, ai: 15, aiRisk: .2, age: 29, car: 0, stress: 42,
+      liabs: [['Кредитна картка', 12000, 600, 'card', .42]] },
+    { id: 'builder', n: 'Прораб на будівництві', sub: 'ФОП 2 група, ремонти під ключ', emp: 'fop2', sal: 56000, partner: 17000, housing: ['Оренда 2к квартири', 20000, 1], food: 11000, transport: 5000, comm: 900, kids: 2, cash: 28000, ai: 5, aiRisk: .05, age: 39, car: 1, stress: 44,
+      liabs: [['Бус у кредит', 320000, 9500, 'car', .18]] },
+    { id: 'realtor', n: 'Рієлтор з нерухомості', sub: 'ФОП 3 група, комісійні', emp: 'fop3', sal: 54000, housing: ['Оренда 1к квартири', 18000, 1], food: 11000, transport: 4000, comm: 1500, kids: 0, cash: 26000, ai: 20, aiRisk: .25, age: 31, car: 1, stress: 48,
+      liabs: [['Авто в кредит', 280000, 8800, 'car', .17]] },
+    { id: 'logistics', n: 'Менеджер з логістики', sub: 'Міжнародні перевезення, Львів', emp: 'emp', sal: 40000, partner: 18000, housing: ['Оренда 1к квартири', 16500, 1], food: 8500, transport: 1800, comm: 900, kids: 1, cash: 16000, ai: 25, aiRisk: .35, age: 30, car: 0, stress: 44,
+      liabs: [['Споживчий кредит', 45000, 2200, 'cons', .42]] },
+    { id: 'dentist_a', n: 'Асистент стоматолога', sub: 'Приватна клініка', emp: 'emp', sal: 23000, housing: ['Оренда смарт-квартири', 11500, 1], food: 6000, transport: 1100, comm: 650, kids: 0, cash: 7000, ai: 10, aiRisk: .1, age: 24, car: 0, stress: 38,
+      liabs: [['Розстрочка на навчання', 18000, 1500, 'inst', 0]] },
   ];
   CF.PROF = PROF;
   const DREAMS = [
@@ -147,6 +163,14 @@
     truck:     { tech: 32, biz: 15, mkt:  5, fin: 12, neg: 22, law: 10, media:  6, gov: 10 },
     taxi:      { tech: 25, biz: 14, mkt: 10, fin: 10, neg: 25, law:  8, media: 10, gov:  8 },
     teach:     { tech: 15, biz: 10, mkt: 20, fin: 12, neg: 25, law: 15, media: 14, gov: 10 },
+    courier:   { tech: 16, biz: 10, mkt:  8, fin:  8, neg: 18, law:  6, media:  8, gov:  5 },
+    mechanic:  { tech: 46, biz: 20, mkt: 10, fin: 12, neg: 24, law:  8, media:  8, gov: 10 },
+    designer:  { tech: 32, biz: 18, mkt: 35, fin: 15, neg: 24, law: 10, media: 24, gov:  8 },
+    pharmacist:{ tech: 20, biz: 14, mkt: 14, fin: 16, neg: 22, law: 14, media: 10, gov: 12 },
+    builder:   { tech: 38, biz: 30, mkt: 14, fin: 18, neg: 36, law: 14, media: 10, gov: 18 },
+    realtor:   { tech: 10, biz: 24, mkt: 36, fin: 22, neg: 48, law: 24, media: 28, gov: 18 },
+    logistics: { tech: 18, biz: 26, mkt: 15, fin: 20, neg: 34, law: 18, media: 10, gov: 15 },
+    dentist_a: { tech: 22, biz: 10, mkt: 12, fin: 10, neg: 20, law: 10, media: 12, gov:  8 },
   };
   function ensureStats(p) {
     if (!p) return p;
@@ -384,17 +408,42 @@
   /* ---------- новий гравець / гра ---------- */
   function newPlayer(uid, profId, dream, av) {
     const pr = PROF.find((x) => x.id === profId) || pick(PROF);
-    return {
-      uid, prof: pr.id, emp: pr.emp, dream: dream || pick(DREAMS).id, pos: 0, track: 'rat', cash: pr.cash, sal: pr.sal,
-      base: { housing: [pr.housing[0], pr.housing[1]], rent: pr.housing[2], food: pr.food, transport: pr.transport, comm: pr.comm, kid: K.KID },
-      kids: pr.kids, partner: pr.partner || 0, kb: [], liabs: pr.liabs.map((l) => ({ id: 'l' + uid6(), n: l[0], bal: l[1], pay: l[2], kind: l[3], apr: l[4] })),
-      assets: [], ins: { dms: 0, life: 0, kasko: 0, prop: 0 }, well: { gym: 0, psy: 0 }, health: 80, stress: pr.stress, ai: pr.ai, aiRisk: pr.aiRisk,
-      av: av || null, unemp: 0, cut: null, charity: 0, gigs: [], recur: [], age: pr.age, car: pr.car, cpiAt: 1, months: 0, hist: [], ftGoal: 0, won: 0, gen: 0, joined: Date.now(),
+    const sal = r100(pr.sal * (0.88 + rnd() * 0.24));
+    const cash = Math.max(2000, r100(pr.cash * (0.8 + rnd() * 0.45)));
+    const kids = rnd() < 0.35 ? rint(0, 2) : pr.kids;
+    const partner = (kids > 0 || rnd() < 0.45) ? (pr.partner || r100(rint(14000, 26000))) : 0;
+    const car = rnd() < 0.45 ? 1 : (rnd() < 0.3 ? 0 : pr.car);
+    const HOUSING_OPTS = pr.sal >= 65000
+      ? [['Оренда 1к у новому ЖК', 22000, 1], ['Оренда 2к у центрі', 28000, 1], ['Комуналка (своя квартира)', 4200, 0], pr.housing]
+      : (pr.sal >= 30000
+        ? [['Оренда 1к на околиці', 13500, 1], ['Оренда смарт-квартири', 12000, 1], ['Комуналка (своя квартира)', 3600, 0], pr.housing]
+        : [['Живе з батьками (частка комуналки)', 2600, 0], ['Оренда кімнати', 7500, 1], ['Комуналка (старий фонд)', 3000, 0], pr.housing]);
+    const hPick = pick(HOUSING_OPTS);
+    const liabs = pr.liabs.map((l) => ({ id: 'l' + uid6(), n: l[0], bal: l[1], pay: l[2], kind: l[3], apr: l[4] }));
+    if (car && !liabs.some((l) => l.kind === 'car') && rnd() < 0.3 && pr.sal >= 40000) {
+      liabs.push({ id: 'l' + uid6(), n: 'Авто в кредит', bal: 280000, pay: 8500, kind: 'car', apr: 0.17 });
+    }
+    const p = {
+      uid, prof: pr.id, emp: pr.emp, dream: dream || pick(DREAMS).id, pos: 0, track: 'rat', cash, sal,
+      base: { housing: [hPick[0], hPick[1]], rent: hPick[2], food: r100(pr.food * (0.9 + rnd() * 0.2)), transport: car ? Math.max(pr.transport, 3200) : Math.min(pr.transport, 1500), comm: pr.comm, kid: K.KID },
+      kids: Math.min(3, kids), partner, kb: [], liabs,
+      assets: [], ins: { dms: 0, life: 0, kasko: 0, prop: 0 }, well: { gym: 0, psy: 0 }, health: 80, stress: clamp(pr.stress + rint(-6, 6), 15, 75), ai: pr.ai, aiRisk: pr.aiRisk,
+      av: av || null, unemp: 0, cut: null, charity: 0, gigs: [], recur: [], age: clamp(pr.age + rint(-3, 4), 20, 52), car, cpiAt: 1, months: 0, hist: [], ftGoal: 0, won: 0, gen: 0, joined: Date.now(),
       skills: Object.assign({}, PROF_BASE[pr.id] || { tech: 15, biz: 15, mkt: 15, fin: 15, neg: 15, law: 15 }),
       media: (PROF_BASE[pr.id] && PROF_BASE[pr.id].media) || 10,
       gov: (PROF_BASE[pr.id] && PROF_BASE[pr.id].gov) || 10,
-      courses: [], ventures: [], tckShield: 0, fastMonths: 0, royalties: [],
+      courses: [], ventures: [], tckShield: 0, pendingShieldM: 0, lastCourseM: -99, lastGovM: -99, voluntaryQuit: 0, courseReveals: {}, fastMonths: 0, royalties: [],
     };
+    // Гарантуємо: мінусовий старт можливий ТІЛЬКИ якщо у людини дохрена грошей (cash >= 150 000 ₴)
+    const tmpW = CF.newWorld();
+    let guard = 0;
+    while (p.cash < 150000 && statement(p, tmpW).cf < 1800 && guard++ < 8) {
+      if (p.liabs.length && p.liabs[0].kind !== 'mortgage') { p.liabs.shift(); continue; }
+      if (p.base.rent && p.base.housing[1] > 7500) { p.base.housing = ['Оренда кімнати', 7000]; continue; }
+      if (p.base.housing[1] > 3500) { p.base.housing = ['Живе з батьками (частка комуналки)', 2500]; p.base.rent = 0; continue; }
+      p.sal = r100(p.sal * 1.15);
+    }
+    return p;
   }
   CF.newPlayer = newPlayer;
   CF.newWorld = function () {
@@ -453,14 +502,15 @@
       if (a.kind === 'biz' && a.vol) { const exp = assetIncome(a, w, p); const real = Math.round(exp * (1 + randn() * a.vol * 0.6)); actual += real - exp; }
       if (a.kind === 're' && a.vac > 0) { actual -= Math.round(a.rent * (1 - rentTax(p))); a.vac--; notes.push(a.n + ': немає орендаря'); }
     });
-    if (p.media >= 30 && p.assets.some((a) => a.kind === 'biz') && rnd() < 0.32) {
-      const bizSum = p.assets.filter((a) => a.kind === 'biz').reduce((s, a) => s + assetIncome(a, w, p), 0);
+    const mediaBiz = p.assets.filter((a) => a.kind === 'biz' && (a.online || (a.need && a.need.media)));
+    if (p.media >= 30 && mediaBiz.length && rnd() < 0.32) {
+      const bizSum = mediaBiz.reduce((s, a) => s + assetIncome(a, w, p), 0);
       if (bizSum > 0) {
         const goodSwing = rnd() < (0.55 + (p.gov >= 40 ? 0.1 : 0));
         const delta = Math.round(bizSum * (goodSwing ? (0.20 + rnd() * 0.25) : -(0.20 + rnd() * 0.22)));
         actual += delta;
-        if (goodSwing) { p.media = clamp(p.media + 3, 0, 100); notes.push('Вірусний хайп у медіа! Бізнес дав +' + fmt(delta)); }
-        else { p.media = clamp(p.media - 5, 0, 100); notes.push('Хейт / негатив у медіа: бізнес просів на ' + fmt(-delta)); }
+        if (goodSwing) { p.media = clamp(p.media + 3, 0, 100); notes.push('Вірусний хайп у медіа! Онлайн/медіа-бізнес дав +' + fmt(delta)); }
+        else { p.media = clamp(p.media - 5, 0, 100); notes.push('Хейт / негатив у медіа: онлайн/медіа-бізнес просів на ' + fmt(-delta)); }
       }
     }
     if (p.cut && p.cut.left > 0) { p.cut.left--; if (!p.cut.left) p.cut = null; }
@@ -1074,11 +1124,11 @@
     return n;
   }
   deck('news', [
-    EV('n_audit', { t: 'Перевірка податкової та органів', draw: (c) => { ensureStats(c.p); return { fine: Math.max(15000, Math.round(statement(c.p, c.w).passive * 0.45)) }; },
-      text: (c, P) => { ensureStats(c.p); return c.p.gov >= 45 ? 'Прийшла позапланова перевірка, але знайомі в органах попередили й допомогли закрити акт без штрафу.' : (c.p.skills.law >= 45 ? 'Податкова ініціювала перевірку, але ваші юридичні знання дозволили відбити 70% претензій.' : 'Позапланова перевірка через високу активність/медійність. Можливий штраф ' + fmt(P.fine) + '.'); },
+    EV('n_audit', { t: 'Перевірка податкової та органів', cond: (c) => c.p.assets.some((a) => a.kind === 'biz') || (c.p.ventures || []).length > 0 || c.p.emp === 'fop2' || c.p.emp === 'fop3', draw: (c) => { ensureStats(c.p); return { fine: Math.max(15000, Math.round(statement(c.p, c.w).passive * 0.45)) }; },
+      text: (c, P) => { ensureStats(c.p); return c.p.gov >= 45 ? 'Прийшла позапланова перевірка, але знайомі в органах попередили й допомогли закрити акт без штрафу.' : (c.p.skills.law >= 45 ? 'Податкова ініціювала перевірку, але ваші юридичні знання дозволили відбити 70% претензій.' : 'Позапланова перевірка бізнесу/ФОП. Можливий штраф ' + fmt(P.fine) + '.'); },
       act: (c, P) => { ensureStats(c.p); if (c.p.gov >= 45) return "Перевірку пройдено чисто завдяки зв'язкам у держструктурах."; const f = c.p.skills.law >= 45 ? Math.round(P.fine * 0.3) : P.fine; return 'Сплачено штраф/аудит: ' + fmt(f) + '.' + spend(c.g, c.p, f); } }),
-    EV('n_media_wave', { t: 'Медійний резонанс', draw: () => ({ up: rnd() < 0.55 }),
-      text: (c, P) => P.up ? 'Про ваш бізнес і підхід вийшов позитивний сюжет! Медійність росте, приходять нові клієнти.' : 'У мережі рознесли негативний відгук / хейт. Медійність падає, потрібна репутаційна стабілізація.',
+    EV('n_media_wave', { t: 'Медійний резонанс', cond: (c) => c.p.assets.some((a) => a.kind === 'biz' && (a.online || (a.need && a.need.media))) || (c.p.ventures || []).length > 0, draw: () => ({ up: rnd() < 0.55 }),
+      text: (c, P) => P.up ? 'Про ваш онлайн-бізнес / медійний проєкт вийшов позитивний сюжет! Приходять нові клієнти.' : 'У мережі рознесли негативний відгук про ваш медійний/онлайн-бізнес. Потрібна репутаційна стабілізація.',
       act: (c, P) => { ensureStats(c.p); if (P.up) { c.p.media = clamp(c.p.media + 12, 0, 100); c.p.cash += 25000; return 'Медійність +12, додатковий прибуток +25 000 ₴.'; } c.p.media = clamp(c.p.media - 10, 0, 100); return 'Медійність -10, витрати на кризовий PR 15 000 ₴.' + spend(c.g, c.p, 15000); } }),EV('n_news', { t: 'Новини', draw: (c) => { const n = applyNews(c.g); return { t: n.t, d: n.d, e: c.w.news[c.w.news.length - 1].e }; }, view: (c, P) => ({ t: P.t, text: P.d, rows: [['Наслідки', P.e]], opts: OK }), act: () => 'Наслідки вже враховано для всіх гравців.' })]);
   DECKS.news[0].nolog = 1;
 
