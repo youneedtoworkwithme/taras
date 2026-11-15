@@ -128,9 +128,11 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 /* Top HUD */
 .top{
   flex:none;display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:8px;
-  padding:calc(var(--safe-t) + 8px) 12px 8px;
-  background:rgba(9,14,26,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.35);
+  padding:calc(var(--safe-t) + 8px) 14px 8px;
+  background:linear-gradient(180deg, rgba(13,20,36,.94) 0%, rgba(8,13,24,.88) 100%);
+  backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+  border-bottom:1px solid rgba(245,158,11,.22);
+  box-shadow:0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
 }
 .ib{
   width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
@@ -141,8 +143,8 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 .ib .dotn{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:var(--bad);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px}
 .bal{text-align:center;line-height:1.05;cursor:pointer;border-radius:14px;padding:2px}
 .bal small{display:block;font-size:11px;font-weight:700;color:var(--mute);letter-spacing:.05em;text-transform:uppercase}
-.bal b{font-family:var(--f-d);font-size:28px;font-weight:700;color:#34D399}
-.bal b.neg{color:#F87171}
+.bal b{font-family:var(--f-d);font-size:29px;font-weight:700;color:#34D399;text-shadow:0 0 22px rgba(16,185,129,.28)}
+.bal b.neg{color:#F87171;text-shadow:0 0 20px rgba(239,68,68,.28)}
 .bal em{display:block;font-style:normal;font-size:12px;font-weight:700;color:var(--ink2)}
 .me{width:46px;height:46px;border-radius:50%;border:2px solid var(--blue);overflow:hidden;background:#1E293B;padding:0;box-shadow:0 0 14px rgba(59,130,246,.35)}
 .me img{width:100%;height:100%;object-fit:cover;display:block}
@@ -167,11 +169,19 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 /* Bottom HUD */
 .bottom{
   flex:none;display:grid;grid-template-columns:auto minmax(0,640px) auto;justify-content:center;gap:10px;align-items:center;
-  padding:10px 12px calc(var(--safe-b) + 10px);
-  background:rgba(9,14,26,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(0,0,0,.35);
+  padding:10px 14px calc(var(--safe-b) + 10px);
+  background:linear-gradient(180deg, rgba(10,16,30,.88) 0%, rgba(5,9,18,.96) 100%);
+  backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+  border-top:1px solid rgba(245,158,11,.22);
+  box-shadow:0 -12px 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
 }
 .bottom .main{min-height:56px;font-size:17px;font-family:var(--f-d);letter-spacing:.01em}
+.bottom .btn.pri.main{
+  background:linear-gradient(135deg,#3B82F6 0%,#1D4ED8 55%,#1E40AF 100%);
+  border:1px solid rgba(147,197,253,.5);
+  box-shadow:0 8px 26px rgba(37,99,235,.48), inset 0 1px 0 rgba(255,255,255,.28);
+}
+.bottom .btn.pri.main:hover{box-shadow:0 10px 30px rgba(59,130,246,.62), inset 0 1px 0 rgba(255,255,255,.35)}
 .timer{width:58px;height:58px;position:relative;flex:none}
 .timer svg{width:58px;height:58px;transform:rotate(-90deg)}
 .timer b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-d);font-size:14px;font-weight:700;color:var(--ink)}
@@ -313,8 +323,8 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 .kpi .l{font-size:11px;color:var(--mute);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
 .kpi .v{font-family:var(--f-d);font-size:21px;font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#F8FAFC;font-variant-numeric:tabular-nums}
 .free{padding:14px;border-radius:18px;background:rgba(15,23,42,.82);border:1px solid var(--line)}
-.free .bar{height:12px;border-radius:999px;background:rgba(148,163,184,.16);overflow:hidden;margin:8px 0 6px}
-.free .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--money),#34D399);transition:width .8s}
+.free .bar{height:14px;border-radius:999px;background:rgba(148,163,184,.16);overflow:hidden;margin:8px 0 6px;border:1px solid rgba(255,255,255,.06)}
+.free .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#10B981 0%,#34D399 55%,#FBBF24 100%);box-shadow:0 0 16px rgba(16,185,129,.45);transition:width .8s}
 .sect h3{font-size:12px;font-family:var(--f-b);font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;align-items:center}
 .lines{display:grid;background:rgba(15,23,42,.78);border:1px solid var(--line);border-radius:16px;padding:4px 12px}
 .ln{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px;align-items:center;color:var(--ink2)}
@@ -488,7 +498,7 @@ body.static .scene *,body.static .cloud,body.static #board *{animation:none!impo
 /* ⬇ ОНЛАЙН-СЕРВЕР: вставте між лапками посилання веб-застосунку Apps Script (закінчується на /exec) */
 window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbxAJtzy86WUwg5NUtcgwJrw9sBlfgzp7EFGr77-LYomjbOalYan6y1jahGy9spLFyLJ/exec';
 </script>
-<script src="../enginecahsflow.js?v=20261115m"></script>
+<script src="../enginecahsflow.js?v=20261115n"></script>
 <script>
 (function () {
 'use strict';
@@ -1462,7 +1472,7 @@ function renderBoard() {
       h += '<g class="tile" data-tile="rat' + i + '"><rect x="' + (x + 4) + '" y="' + (y + 8) + '" width="' + (T - 8) + '" height="' + (T - 8) + '" rx="18" fill="#060A13" opacity=".85"/><rect id="cr' + i + '" x="' + (x + 4) + '" y="' + (y + 4) + '" width="' + (T - 8) + '" height="' + (T - 8) + '" rx="18" fill="#111B2E" stroke="' + col + '" stroke-width="2.2" stroke-opacity=".85"/><rect x="' + (x + 12) + '" y="' + (y + 8) + '" width="' + (T - 24) + '" height="5" rx="2.5" fill="' + col + '"/><rect x="' + (x + 4) + '" y="' + (y + 4) + '" width="' + (T - 8) + '" height="' + (T - 8) + '" rx="18" fill="url(#hi)" opacity=".45"/>' + glyph(k, x + T / 2, y + T / 2 - 10, 1.65, col) + '<text x="' + (x + T / 2) + '" y="' + (y + T - 14) + '" text-anchor="middle" font-size="' + fs + '" font-weight="800" fill="#F8FAFC" font-family="Manrope,Arial,sans-serif">' + nm + '</text></g>'; });
     const [sx, sy] = ratXY(0); h += '<g style="pointer-events:none"><rect x="' + (sx - 30) + '" y="' + (sy - 52) + '" width="60" height="18" rx="9" fill="#1E293B" stroke="#3B82F6" stroke-width="1.2"/><text x="' + sx + '" y="' + (sy - 39) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#F8FAFC" font-family="Manrope,Arial,sans-serif">СТАРТ ▸</text></g>';
     h += '<circle cx="' + BD.fcx + '" cy="' + BD.fcy + '" r="' + (BD.Rf + 6) + '" fill="#111827" stroke="#D97706" stroke-width="2"/>';
-    CF.FAST.forEach((c, i) => { const k = CF.CELL[c].c; const col = CFILL[c] || CFILL[k]; h += '<path class="tile" data-tile="fast' + i + '" id="cf' + i + '" d="' + fsector(i, .012) + '" fill="' + col + '" opacity=".92"/>'; const [x, y] = fastXY(i); h += '<g style="pointer-events:none">' + glyph(c in GLYPH ? c : k, x, y - 6, BD.wf > 60 ? 1.05 : .85, '#fff') + '<text x="' + x + '" y="' + (y + (BD.wf > 60 ? 18 : 14)) + '" text-anchor="middle" font-size="' + (BD.wf > 60 ? 10.5 : 9) + '" font-weight="800" fill="#fff" font-family="Manrope,Arial,sans-serif">' + (c === 'charity' ? 'Добро' : (CNAME[c] || '')) + '</text></g>'; });
+    CF.FAST.forEach((c, i) => { const k = CF.CELL[c].c; const col = CFILL[c] || CFILL[k]; h += '<path class="tile" data-tile="fast' + i + '" id="cf' + i + '" d="' + fsector(i, .014) + '" fill="#0D1628" stroke="' + col + '" stroke-width="1.8" stroke-opacity=".88"/>'; const [x, y] = fastXY(i); h += '<g style="pointer-events:none">' + glyph(c in GLYPH ? c : k, x, y - 6, BD.wf > 60 ? 1.05 : .85, col) + '<text x="' + x + '" y="' + (y + (BD.wf > 60 ? 18 : 14)) + '" text-anchor="middle" font-size="' + (BD.wf > 60 ? 10.5 : 9) + '" font-weight="800" fill="#F8FAFC" font-family="Manrope,Arial,sans-serif">' + (c === 'charity' ? 'Добро' : (CNAME[c] || '')) + '</text></g>'; });
     const rIn = BD.Rf - BD.wf - 4; h += '<circle cx="' + BD.fcx + '" cy="' + BD.fcy + '" r="' + rIn + '" fill="#0B1324"/>';
     h += '<text x="' + BD.fcx + '" y="' + (BD.fcy - rIn + 22) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#FBBF24" font-family="Manrope,Arial,sans-serif">★ ВЕЛИКЕ КОЛО</text>';
     h += '<g id="plaza"></g><g id="hl"></g><g id="bld"></g><g id="life" style="pointer-events:none"></g><g id="toks"></g>';
