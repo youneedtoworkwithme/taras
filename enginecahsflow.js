@@ -64,30 +64,42 @@
   /* ---------- професії ---------- */
   // liabs: [назва, борг, платіж, тип, річна ставка]
   const PROF = [
-    { id: 'dev', n: 'Програміст', sub: 'ФОП 3 група, аутсорс', emp: 'fop3', sal: 120000, housing: ['Оренда 1к квартири', 20000, 1], food: 18000, transport: 4500, comm: 2200, kids: 0, cash: 60000, ai: 45, aiRisk: .5, age: 27, car: 1, stress: 35,
-      liabs: [['Авто в кредит', 520000, 14500, 'car', .16], ['Кредитна картка', 40000, 2000, 'card', .42]] },
-    { id: 'doc', n: 'Лікар', sub: 'Комунальна лікарня', emp: 'emp', sal: 26000, partner: 18000, housing: ['Комуналка (своя квартира)', 3800, 0], food: 7000, transport: 1500, comm: 700, kids: 1, cash: 12000, ai: 15, aiRisk: .1, age: 34, car: 0, stress: 45,
-      liabs: [['Іпотека «єОселя» 3%', 1300000, 7200, 'mortgage', .03], ['Кредитна картка', 15000, 750, 'card', .42]] },
-    { id: 'teach', n: 'Вчитель', sub: 'Школа, 1,5 ставки', emp: 'emp', sal: 16500, partner: 15000, housing: ['Комуналка (своя квартира)', 3200, 0], food: 6500, transport: 1200, comm: 700, kids: 1, cash: 6000, ai: 20, aiRisk: .2, age: 31, car: 0, stress: 40,
+    { id: 'cashier', n: 'Касир у супермаркеті', sub: 'Роздрібна торгівля', emp: 'emp', sal: 16500, housing: ['Оренда кімнати', 7500, 1], food: 5000, transport: 900, comm: 600, kids: 0, cash: 3000, ai: 5, aiRisk: .55, age: 23, car: 0, stress: 42,
+      liabs: [['Кредитна картка', 12000, 600, 'card', .42]] },
+    { id: 'guard', n: 'Охоронець', sub: 'Бізнес-центр, позмінно', emp: 'emp', sal: 15500, partner: 14000, housing: ['Комуналка (старий фонд)', 2800, 0], food: 6500, transport: 1000, comm: 600, kids: 1, cash: 4000, ai: 5, aiRisk: .2, age: 43, car: 0, stress: 32,
+      liabs: [['Споживчий кредит', 25000, 1500, 'cons', .48]] },
+    { id: 'barista', n: 'Бариста', sub: 'Мережа кав’ярень у Львові', emp: 'emp', sal: 19500, housing: ['Оренда кімнати', 8500, 1], food: 5500, transport: 1000, comm: 650, kids: 0, cash: 5000, ai: 10, aiRisk: .15, age: 22, car: 0, stress: 38,
+      liabs: [['Розстрочка на телефон', 18000, 1500, 'inst', 0]] },
+    { id: 'teach', n: 'Вчитель', sub: 'Школа, 1,5 ставки', emp: 'emp', sal: 17500, partner: 16000, housing: ['Комуналка (своя квартира)', 3400, 0], food: 7000, transport: 1200, comm: 700, kids: 1, cash: 6000, ai: 20, aiRisk: .2, age: 31, car: 0, stress: 42,
       liabs: [['Іпотека «єОселя» 3%', 950000, 5300, 'mortgage', .03], ['Кредитна картка', 8000, 400, 'card', .42]] },
-    { id: 'sales', n: 'Менеджер з продажу', sub: 'Сантехніка й опалення', emp: 'emp', sal: 38000, housing: ['Оренда 1к квартири', 11000, 1], food: 6500, transport: 1800, comm: 800, kids: 0, cash: 15000, ai: 25, aiRisk: .3, age: 26, car: 0, stress: 35,
-      liabs: [['Кредитна картка', 20000, 1000, 'card', .42], ['Розстрочка на iPhone', 30000, 2500, 'inst', 0]] },
-    { id: 'dir', n: 'Директор магазину', sub: 'Мережа будтоварів', emp: 'emp', sal: 58000, partner: 20000, housing: ['Оренда 2к квартири', 17000, 1], food: 12000, transport: 3500, comm: 1200, kids: 1, cash: 40000, ai: 35, aiRisk: .2, age: 35, car: 1, stress: 50,
-      liabs: [['Авто в кредит', 380000, 10500, 'car', .17], ['Кредитна картка', 30000, 1500, 'card', .42]] },
-    { id: 'plumb', n: 'Майстер-сантехнік', sub: 'ФОП 2 група', emp: 'fop2', sal: 48000, partner: 16000, housing: ['Оренда 2к квартири', 12000, 1], food: 9000, transport: 4500, comm: 900, kids: 2, cash: 25000, ai: 10, aiRisk: .05, age: 38, car: 1, stress: 35,
-      liabs: [['Інструмент у кредит', 60000, 3000, 'inst', 0], ['Бус у кредит', 300000, 8500, 'car', .18]] },
-    { id: 'acc', n: 'Бухгалтер', sub: 'Аутсорс-бухгалтерія', emp: 'emp', sal: 29000, partner: 15000, housing: ['Оренда 1к квартири', 12000, 1], food: 7500, transport: 1500, comm: 800, kids: 1, cash: 20000, ai: 30, aiRisk: .6, age: 33, car: 0, stress: 40,
-      liabs: [['Кредитна картка', 10000, 500, 'card', .42]] },
-    { id: 'smm', n: 'SMM-менеджер', sub: 'ФОП 3 група, фриланс', emp: 'fop3', sal: 36000, housing: ['Оренда смарт-квартири', 11000, 1], food: 8000, transport: 1200, comm: 1600, kids: 0, cash: 10000, ai: 40, aiRisk: .75, age: 24, car: 0, stress: 45,
+    { id: 'nurse', n: 'Медсестра', sub: 'Обласна лікарня', emp: 'emp', sal: 18500, housing: ['Живе з батьками (частка комуналки)', 2600, 0], food: 5500, transport: 1000, comm: 600, kids: 0, cash: 4500, ai: 10, aiRisk: .1, age: 25, car: 0, stress: 45,
+      liabs: [['Кредитна картка', 9000, 450, 'card', .42]] },
+    { id: 'doc', n: 'Лікар', sub: 'Комунальна лікарня', emp: 'emp', sal: 28000, partner: 18000, housing: ['Комуналка (своя квартира)', 4000, 0], food: 8000, transport: 1600, comm: 800, kids: 1, cash: 12000, ai: 15, aiRisk: .1, age: 34, car: 0, stress: 46,
+      liabs: [['Іпотека «єОселя» 3%', 1300000, 7200, 'mortgage', .03], ['Кредитна картка', 15000, 750, 'card', .42]] },
+    { id: 'acc', n: 'Бухгалтер', sub: 'Аутсорс-бухгалтерія', emp: 'emp', sal: 30000, partner: 16000, housing: ['Оренда 1к квартири', 16500, 1], food: 8000, transport: 1500, comm: 800, kids: 1, cash: 18000, ai: 30, aiRisk: .6, age: 33, car: 0, stress: 40,
+      liabs: [['Кредитна картка', 14000, 700, 'card', .42]] },
+    { id: 'smm', n: 'SMM-менеджер', sub: 'ФОП 3 група, фриланс', emp: 'fop3', sal: 32000, housing: ['Оренда смарт-квартири', 14500, 1], food: 7500, transport: 1200, comm: 1500, kids: 0, cash: 10000, ai: 40, aiRisk: .75, age: 24, car: 0, stress: 45,
       liabs: [['Розстрочка на MacBook', 45000, 3750, 'inst', 0]] },
-    { id: 'truck', n: 'Далекобійник', sub: 'Міжнародні перевезення', emp: 'emp', sal: 52000, partner: 8000, housing: ['Комуналка (своя квартира)', 3600, 0], food: 10000, transport: 1000, comm: 800, kids: 2, cash: 30000, ai: 5, aiRisk: .35, age: 41, car: 1, stress: 40,
-      liabs: [['Споживчий кредит', 80000, 4000, 'cons', .6]] },
-    { id: 'taxi', n: 'Водій таксі', sub: 'ФОП 2 група, Bolt/Uklon', emp: 'fop2', sal: 38000, housing: ['Оренда кімнати', 8000, 1], food: 6000, transport: 5500, comm: 700, kids: 0, cash: 5000, ai: 10, aiRisk: .45, age: 29, car: 1, stress: 40,
-      liabs: [['Авто в кредит', 250000, 8000, 'car', .2]] },
-    { id: 'nurse', n: 'Медсестра', sub: 'Обласна лікарня', emp: 'emp', sal: 17000, housing: ['Живе з батьками (частка комуналки)', 2500, 0], food: 5500, transport: 1000, comm: 600, kids: 0, cash: 4000, ai: 10, aiRisk: .1, age: 25, car: 0, stress: 45,
-      liabs: [['Кредитна картка', 6000, 300, 'card', .42]] },
-    { id: 'law', n: 'Юрист', sub: 'Юридична фірма', emp: 'emp', sal: 68000, housing: ['Оренда 1к у центрі', 14000, 1], food: 10000, transport: 3000, comm: 1200, kids: 0, cash: 50000, ai: 35, aiRisk: .45, age: 30, car: 1, stress: 50,
+    { id: 'taxi', n: 'Водій таксі', sub: 'ФОП 2 група, Bolt/Uklon', emp: 'fop2', sal: 33000, housing: ['Оренда 1к на околиці', 13500, 1], food: 6500, transport: 5500, comm: 700, kids: 0, cash: 6000, ai: 10, aiRisk: .45, age: 29, car: 1, stress: 42,
+      liabs: [['Авто в кредит', 240000, 7800, 'car', .2]] },
+    { id: 'sales', n: 'Менеджер з продажу', sub: 'Сантехніка й опалення', emp: 'emp', sal: 34000, housing: ['Оренда 1к квартири', 16000, 1], food: 7000, transport: 1800, comm: 800, kids: 0, cash: 14000, ai: 25, aiRisk: .3, age: 26, car: 0, stress: 38,
+      liabs: [['Кредитна картка', 20000, 1000, 'card', .42], ['Розстрочка на iPhone', 30000, 2500, 'inst', 0]] },
+    { id: 'plumb', n: 'Майстер-сантехнік', sub: 'ФОП 2 група', emp: 'fop2', sal: 42000, partner: 16000, housing: ['Оренда 2к квартири', 18000, 1], food: 9500, transport: 4500, comm: 900, kids: 2, cash: 22000, ai: 10, aiRisk: .05, age: 38, car: 1, stress: 36,
+      liabs: [['Інструмент у кредит', 60000, 3000, 'inst', 0], ['Бус у кредит', 300000, 8500, 'car', .18]] },
+    { id: 'truck', n: 'Далекобійник', sub: 'Міжнародні перевезення', emp: 'emp', sal: 46000, partner: 10000, housing: ['Комуналка (своя квартира)', 3800, 0], food: 11000, transport: 1200, comm: 900, kids: 2, cash: 26000, ai: 5, aiRisk: .35, age: 41, car: 1, stress: 42,
+      liabs: [['Споживчий кредит', 80000, 4000, 'cons', .5]] },
+    { id: 'dir', n: 'Директор магазину', sub: 'Мережа будтоварів', emp: 'emp', sal: 62000, partner: 22000, housing: ['Оренда 2к квартири', 24000, 1], food: 14000, transport: 4000, comm: 1300, kids: 1, cash: 35000, ai: 35, aiRisk: .2, age: 35, car: 1, stress: 50,
+      liabs: [['Авто в кредит', 380000, 10500, 'car', .17], ['Кредитна картка', 30000, 1500, 'card', .42]] },
+    { id: 'law', n: 'Юрист', sub: 'Юридична фірма', emp: 'emp', sal: 76000, housing: ['Оренда 1к у центрі', 23000, 1], food: 13000, transport: 3500, comm: 1300, kids: 0, cash: 42000, ai: 35, aiRisk: .45, age: 30, car: 1, stress: 50,
       liabs: [['Авто в кредит', 450000, 12000, 'car', .16], ['Кредитна картка', 35000, 1750, 'card', .42]] },
+    { id: 'architect', n: 'Головний архітектор', sub: 'Будівельна компанія', emp: 'emp', sal: 82000, partner: 24000, housing: ['Оренда 2к у новому ЖК', 28000, 1], food: 16000, transport: 4500, comm: 1500, kids: 1, cash: 48000, ai: 30, aiRisk: .25, age: 36, car: 1, stress: 48,
+      liabs: [['Авто в кредит', 520000, 14500, 'car', .16]] },
+    { id: 'dev', n: 'Програміст', sub: 'ФОП 3 група, аутсорс', emp: 'fop3', sal: 90000, housing: ['Оренда 1к у новому ЖК', 23000, 1], food: 16000, transport: 4500, comm: 2200, kids: 0, cash: 55000, ai: 45, aiRisk: .5, age: 28, car: 1, stress: 38,
+      liabs: [['Авто в кредит', 560000, 15800, 'car', .16], ['Кредитна картка', 40000, 2000, 'card', .42]] },
+    { id: 'surgeon', n: 'Хірург-стоматолог', sub: 'Приватна клініка у Львові', emp: 'emp', sal: 95000, housing: ['Оренда 2к у центрі', 29000, 1], food: 16000, transport: 4500, comm: 1400, kids: 1, cash: 58000, ai: 20, aiRisk: .05, age: 35, car: 1, stress: 46,
+      liabs: [['Стоматобладнання в кредит', 420000, 14000, 'inst', .12], ['Авто в кредит', 450000, 12500, 'car', .16]] },
+    { id: 'bizowner', n: 'Власник міні-мережі', sub: 'ФОП 3 група, 2 торгові точки', emp: 'fop3', sal: 145000, partner: 25000, housing: ['Комуналка + охорона (власний будинок)', 12000, 0], food: 24000, transport: 9000, comm: 2500, kids: 2, cash: 220000, ai: 25, aiRisk: .15, age: 40, car: 1, stress: 58,
+      liabs: [['Бізнес-кредит на оборотку', 950000, 32000, 'biz', .19], ['Лізинг позашляховика', 780000, 22000, 'car', .17]] },
   ];
   CF.PROF = PROF;
   const DREAMS = [
@@ -117,18 +129,24 @@
   CF.profOf = profOf;
 
   const PROF_BASE = {
-    dev:   { tech: 45, biz: 15, mkt: 15, fin: 20, neg: 20, law: 10, media: 15, gov: 12 },
-    smm:   { tech: 20, biz: 20, mkt: 50, fin: 15, neg: 30, law: 10, media: 38, gov: 10 },
-    law:   { tech:  5, biz: 20, mkt: 15, fin: 20, neg: 35, law: 50, media: 22, gov: 30 },
-    dir:   { tech: 10, biz: 42, mkt: 25, fin: 25, neg: 35, law: 15, media: 18, gov: 22 },
-    sales: { tech: 10, biz: 22, mkt: 30, fin: 15, neg: 45, law: 10, media: 16, gov: 12 },
-    acc:   { tech: 15, biz: 20, mkt:  5, fin: 48, neg: 15, law: 28, media:  8, gov: 18 },
-    doc:   { tech: 22, biz: 12, mkt: 10, fin: 12, neg: 20, law: 15, media: 12, gov: 16 },
-    nurse: { tech: 18, biz:  8, mkt: 10, fin: 10, neg: 18, law: 10, media: 10, gov: 12 },
-    plumb: { tech: 38, biz: 18, mkt: 10, fin: 12, neg: 25, law:  8, media:  8, gov: 10 },
-    truck: { tech: 32, biz: 15, mkt:  5, fin: 12, neg: 22, law: 10, media:  6, gov: 12 },
-    taxi:  { tech: 25, biz: 14, mkt: 10, fin: 10, neg: 25, law:  8, media: 10, gov:  9 },
-    teach: { tech: 15, biz: 10, mkt: 20, fin: 12, neg: 25, law: 15, media: 14, gov: 12 },
+    cashier:   { tech:  8, biz:  8, mkt: 10, fin: 10, neg: 18, law:  6, media:  5, gov:  5 },
+    guard:     { tech: 10, biz:  8, mkt:  5, fin: 10, neg: 15, law: 12, media:  5, gov: 10 },
+    barista:   { tech: 12, biz: 14, mkt: 18, fin: 10, neg: 22, law:  6, media: 14, gov:  6 },
+    dev:       { tech: 45, biz: 15, mkt: 15, fin: 20, neg: 20, law: 10, media: 15, gov: 12 },
+    smm:       { tech: 20, biz: 20, mkt: 50, fin: 15, neg: 30, law: 10, media: 38, gov: 10 },
+    law:       { tech:  5, biz: 20, mkt: 15, fin: 20, neg: 35, law: 50, media: 22, gov: 25 },
+    dir:       { tech: 10, biz: 42, mkt: 25, fin: 25, neg: 35, law: 15, media: 18, gov: 18 },
+    sales:     { tech: 10, biz: 22, mkt: 30, fin: 15, neg: 45, law: 10, media: 16, gov: 10 },
+    acc:       { tech: 15, biz: 20, mkt:  5, fin: 48, neg: 15, law: 28, media:  8, gov: 15 },
+    doc:       { tech: 22, biz: 12, mkt: 10, fin: 12, neg: 20, law: 15, media: 12, gov: 14 },
+    surgeon:   { tech: 35, biz: 22, mkt: 18, fin: 20, neg: 28, law: 15, media: 20, gov: 16 },
+    architect: { tech: 38, biz: 26, mkt: 18, fin: 22, neg: 30, law: 22, media: 18, gov: 18 },
+    bizowner:  { tech: 18, biz: 48, mkt: 30, fin: 32, neg: 42, law: 24, media: 22, gov: 24 },
+    nurse:     { tech: 18, biz:  8, mkt: 10, fin: 10, neg: 18, law: 10, media: 10, gov: 10 },
+    plumb:     { tech: 38, biz: 18, mkt: 10, fin: 12, neg: 25, law:  8, media:  8, gov: 10 },
+    truck:     { tech: 32, biz: 15, mkt:  5, fin: 12, neg: 22, law: 10, media:  6, gov: 10 },
+    taxi:      { tech: 25, biz: 14, mkt: 10, fin: 10, neg: 25, law:  8, media: 10, gov:  8 },
+    teach:     { tech: 15, biz: 10, mkt: 20, fin: 12, neg: 25, law: 15, media: 14, gov: 10 },
   };
   function ensureStats(p) {
     if (!p) return p;
@@ -139,6 +157,11 @@
     if (!p.courses) p.courses = [];
     if (!p.ventures) p.ventures = [];
     if (p.tckShield == null) p.tckShield = 0;
+    if (p.pendingShieldM == null) p.pendingShieldM = 0;
+    if (p.lastCourseM == null) p.lastCourseM = -99;
+    if (p.lastGovM == null) p.lastGovM = -99;
+    if (p.voluntaryQuit == null) p.voluntaryQuit = 0;
+    if (!p.courseReveals) p.courseReveals = {};
     if (p.fastMonths == null) p.fastMonths = 0;
     if (!p.royalties) p.royalties = [];
     if (p.kids > 3) p.kids = 3;
@@ -146,23 +169,40 @@
   }
   CF.ensureStats = ensureStats;
 
+  CF.timeUsage = function (p) {
+    ensureStats(p);
+    const hasJob = p.track === 'rat' && !p.voluntaryQuit && !p.unemp;
+    const jobPct = hasJob ? 60 : 0;
+    const gigsPct = (p.gigs || []).length * 20;
+    const ventPct = (p.ventures || []).length * 20;
+    const used = jobPct + gigsPct + ventPct;
+    return { used, free: Math.max(0, 100 - used), max: 100, hasJob, jobPct, gigsPct, ventPct };
+  };
+
   const COURSES = [
-    { id: 'c_ai', n: 'AI & Автоматизація бізнесу', sphere: 'tech', base: 24000, fit: ['dev', 'smm', 'acc', 'dir'], desc: 'Нейромережі, автоматизація процесів і зниження ризику втратити роботу.', eff: { ai: 22, tech: 18, biz: 8 }, sal: 0.10 },
-    { id: 'c_mkt', n: 'Вірусний маркетинг та PR', sphere: 'mkt', base: 22000, fit: ['smm', 'sales', 'dir', 'teach'], desc: 'Просування бренду в соцмережах. Сильно піднімає медійність (і ризик хейту).', eff: { mkt: 24, neg: 8, media: 20 }, sal: 0.06 },
-    { id: 'c_biz', n: 'Операційний менеджмент та масштабування', sphere: 'biz', base: 34000, fit: ['dir', 'sales', 'plumb', 'dev'], desc: 'Систематизація бізнесу, делегування та вихід на мережу точок.', eff: { biz: 26, fin: 10, neg: 10 }, sal: 0.08 },
-    { id: 'c_neg', n: 'Жорсткі переговори та продажі B2B', sphere: 'neg', base: 19000, fit: ['sales', 'law', 'dir', 'smm', 'taxi'], desc: 'Допомагає вибивати кращі умови, знижки та контракти.', eff: { neg: 26, mkt: 10, media: 6 }, sal: 0.08 },
-    { id: 'c_fin', n: 'Корпоративні фінанси й аудит', sphere: 'fin', base: 28000, fit: ['acc', 'dir', 'law', 'dev'], desc: 'Управління капіталом, податкова оптимізація та оцінка активів.', eff: { fin: 28, law: 10, biz: 8 }, sal: 0.07 },
-    { id: 'c_gr', n: 'Право, GR та держзакупівлі', sphere: 'law', base: 38000, fit: ['law', 'dir', 'acc', 'doc'], desc: 'Взаємодія з органами, тендери, перевірки та юридичний захист.', eff: { law: 25, gov: 22, neg: 10 }, sal: 0.05 },
-    { id: 'c_tech', n: 'Інженерія, автосервіс та діагностика', sphere: 'tech', base: 21000, fit: ['plumb', 'truck', 'taxi', 'dev'], desc: 'Прикладна технічна база для власної майстерні, СТО або логістики.', eff: { tech: 26, biz: 10 }, sal: 0.07 },
-    { id: 'c_hype', n: 'Марафон «Успішний успіх» від блогера', sphere: 'mkt', base: 15000, fit: ['smm'], desc: 'Гучна обіцянка мільйонів за тиждень. Користь сумнівна, але додає медійності.', eff: { media: 14, mkt: 5, biz: 2 }, sal: 0 },
+    { id: 'c_ai', n: 'AI & Автоматизація бізнесу', sphere: 'tech', base: 24000, fit: ['dev', 'smm', 'acc', 'dir', 'architect'], desc: 'Нейромережі, автоматизація процесів і робота з даними.', eff: { ai: 20, tech: 16, biz: 8 }, sal: 0.08 },
+    { id: 'c_mkt', n: 'Вірусний маркетинг та PR', sphere: 'mkt', base: 22000, fit: ['smm', 'sales', 'dir', 'teach', 'barista'], desc: 'Просування бренду в соцмережах і залучення аудиторії.', eff: { mkt: 22, neg: 8, media: 16 }, sal: 0.05 },
+    { id: 'c_biz', n: 'Операційний менеджмент та масштабування', sphere: 'biz', base: 34000, fit: ['dir', 'sales', 'plumb', 'dev', 'bizowner'], desc: 'Систематизація бізнесу, делегування та управління мережею.', eff: { biz: 24, fin: 10, neg: 10 }, sal: 0.07 },
+    { id: 'c_neg', n: 'Жорсткі переговори та продажі B2B', sphere: 'neg', base: 19000, fit: ['sales', 'law', 'dir', 'smm', 'taxi', 'bizowner'], desc: 'Складні переговори, торг, знижки та контракти.', eff: { neg: 24, mkt: 10, media: 5 }, sal: 0.07 },
+    { id: 'c_fin', n: 'Корпоративні фінанси й аудит', sphere: 'fin', base: 28000, fit: ['acc', 'dir', 'law', 'dev', 'bizowner'], desc: 'Управління капіталом, податкове планування та оцінка активів.', eff: { fin: 24, law: 10, biz: 8 }, sal: 0.06 },
+    { id: 'c_gr', n: 'Право, GR та держзакупівлі', sphere: 'law', base: 38000, fit: ['law', 'dir', 'acc', 'doc', 'bizowner'], desc: 'Взаємодія з держструктурами, тендери та юридичний супровід.', eff: { law: 22, gov: 14, neg: 8 }, sal: 0.05 },
+    { id: 'c_tech', n: 'Інженерія, автосервіс та діагностика', sphere: 'tech', base: 21000, fit: ['plumb', 'truck', 'taxi', 'dev', 'architect'], desc: 'Прикладна технічна база для майстерні, СТО або будівництва.', eff: { tech: 24, biz: 10 }, sal: 0.06 },
+    { id: 'c_eng', n: 'Бізнес-англійська для міжнародних контрактів', sphere: 'neg', base: 20000, fit: ['dev', 'smm', 'law', 'architect', 'surgeon'], desc: 'Ділове листування й переговори з закордонними замовниками.', eff: { neg: 14, mkt: 12, biz: 10 }, sal: 0.08 },
+    { id: 'c_hype', n: 'Марафон «Успішний успіх» від блогера', sphere: 'mkt', base: 16000, fit: [], desc: 'Мотиваційні вебінари «як мислити як мільйонер» і чек-листи.', eff: {}, sal: 0, useless: 1 },
+    { id: 'c_sig', n: 'Закритий клуб криптосигналів «х100»', sphere: 'fin', base: 25000, fit: [], desc: 'Телеграм-канал з інсайдами, сигналами та обіцянкою швидкого ікса.', eff: {}, sal: 0, useless: 1 },
+    { id: 'c_astro', n: 'Нейро-коучинг і матриця долі для бізнесу', sphere: 'biz', base: 18000, fit: [], desc: 'Розбір фінансового коду та енергетичні практики для підприємців.', eff: {}, sal: 0, useless: 1 },
   ];
   CF.COURSES = COURSES;
-  CF.courseQuote = function (p, c) {
+  CF.courseQuote = function (p, c, curM) {
     ensureStats(p);
     const isFit = c.fit.includes(p.prof);
-    const price = Math.round(c.base * (isFit ? 0.85 : 1.25) / 500) * 500;
-    const mult = isFit ? 1.25 : (c.id === 'c_hype' ? 0.5 : 0.75);
-    return { price, isFit, mult, bought: (p.courses || []).includes(c.id) };
+    const price = Math.round(c.base * (isFit ? 0.9 : 1.15) / 500) * 500;
+    const mult = c.useless ? 0 : (isFit ? 1.15 : 0.65);
+    const monthsSince = (curM != null ? curM : (p.lastCourseM || 0) + 99) - (p.lastCourseM ?? -99);
+    const cooldownLeft = Math.max(0, 3 - monthsSince);
+    const bought = (p.courses || []).includes(c.id);
+    const reveal = (p.courseReveals || {})[c.id] || null;
+    return { price, isFit, mult, bought, cooldownLeft, reveal };
   };
 
   const VENTURES = [
@@ -190,13 +230,13 @@
 
   function taxOf(p, w) {
     const esv = r10(K.ESV * (w.mw || 1));
-    if (p.track === 'fast') return 0;
+    if (p.track === 'fast' || p.voluntaryQuit) return 0;
     if (p.emp === 'emp') return p.unemp > 0 ? 0 : Math.round(p.sal * K.EMP_TAX);
     if (p.emp === 'fop3') return (p.unemp > 0 ? 0 : Math.round(p.sal * K.FOP3)) + esv;
     return r10(K.MINW * (w.mw || 1) * 0.3) + esv; // ФОП 2: єдиний 20% + військовий 10% мінімалки + ЄСВ
   }
   function salaryNow(p) {
-    if (p.track === 'fast') return 0;
+    if (p.track === 'fast' || p.voluntaryQuit) return 0;
     if (p.unemp > 0) return 0;
     let s = p.sal; if (p.cut && p.cut.left > 0) s = Math.round(s * p.cut.k); return s;
   }
@@ -381,6 +421,16 @@
       }
     }
     if (p.tckShield > 0) p.tckShield--;
+    if (p.pendingShieldM > 0) {
+      p.pendingShieldM--;
+      if (p.pendingShieldM === 0) {
+        p.tckShield = Math.max(p.tckShield, 6);
+        notes.push('Бронювання погоджено та активовано на 6 місяців!');
+        L(g, 'Бронювання погоджено та активовано на 6 місяців.', 'good', uid);
+      } else {
+        notes.push('Бронювання на розгляді (ще ' + p.pendingShieldM + ' міс.)');
+      }
+    }
     p.assets.forEach((a) => {
       if (a.kind === 'biz' && a.vol) { const exp = assetIncome(a, w, p); const real = Math.round(exp * (1 + randn() * a.vol * 0.6)); actual += real - exp; }
       if (a.kind === 're' && a.vac > 0) { actual -= Math.round(a.rent * (1 - rentTax(p))); a.vac--; notes.push(a.n + ': немає орендаря'); }
@@ -468,14 +518,22 @@
   /* ---------- світ (раз на коло = місяць) ---------- */
   function advanceWorld(g) {
     const w = g.world; w.m++;
+    const regime = rnd() < 0.14 ? (rnd() < 0.5 ? -0.04 : 0.035) : 0; // випадковий ринковий імпульс
     Object.keys(SYM).forEach((k) => {
-      const s = SYM[k]; let r = s.mu + randn() * s.sd;
-      if (k === 'MEME' && rnd() < 0.04) r = Math.log(rint(3, 8));
-      if (eff(w, 'aiboom') && k === 'AI') r += 0.03;
+      const s = SYM[k];
+      let r = s.mu + randn() * s.sd + (k === 'GOLD' ? -regime * 0.5 : regime);
+      if (k === 'MEME' && rnd() < 0.05) r = Math.log(rint(2, 6));
+      if (eff(w, 'aiboom') && k === 'AI') r += 0.035;
       w.px[k] = Math.max(k === 'MEME' ? 0.0005 : 1, +(w.px[k] * Math.exp(r)).toFixed(k === 'MEME' ? 5 : 2));
     });
-    w.re = +(w.re * Math.exp(0.003 + randn() * 0.012)).toFixed(4);
-    w.fx = +(w.fx * Math.exp(0.0025 + randn() * 0.007)).toFixed(2);
+    if (w.tk) {
+      Object.keys(w.tk).forEach((sym) => {
+        const step = (rnd() - 0.48) * 0.14 + regime;
+        w.tk[sym] = Math.max(2, +(w.tk[sym] * Math.exp(step)).toFixed(2));
+      });
+    }
+    w.re = +(w.re * Math.exp(0.003 + randn() * 0.015)).toFixed(4);
+    w.fx = +(w.fx * Math.exp(0.0025 + randn() * 0.009)).toFixed(2);
     w.infl = +((w.infl || 0.1) + 0.03 * (0.07 - (w.infl || 0.1))).toFixed(4);
     const mi = w.infl / 12 + randn() * 0.002; w.cpi = +(w.cpi * (1 + mi)).toFixed(4);
     ['SPX', 'AI', 'BTC'].forEach((k) => { w.pxHist[k] = (w.pxHist[k] || []).concat([w.px[k]]).slice(-36); });
@@ -490,12 +548,12 @@
         let msg = 'Новий рік: ціни зросли на ' + (inf * 100).toFixed(1) + '%. Ваші витрати на життя проіндексовано.';
         p.assets.forEach((a) => { if (a.kind === 're') a.rent = r100(a.rent * (1 + inf * 0.8)); if (a.kind === 'biz') a.cf = r100(a.cf * (1 + inf * 0.7)); });
         if (p.partner) p.partner = r100(p.partner * (1 + inf));
-        if (p.track === 'rat' && rnd() < 0.8) { const k = inf * (0.95 + rnd() * 0.5); p.sal = r100(p.sal * (1 + k)); msg += ' Зарплату підвищили на ' + (k * 100).toFixed(1) + '%. Оренда й прибутки бізнесів теж трохи зросли.'; }
-        else if (p.track === 'rat') msg += ' Зарплату не підвищили — реальний дохід впав.';
+        if (p.track === 'rat' && !p.voluntaryQuit && rnd() < 0.8) { const k = inf * (0.95 + rnd() * 0.5); p.sal = r100(p.sal * (1 + k)); msg += ' Зарплату підвищили на ' + (k * 100).toFixed(1) + '%. Оренда й прибутки бізнесів теж трохи зросли.'; }
+        else if (p.track === 'rat' && !p.voluntaryQuit) msg += ' Зарплату не підвищили — реальний дохід впав.';
         L(g, msg, 'sys', p.uid);
       });
     }
-    const nf = { rare: 0.15, norm: 0.3, often: 0.5 }[(g.rules && g.rules.news) || 'norm'] || 0.3;
+    const nf = { rare: 0.25, norm: 0.45, often: 0.65 }[(g.rules && g.rules.news) || 'norm'] || 0.45;
     if (rnd() < nf) applyNews(g, null);
     // ціни на швидкій оренді
     g.round = (g.round || 1) + 1;
@@ -744,16 +802,16 @@
       tip: 'Якщо ставка депозиту після податку нижча за інфляцію — гроші реально знецінюються.' }),
     RE('s_garage', {}, { n: 'Гараж на Сихові', tag: 'garage', usd: [7500, 10500], rent: [2000, 3000], maint: 150, fin: [{ k: 'cash', down: 1 }], text: 'Капітальний гараж у кооперативі. Здається під склад для інтернет-магазину. Попит стабільний.' }),
     RE('s_park', {}, { n: 'Паркомісце в ЖК', tag: 'garage', usd: [10000, 14000], rent: [2500, 3500], maint: 300, fin: [{ k: 'cash', down: 1 }], text: 'Підземний паркінг у новому ЖК — заодно й укриття. Мешканці охоче орендують.' }),
-    RE('s_smart', {}, { n: 'Смарт-квартира 19 м²', tag: 'flat', usd: [23000, 29000], rent: [7000, 9000], maint: 700, fin: [{ k: 'cash', down: 1 }], text: 'Компактна квартира у Львові біля університету. Студенти та ВПО орендують цілий рік.' }),
-    RE('s_stryi', {}, { n: '1к квартира у Стрию', tag: 'flat', usd: [27000, 33000], rent: [6500, 8500], maint: 700, fin: [{ k: 'cash', down: 1 }], text: 'Вторинка в райцентрі, потребує косметичного ремонту. Орендарі — переселенці, які працюють на місцевому підприємстві.' }),
-    RE('s_land', {}, { kind: 'land', n: 'Ділянка 10 соток під Львовом', tag: 'land', usd: [11000, 17000], rent: [0, 0], fin: [{ k: 'cash', down: 1 }], text: 'Земля під забудову, поряд планують нову дорогу. Доходу не дає, але може подорожчати.' }),
-    RE('s_newbuild', { cond: (c) => true }, { kind: 'newbuild', build: 18, n: 'Студія в новобудові', tag: 'newbuild', usd: [28000, 36000], rent: [8500, 11000], maint: 800, fin: [{ k: 'inst', down: 0.3, apr: 0, y: 2, n: 'розстрочка забудовника 0%', kind: 'inst' }, { k: 'cash', down: 1 }], text: 'ЖК на етапі котловану, ціна нижча за ринок на 25%. Ризик: забудовник може заморозити будівництво.' }),
-    BIZ('s_vend', { n: 'Кавовий автомат у бізнес-центрі', tag: 'coffee', cost: [120000, 160000], cf: [5000, 8000], vol: .25, offline: 1, text: 'Вендинговий автомат з кавою в БЦ на 400 працівників. Оренда місця і зернова кава — включено в розрахунок.' }),
-    BIZ('s_ev', { n: 'Зарядна станція для електромобілів', tag: 'auto', cost: [170000, 220000], cf: [6000, 9000], vol: .2, offline: 1, text: 'Швидка зарядна станція на 2 пости біля супермаркету. Кількість електроавто в Україні швидко зростає.' }),
-    BIZ('s_gen', { n: 'Генератори в оренду', tag: 'power', cost: [130000, 180000], cf: [3000, 5000], vol: .3, power: 1, text: 'Парк з 6 генераторів і 4 зарядних станцій. У звичайні місяці дохід скромний, під час блекаутів — у рази більший.' }),
-    BIZ('s_prom', { n: 'Інтернет-магазин на Prom', tag: 'shop', cost: [70000, 100000], cf: [3500, 6500], vol: .35, online: 1, text: 'Готовий магазин автотоварів з відгуками та складом у гаражі. Продажі через Prom і Rozetka.' }),
-    BIZ('s_tg', { n: 'Telegram-канал оголошень', tag: 'media', cost: [50000, 80000], cf: [3000, 5000], vol: .4, online: 1, text: 'Локальний канал «Робота і оголошення Львів», 28 тис. підписників. Дохід — платні публікації.' }),
-    BIZ('s_kiosk', { n: 'Кіоск кави біля зупинки', tag: 'coffee', cost: [280000, 360000], cf: [12000, 18000], vol: .35, offline: 1, text: 'Діючий кіоск «кава з собою» з бариста. Сезонність: взимку продажі вищі.' }),
+    RE('s_smart', {}, { n: 'Смарт-квартира 22 м²', tag: 'flat', usd: [28000, 35000], rent: [11000, 14000], maint: 800, fin: [{ k: 'cash', down: 1 }], text: 'Компактна смарт-квартира у Львові. Реальна ринкова оренда — попит стабільний цілий рік.' }),
+    RE('s_stryi', {}, { n: '1к квартира у Стрию', tag: 'flat', usd: [27000, 33000], rent: [7500, 9500], maint: 700, fin: [{ k: 'cash', down: 1 }], text: 'Вторинка в райцентрі, потребує косметичного ремонту. Орендарі — переселенці та працівники.' }),
+    RE('s_land', {}, { kind: 'land', n: 'Ділянка 10 соток під Львовом', tag: 'land', usd: [14000, 22000], rent: [0, 0], fin: [{ k: 'cash', down: 1 }], text: 'Земля під забудову, поряд планують нову дорогу. Доходу не дає, але може подорожчати.' }),
+    RE('s_newbuild', { cond: (c) => true }, { kind: 'newbuild', build: 18, n: 'Студія в новобудові', tag: 'newbuild', usd: [32000, 42000], rent: [12000, 15500], maint: 900, fin: [{ k: 'inst', down: 0.3, apr: 0, y: 2, n: 'розстрочка забудовника 0%', kind: 'inst' }, { k: 'cash', down: 1 }], text: 'ЖК на етапі котловану, ціна нижча за ринок на 25%. Ризик: забудовник може заморозити будівництво.' }),
+    BIZ('s_vend', { n: 'Кавовий автомат самообслуговування', tag: 'coffee', cost: [135000, 175000], cf: [16000, 24000], vol: .28, offline: 1, text: 'Кав\'ярня самообслуговування в БЦ чи лікарні. Реальна окупність по Україні — 7–10 міс., якщо хороша локація.' }),
+    BIZ('s_ev', { n: 'Зарядна станція для електромобілів', tag: 'auto', cost: [180000, 240000], cf: [9000, 14000], vol: .25, offline: 1, text: 'Швидка зарядна станція на 2 пости біля супермаркету. Кількість електроавто в Україні швидко зростає.' }),
+    BIZ('s_gen', { n: 'Генератори в оренду', tag: 'power', cost: [140000, 190000], cf: [5000, 9000], vol: .35, power: 1, text: 'Парк з 6 генераторів і 4 зарядних станцій. У звичайні місяці дохід скромний, під час блекаутів — у рази більший.' }),
+    BIZ('s_prom', { n: 'Інтернет-магазин на Prom', tag: 'shop', cost: [75000, 110000], cf: [5500, 9500], vol: .35, online: 1, text: 'Готовий магазин автотоварів з відгуками та складом у гаражі. Продажі через Prom і Rozetka.' }),
+    BIZ('s_tg', { n: 'Telegram-канал оголошень', tag: 'media', cost: [55000, 85000], cf: [4000, 7500], vol: .4, online: 1, text: 'Локальний канал «Робота і оголошення Львів», 28 тис. підписників. Дохід — платні публікації.' }),
+    BIZ('s_kiosk', { n: 'Кіоск кави біля зупинки', tag: 'coffee', cost: [290000, 380000], cf: [18000, 28000], vol: .35, offline: 1, text: 'Діючий МАФ «кава з собою» з бариста. Зарплата бариста й оренда місця враховані.' }),
     BIZ('s_tools', { n: 'Прокат будівельного інструменту', tag: 'tools', cost: [100000, 140000], cf: [5000, 7000], vol: .25, offline: 1, text: 'Перфоратори, бетономішалки, генератори в оренду майстрам. Попит зростає на відбудові.' }),
     BIZ('s_3d', { n: '3D-друк деталей для дронів', tag: 'drone', cost: [80000, 110000], cf: [5000, 8000], vol: .35, war: 1, text: 'Три 3D-принтери, замовлення від виробників FPV-дронів і волонтерів. Залежить від оборонного попиту.' }),
     EV('s_friend', { t: 'Друг просить позичити', draw: (c) => ({ amt: r10(50000 * c.w.cpi) }),
@@ -768,16 +826,16 @@
   const MORT = (down, apr, y) => ({ k: 'mort', down, apr, y, n: 'іпотека ' + Math.round(apr * 100) + '%', kind: 'mortgage' });
   const BLOAN = (down, apr, y) => ({ k: 'bl', down, apr, y, n: 'кредит для бізнесу ' + Math.round(apr * 100) + '%', kind: 'biz' });
   deck('big', [
-    RE('b_flat1', {}, { n: '1к квартира у Львові', tag: 'flat', usd: [62000, 74000], rent: [14000, 17500], maint: 1200, fin: [{ k: 'cash', down: 1 }, MORT(0.3, 0.17, 15)], text: 'Вторинка в Сихівському районі, 42 м², з ремонтом і орендарем. Іпотека з комерційною ставкою — подивіться, чи окупається.', wt: 1.3 }),
-    RE('b_flat2', {}, { n: '2к у зданому ЖК', tag: 'flat', usd: [85000, 98000], rent: [19000, 24000], maint: 1600, fin: [{ k: 'cash', down: 1 }, MORT(0.3, 0.16, 15)], text: 'Новий будинок з генератором і укриттям. Попит від айтішників та релокованих компаній.' }),
-    RE('b_house', {}, { n: 'Будинок під подобову оренду', tag: 'house', usd: [95000, 120000], rent: [40000, 55000], maint: 9000, fin: [{ k: 'cash', down: 1 }, MORT(0.4, 0.18, 10)], text: 'Котедж біля Брюховичів з сауною. Подобово на вихідні та свята. Дохід сезонний, потрібен менеджер.' }),
-    RE('b_comm', {}, { n: 'Комерційне приміщення 60 м²', tag: 'commercial', usd: [75000, 95000], rent: [32000, 42000], maint: 2000, fin: [{ k: 'cash', down: 1 }, MORT(0.4, 0.18, 10)], text: 'Перший поверх на жвавій вулиці, орендар — аптека з договором на 3 роки.' }),
-    RE('b_dohid', {}, { n: 'Прибутковий будинок: 4 смарт-квартири', tag: 'flat', usd: [140000, 165000], rent: [32000, 38000], maint: 3500, fin: [MORT(0.4, 0.16, 15), { k: 'cash', down: 1 }], text: 'Реконструйований будинок з 4 студіями під довгострокову оренду. Стабільний потік, але ремонти — за ваш рахунок.' }),
-    RE('b_sklad', {}, { n: 'Склад 300 м² для маркетплейсів', tag: 'commercial', usd: [105000, 130000], rent: [45000, 58000], maint: 3000, fin: [MORT(0.4, 0.18, 10), { k: 'cash', down: 1 }], text: 'Склад біля окружної, орендар — логістична компанія для Rozetka та Epicentr. Бум e-commerce.' }),
-    BIZ('b_coffee', { n: 'Франшиза кав\'ярні', tag: 'coffee', cost: [1150000, 1400000], cf: [42000, 60000], vol: .3, offline: 1, fin: [{ k: 'cash', down: 1 }, BLOAN(0.5, 0.2, 5)], text: 'Відома українська мережа кав\'ярень: паушальний внесок, обладнання, навчання. Роялті 5% уже враховано. Під час блекаутів без генератора дохід падає.' }),
-    BIZ('b_pizza', { n: 'Франшиза піцерії з доставкою', tag: 'food', cost: [2300000, 2800000], cf: [80000, 105000], vol: .3, offline: 1, online: 1, fin: [BLOAN(0.5, 0.2, 5), { k: 'cash', down: 1 }], text: 'Піцерія з власною доставкою і генератором. Під час локдаунів доставка рятує.' }),
-    BIZ('b_sto', { n: 'СТО на 2 пости', tag: 'auto', cost: [1700000, 2100000], cf: [62000, 82000], vol: .25, offline: 1, fin: [BLOAN(0.5, 0.19, 5), { k: 'cash', down: 1 }], text: 'Станція техобслуговування з досвідченими майстрами. Автопарк в Україні старіє — роботи вистачає.' }),
-    BIZ('b_wash', { n: 'Автомийка самообслуговування', tag: 'auto', cost: [3000000, 3600000], cf: [90000, 120000], vol: .3, offline: 1, fin: [BLOAN(0.5, 0.19, 7), { k: 'cash', down: 1 }], text: '4 пости самообслуговування без персоналу. Дуже залежить від світла.' }),
+    RE('b_flat1', {}, { n: '1к квартира у Львові', tag: 'flat', usd: [58000, 72000], rent: [20000, 24500], maint: 1400, fin: [{ k: 'cash', down: 1 }, MORT(0.3, 0.17, 15)], text: '1к у Сихові чи Франківському районі, 42 м², з ремонтом і орендарем. Реальна ринкова ціна та оренда Львова.', wt: 1.3 }),
+    RE('b_flat2', {}, { n: '2к у зданому ЖК у Львові', tag: 'flat', usd: [85000, 105000], rent: [27000, 33000], maint: 1800, fin: [{ k: 'cash', down: 1 }, MORT(0.3, 0.16, 15)], text: 'Новий будинок з генератором і укриттям. Попит від айтішників та релокованих сімей.' }),
+    RE('b_house', {}, { n: 'Будинок під подобову оренду', tag: 'house', usd: [105000, 135000], rent: [45000, 62000], maint: 10000, fin: [{ k: 'cash', down: 1 }, MORT(0.4, 0.18, 10)], text: 'Котедж біля Брюховичів з сауною. Подобово на вихідні та свята. Дохід сезонний, потрібен менеджер.' }),
+    RE('b_comm', {}, { n: 'Комерційне приміщення 60 м²', tag: 'commercial', usd: [85000, 110000], rent: [36000, 48000], maint: 2200, fin: [{ k: 'cash', down: 1 }, MORT(0.4, 0.18, 10)], text: 'Перший поверх на жвавій вулиці у Львові, орендар — аптека з договором на 3 роки.' }),
+    RE('b_dohid', {}, { n: 'Прибутковий будинок: 4 смарт-квартири', tag: 'flat', usd: [145000, 175000], rent: [44000, 54000], maint: 4000, fin: [MORT(0.4, 0.16, 15), { k: 'cash', down: 1 }], text: 'Реконструйований будинок з 4 студіями під довгострокову оренду. Стабільний потік, але ремонти — за ваш рахунок.' }),
+    RE('b_sklad', {}, { n: 'Склад 300 м² для маркетплейсів', tag: 'commercial', usd: [115000, 145000], rent: [48000, 62000], maint: 3500, fin: [MORT(0.4, 0.18, 10), { k: 'cash', down: 1 }], text: 'Склад біля кільцевої Львова, орендар — логістика для Rozetka та Нової Пошти.' }),
+    BIZ('b_coffee', { n: 'Франшиза кав\'ярні', tag: 'coffee', cost: [750000, 1050000], cf: [42000, 62000], vol: .3, offline: 1, fin: [{ k: 'cash', down: 1 }, BLOAN(0.5, 0.2, 5)], text: 'Відома українська мережа кав\'ярень: паушальний внесок, ремонт, обладнання. Роялті враховано. Окупність ~15–20 міс.' }),
+    BIZ('b_pizza', { n: 'Франшиза піцерії з доставкою', tag: 'food', cost: [1400000, 1900000], cf: [65000, 95000], vol: .3, offline: 1, online: 1, fin: [BLOAN(0.5, 0.2, 5), { k: 'cash', down: 1 }], text: 'Піцерія з власною доставкою і генератором. Під час блекаутів/карантину доставка тримає касу.' }),
+    BIZ('b_sto', { n: 'СТО на 2–3 пости', tag: 'auto', cost: [900000, 1450000], cf: [55000, 88000], vol: .25, offline: 1, fin: [BLOAN(0.5, 0.19, 5), { k: 'cash', down: 1 }], text: 'Станція техобслуговування з підйомниками та майстрами. Автопарк в Україні старіє — завантаження високе.' }),
+    BIZ('b_wash', { n: 'Автомийка самообслуговування (4 пости)', tag: 'auto', cost: [3200000, 4200000], cf: [120000, 175000], vol: .3, offline: 1, fin: [BLOAN(0.5, 0.19, 7), { k: 'cash', down: 1 }], text: '4 пости самообслуговування (€70–95 тис. за ключ). Залежить від світла й трафіку.' }),
     BIZ('b_santeh', { n: 'Магазин сантехніки біля новобудов', tag: 'shop', cost: [2000000, 2500000], cf: [65000, 90000], vol: .25, offline: 1, fin: [BLOAN(0.5, 0.2, 5), { k: 'cash', down: 1 }], text: 'Ви знаєте цей бізнес зсередини: товар, оренда, 2 продавці. Поруч здають три ЖК — ремонти на роки.' }),
     BIZ('b_fpv', { n: 'Частка 20% у виробництві FPV-дронів', tag: 'drone', cost: [1400000, 1800000], cf: [55000, 80000], vol: .45, war: 1, fin: [{ k: 'cash', down: 1 }], text: 'Українська оборонна компанія з державними контрактами через Brave1 і Prozorro. Високий дохід, але залежить від війни та контрактів.' }),
     BIZ('b_solar', { n: 'Сонячна станція 50 кВт', tag: 'power', cost: [1300000, 1600000], cf: [32000, 42000], vol: .15, solar: 1, fin: [BLOAN(0.3, 0.12, 7), { k: 'cash', down: 1 }], text: 'СЕС на даху складу, енергію купує сусідній бізнес. Пільговий кредит на енергонезалежність 12%. Не боїться блекаутів.' }),
@@ -894,8 +952,8 @@
   ];
   deck('gig', [EV('g_gig', { t: 'Підробіток', draw: (c) => { const l = GIGS.filter((x) => !x.cond || x.cond(c.p)); const gg = pick(l); const a = typeof gg.a === 'function' ? gg.a(c.p, c.w) : r100(gg.a * c.w.cpi); return { n: gg.n, a, s: gg.s, h: gg.h || 0 }; },
     text: (c, P) => 'Є можливість підзаробити: «' + P.n + '». Можна разово, а можна зробити регулярним — але це навантаження і стрес.',
-    rows: (c, P) => [['Разово', '+' + fmt(P.a)], ['Регулярно', '+' + fmt(P.a * 0.8) + '/міс, стрес +' + Math.ceil(P.s / 2) + '/міс'], ['Активних підробітків', (c.p.gigs || []).length]],
-    opts: (c) => [{ k: 'once', label: 'Взятися разово', cls: 'pri' }, { k: 'reg', label: 'Зробити регулярним', dis: (c.p.gigs || []).length >= 2 }, { k: 'pass', label: 'Відпочити' }], def: 'pass',
+    rows: (c, P) => [['Разово', '+' + fmt(P.a)], ['Регулярно', '+' + fmt(P.a * 0.8) + '/міс, стрес +' + Math.ceil(P.s / 2) + '/міс, час 20%'], ['Вільний час', CF.timeUsage(c.p).free + '%']],
+    opts: (c) => [{ k: 'once', label: 'Взятися разово', cls: 'pri' }, { k: 'reg', label: 'Зробити регулярним (20% часу)', dis: CF.timeUsage(c.p).free < 20 }, { k: 'pass', label: 'Відпочити' }], def: 'pass',
     act: (c, P, k) => { if (k === 'pass') { c.p.stress = clamp(c.p.stress - 3, 0, 100); return 'Ви відпочили. Стрес −3.'; } if (k === 'once') { c.p.cash += P.a; c.p.stress = clamp(c.p.stress + P.s, 0, 100); c.p.health = clamp(c.p.health + P.h, 0, 100); return 'Зароблено ' + fmt(P.a) + '. Стрес +' + P.s + '.'; } c.p.gigs = (c.p.gigs || []).concat([{ n: P.n, a: Math.round(P.a * 0.8), s: Math.ceil(P.s / 2) }]); return 'Новий регулярний дохід ' + fmt(P.a * 0.8) + '/міс.'; },
     tip: 'Підробіток — активний дохід. Вкладайте його, щоб створити пасивний.' })]);
 
@@ -918,9 +976,9 @@
   deck('charity', [EV('ch_give', { t: 'Благодійність', draw: (c) => ({ amt: r100(statement(c.p, c.w).income * 0.1) }), text: 'Донат на ЗСУ або благодійний фонд — 10% місячного доходу. Добро повертається: наступні 3 ходи можна кидати 2 кубики, а стрес знизиться.', rows: (c, P) => [['10% доходу', fmt(P.amt)]], opts: (c, P) => [{ k: 'ok', label: 'Задонатити ' + fmt(P.amt), cls: 'pri' }, { k: 'pass', label: 'Не цього разу' }], def: 'pass',
     act: (c, P, k) => { if (k === 'pass') return 'Ви не донатили цього місяця.'; ensureStats(c.p); c.p.charity = 3; c.p.stress = clamp(c.p.stress - 10, 0, 100); c.p.media = clamp(c.p.media + 4, 0, 100); c.p.gov = clamp(c.p.gov + 3, 0, 100); return 'Задоначено ' + fmt(P.amt) + '. 3 ходи з двома кубиками.' + spend(c.g, c.p, P.amt); }, tip: 'Благодійні внески до 4% річного доходу можна вказати в податковій знижці.' })]);
   deck('layoff', [
-    EV('l_tck', { t: 'Перевірка ТЦК та бронювання', text: (c) => { ensureStats(c.p); return c.p.kids >= 3 ? 'Вас зупинили для перевірки документів, але як багатодітний батько (3 дітей) ви маєте законну відстрочку.' : (c.p.tckShield > 0 ? 'Перевірка ТЦК: у вас оформлене дійсне бронювання (' + c.p.tckShield + ' міс.), усе гаразд.' : (c.p.gov >= 45 ? "Перевірка ТЦК: завдяки вашим зв'язкам у структурах документи оновили без затримок." : 'Перевірка ТЦК: потрібне термінове оновлення даних / ВЛК або юридичне бронювання. Без цього можлива пауза в роботі на 1 міс.')); },
-      opts: (c) => { ensureStats(c.p); if (c.p.kids >= 3 || c.p.tckShield > 0 || c.p.gov >= 45) return [{ k: 'ok', label: 'Пройти перевірку без втрат', cls: 'pri' }]; return [{ k: 'shield', label: 'Терміновий юрсупровід та бронювання (35 000 ₴)', cls: 'pri' }, { k: 'pass', label: 'Випасти з роботи на 1 міс (ВЛК/оформлення)' }]; },
-      act: (c, P, k) => { ensureStats(c.p); if (k === 'ok') return 'Документи в порядку, без втрат.'; if (k === 'shield') { c.p.tckShield = Math.max(c.p.tckShield, 6); return 'Оформлено бронювання на 6 місяців.' + spend(c.g, c.p, 35000); } c.p.unemp = Math.max(c.p.unemp, 1); c.p.stress = clamp(c.p.stress + 8, 0, 100); return 'Пауза в роботі на 1 місяць для проходження комісії.'; } }),EV('l_cut', { t: 'Звільнення', text: (c) => c.p.emp === 'emp' ? 'Компанія скорочує штат через падіння продажів. Пошук нової роботи займе 2 місяці. Держава платить допомогу по безробіттю.' : 'Ключовий клієнт пішов. 2 місяці без доходу, поки знайдете нових. ФОП не має допомоги по безробіттю.',
+    EV('l_tck', { t: 'Перевірка ТЦК та бронювання', text: (c) => { ensureStats(c.p); return c.p.kids >= 3 ? 'Вас зупинили для перевірки документів, але як багатодітний батько (3 дітей) ви маєте законну відстрочку.' : (c.p.tckShield > 0 ? 'Перевірка ТЦК: у вас оформлене дійсне бронювання (' + c.p.tckShield + ' міс.), усе гаразд.' : (c.p.gov >= 50 ? "Перевірка ТЦК: завдяки вашим зв'язкам у структурах документи оновили без затримок." : 'Перевірка ТЦК: потрібне оновлення даних / ВЛК. Термінове бронювання без зв\'язків коштує дорого й не завжди доступне — інакше пауза в роботі на 1 міс.')); },
+      opts: (c) => { ensureStats(c.p); if (c.p.kids >= 3 || c.p.tckShield > 0 || c.p.gov >= 50) return [{ k: 'ok', label: 'Пройти перевірку без втрат', cls: 'pri' }]; const hasBiz = (c.p.ventures || []).length > 0 || c.p.assets.some((a) => a.kind === 'biz'); const canBook = c.p.gov >= 35 && hasBiz; const cost = c.p.gov >= 60 ? 95000 : 135000; return [{ k: 'shield', label: canBook ? 'Термінове бронювання (' + fmt(cost) + ')' : 'Бронювання недоступне (потрібні зв\'язки 35+ і бізнес)', cls: 'pri', dis: !canBook || c.p.cash < cost }, { k: 'pass', label: 'Випасти з роботи на 1 міс (ВЛК/оформлення)' }]; },
+      act: (c, P, k) => { ensureStats(c.p); if (k === 'ok') return 'Документи в порядку, без втрат.'; if (k === 'shield') { const cost = c.p.gov >= 60 ? 95000 : 135000; c.p.tckShield = Math.max(c.p.tckShield, 6); return 'Оформлено бронювання на 6 місяців.' + spend(c.g, c.p, cost); } c.p.unemp = Math.max(c.p.unemp, 1); c.p.stress = clamp(c.p.stress + 8, 0, 100); return 'Пауза в роботі на 1 місяць для проходження комісії.'; } }),EV('l_cut', { t: 'Звільнення', text: (c) => c.p.emp === 'emp' ? 'Компанія скорочує штат через падіння продажів. Пошук нової роботи займе 2 місяці. Держава платить допомогу по безробіттю.' : 'Ключовий клієнт пішов. 2 місяці без доходу, поки знайдете нових. ФОП не має допомоги по безробіттю.',
     act: (c) => { if (c.p.track === 'fast') return 'Вас це не стосується.'; c.p.unemp = 2; c.p.stress = clamp(c.p.stress + 15, 0, 100); return '2 місяці без зарплати.' + (c.p.cash < statement(c.p, c.w).out * 2 ? ' Подушки безпеки замало — доведеться позичати.' : ' Подушка безпеки рятує.'); }, tip: 'Саме для таких випадків потрібна подушка безпеки.' })]);
 
   deck('pay', [EV('pay_day', { t: 'Получка', art: 'money', def: 'ok', draw: (c) => { const pd = (c.g.pay || {})[c.uid] || {}; return { net: pd.net || 0, inc: pd.inc || 0, out: pd.out || 0, n: pd.n || 0 }; },
@@ -969,6 +1027,12 @@
     { id: 'defcontracts', wt: .5, t: 'Нові оборонні контракти', d: 'Міноборони законтрактувало мільйон дронів на рік.', f: (g) => { allP(g, (p) => p.assets.forEach((a) => { if (a.war) a.cf = r100(a.cf * 1.1); })); return 'Оборонні бізнеси +10%.'; } },
     { id: 'euTalks', wt: .5, t: 'Прогрес у вступі до ЄС', d: 'Україна відкрила нові переговорні кластери з ЄС.', f: (g) => { g.world.re *= 1.03; g.world.fx *= 0.99; allP(g, (p) => { p.stress = clamp(p.stress - 3, 0, 100); }); return 'Нерухомість +3%, гривня трохи зміцніла.'; } },
     { id: 'euAid', wt: .7, t: 'Пакет допомоги від ЄС', d: 'ЄС погодив фінансування на 2026–2027 роки. Резерви НБУ зростають.', f: (g) => { g.world.fx *= 0.985; g.world.re *= 1.02; allP(g, (p) => { p.stress = clamp(p.stress - 3, 0, 100); }); return 'Гривня зміцнилась, нерухомість +2%.'; } },
+    { id: 'fedCut', wt: .6, t: 'ФРС США знизила облікову ставку', d: 'Дешевші долари штовхають фондовий ринок і крипту вгору.', f: (g) => { const x = g.world.px; x.SPX *= 1.08; x.AI *= 1.12; x.BTC *= 1.15; x.ETH *= 1.18; if (g.world.tk) Object.keys(g.world.tk).forEach((k) => { g.world.tk[k] *= 1.09; }); return 'S&P 500 +8%, AI +12%, BTC +15%, локальні акції +9%.'; } },
+    { id: 'fedHike', wt: .5, t: 'ФРС жорстко тримає високу ставку', d: 'Ризик-активи під тиском, інвестори виходять у кеш та золото.', f: (g) => { const x = g.world.px; x.SPX *= 0.92; x.AI *= 0.88; x.BTC *= 0.86; x.GOLD *= 1.07; if (g.world.tk) Object.keys(g.world.tk).forEach((k) => { g.world.tk[k] *= 0.91; }); return 'S&P 500 −8%, AI −12%, BTC −14%, золото +7%.'; } },
+    { id: 'techRally', wt: .6, t: 'Бум квартальних звітів техгігантів', d: 'Техкомпанії перевершили прогнози за прибутком. Індекси оновлюють максимуми.', f: (g) => { g.world.px.AI *= 1.18; g.world.px.SPX *= 1.06; if (g.world.tk) { g.world.tk.NVLG = (g.world.tk.NVLG || 18) * 1.25; g.world.tk.DRNX = (g.world.tk.DRNX || 12) * 1.18; } return 'AI +18%, S&P 500 +6%, NVLG/DRNX зросли.'; } },
+    { id: 'agriBoom', wt: .6, t: 'Експортний коридор працює на повну', d: 'Чорноморський коридор стабільний, аграрії та енергетики нарощують прибутки.', f: (g) => { g.world.fx *= 0.98; if (g.world.tk) { g.world.tk.AGRX = (g.world.tk.AGRX || 15) * 1.22; g.world.tk.ENRG = (g.world.tk.ENRG || 10) * 1.15; } return 'Гривня +2%, AGRX +22%, ENRG +15%.'; } },
+    { id: 'btcCrash', wt: .5, t: 'Регуляторний удар по крипторинку', d: 'Нові обмеження на P2P та біржі у світі спричинили розпродаж.', f: (g) => { const x = g.world.px; x.BTC *= 0.78; x.ETH *= 0.74; x.MEME *= 0.45; return 'BTC −22%, ETH −26%, мемкоіни −55%.'; } },
+    { id: 'lvivBoom', wt: .7, t: 'Львів: стрибок попиту на оренду й комерцію', d: 'Нові офіси й студенти підняли ставки оренди по всьому місту.', f: (g) => { g.world.re *= 1.06; allP(g, (p) => p.assets.forEach((a) => { if (a.kind === 're') a.rent = r100(a.rent * 1.06); })); return 'Нерухомість +6%, ваша оренда +6%.'; } },
   ];
   CF.NEWS = NEWS;
   function allP(g, f) { Object.values(g.players).forEach(f); }
@@ -1049,19 +1113,31 @@
       case 'course': {
         ensureStats(p);
         const c = COURSES.find((y) => y.id === x.id); if (!c) return 'Курс не знайдено.';
-        const q = CF.courseQuote(p, c);
+        const q = CF.courseQuote(p, c, g.world.m);
         if (q.bought) return 'Ви вже пройшли цей курс.';
+        if (q.cooldownLeft > 0) return 'Ліміт: 1 курс на 3 місяці. Наступний курс через ' + q.cooldownLeft + ' міс.';
         if (p.cash < q.price) return 'Не вистачає готівки: потрібно ' + fmt(q.price) + '.';
-        p.cash -= q.price; p.courses.push(c.id);
+        p.cash -= q.price; p.courses.push(c.id); p.lastCourseM = g.world.m;
+        if (c.useless) {
+          p.courseReveals[c.id] = 'Гроші на вітер — навички не виросли';
+          m = 'Ви пройшли «' + c.n + '». На жаль, це виявилася вода: гроші на вітер, жодного реального ефекту.';
+          break;
+        }
+        const gained = [];
         Object.keys(c.eff).forEach((k) => {
           const val = Math.max(1, Math.round(c.eff[k] * q.mult));
-          if (k === 'ai') p.ai = clamp((p.ai || 0) + val, 0, 100);
-          else if (k === 'media') p.media = clamp((p.media || 0) + val, 0, 100);
-          else if (k === 'gov') p.gov = clamp((p.gov || 0) + val, 0, 100);
-          else if (k in p.skills) p.skills[k] = clamp((p.skills[k] || 0) + val, 0, 100);
+          if (k === 'ai') { p.ai = clamp((p.ai || 0) + val, 0, 100); gained.push('ШІ +' + val); }
+          else if (k === 'media') { p.media = clamp((p.media || 0) + val, 0, 100); gained.push('Медіа +' + val); }
+          else if (k === 'gov') { p.gov = clamp((p.gov || 0) + val, 0, 100); gained.push("Зв'язки +" + val); }
+          else if (k in p.skills) { p.skills[k] = clamp((p.skills[k] || 0) + val, 0, 100); gained.push(k.toUpperCase() + ' +' + val); }
         });
-        if (c.sal && p.track === 'rat') { p.sal = Math.round(p.sal * (1 + c.sal * (q.isFit ? 1 : 0.4))); }
-        m = 'Пройдено курс «' + c.n + '» (' + (q.isFit ? 'профільний максимум!' : 'загальний ефект') + ').';
+        if (c.sal && p.track === 'rat' && !p.voluntaryQuit) {
+          const inc = c.sal * (q.isFit ? 1 : 0.35);
+          p.sal = Math.round(p.sal * (1 + inc));
+          gained.push('ЗП +' + Math.round(inc * 100) + '%');
+        }
+        p.courseReveals[c.id] = (q.isFit ? 'Корисний профільний курс: ' : 'Базова користь: ') + gained.join(', ');
+        m = 'Пройдено курс «' + c.n + '» — ' + p.courseReveals[c.id] + '.';
         break;
       }
       case 'venture': {
@@ -1070,31 +1146,63 @@
         const st = CF.ventureStatus(p, vn);
         if (st.active) return 'Ця власна справа вже працює.';
         if (!st.unlocked) return 'Ще бракує навичок для рекомендації.';
+        const tu = CF.timeUsage(p);
+        if (tu.free < 20) return 'Не вистачає часу (' + tu.free + '% вільно, потрібно 20%). Звільніться з роботи або закрийте підробіток.';
         if (p.cash < vn.cost) return 'Не вистачає стартового капіталу: ' + fmt(vn.cost) + '.';
         p.cash -= vn.cost; p.ventures.push(vn.id); p.stress = clamp(p.stress + vn.stress, 0, 100);
-        m = 'Запущено власну справу «' + vn.n + '» (+' + fmt(vn.cf) + '/міс база).';
+        m = 'Запущено власну справу «' + vn.n + '» (+' + fmt(vn.cf) + '/міс база, зайнятість +20%).';
+        break;
+      }
+      case 'quitjob': {
+        ensureStats(p);
+        if (p.track !== 'rat' || p.voluntaryQuit) return 'Ви вже не працюєте на основній роботі.';
+        p.voluntaryQuit = 1; p.unemp = 0; p.stress = clamp(p.stress - 5, 0, 100);
+        m = 'Ви звільнилися з основної роботи! Звільнилось 60% часу для власних справ і підробітків.';
+        break;
+      }
+      case 'resumejob': {
+        ensureStats(p);
+        if (p.track !== 'rat' || !p.voluntaryQuit) return 'Ви вже працюєте на основній роботі.';
+        const tu = CF.timeUsage(p);
+        if (tu.free < 60) return 'Зараз зайнято ' + tu.used + '% часу (потрібно 60% вільного часу для роботи).';
+        p.voluntaryQuit = 0;
+        m = 'Ви повернулися на основну роботу (зайнятість +60%).';
         break;
       }
       case 'pr': {
         ensureStats(p);
         if (p.cash < 25000) return 'Потрібно 25 000 ₴ на PR-кампанію.';
-        p.cash -= 25000; p.media = clamp(p.media + 14, 0, 100);
-        m = 'PR-кампанія запущена: медійність +14 (зараз ' + p.media + ').';
+        p.cash -= 25000; p.media = clamp(p.media + 12, 0, 100);
+        m = 'PR-кампанія запущена: медійність +12 (зараз ' + p.media + ').';
         break;
       }
       case 'gr': {
         ensureStats(p);
-        if (p.cash < 35000) return "Потрібно 35 000 ₴ на нетворкінг і зв'язки.";
-        p.cash -= 35000; p.gov = clamp(p.gov + 12, 0, 100);
-        m = "Зв'язки в держструктурах +12 (зараз " + p.gov + ').';
+        const wait = 2 - (g.world.m - (p.lastGovM ?? -99));
+        if (wait > 0) return 'Знайомства у структурах потребують часу. Наступна спроба через ' + wait + ' міс.';
+        if (p.cash < 45000) return "Потрібно 45 000 ₴ на закриті бізнес-клуби, форуми та нетворкінг.";
+        p.cash -= 45000; p.lastGovM = g.world.m;
+        if (rnd() < 0.72) {
+          const gain = rint(5, 10);
+          p.gov = clamp(p.gov + gain, 0, 100);
+          m = 'Вдалий нетворкінг: з\'явились потрібні контакти (+' + gain + ' до зв\'язків, зараз ' + p.gov + ').';
+        } else {
+          p.gov = clamp(p.gov + 1, 0, 100);
+          m = 'Вечеря й форум пройшли без конкретних домовленостей (зв\'язки лише +1, зараз ' + p.gov + ').';
+        }
         break;
       }
       case 'shield': {
         ensureStats(p);
-        const cost = p.gov >= 40 ? 25000 : 45000;
-        if (p.cash < cost) return 'Потрібно ' + fmt(cost) + ' на оформлення бронювання.';
-        p.cash -= cost; p.tckShield = Math.max(p.tckShield, 6);
-        m = 'Оформлено бронювання / юрзахист на 6 міс.';
+        if (p.tckShield > 0) return 'У вас уже діє бронювання (' + p.tckShield + ' міс.).';
+        if (p.pendingShieldM > 0) return 'Бронювання вже на розгляді (активація через ' + p.pendingShieldM + ' міс.).';
+        const hasBiz = (p.ventures || []).length > 0 || p.assets.some((a) => a.kind === 'biz');
+        if (!hasBiz) return 'Для бронювання через підприємство потрібна власна справа або бізнес-актив.';
+        if (p.gov < 35) return 'Потрібні зв\'язки в держструктурах (від 35, зараз ' + p.gov + ') — спочатку познайомтесь із потрібними людьми.';
+        const cost = p.gov >= 60 ? 95000 : 135000;
+        if (p.cash < cost) return 'Потрібно ' + fmt(cost) + ' на оформлення бронювання й юрсупровід.';
+        p.cash -= cost; p.pendingShieldM = p.gov >= 60 ? 1 : 2;
+        m = 'Подано документи на бронювання (' + fmt(cost) + '). Активація через ' + p.pendingShieldM + ' міс.';
         break;
       }
       default: return 'Невідома дія.';
