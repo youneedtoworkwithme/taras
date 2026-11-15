@@ -16,7 +16,7 @@
   function fmtUsd(n) { n = Math.round(n || 0); return '$' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
   function pmt(P, apr, years) { const n = years * 12; if (!apr) return P / n; const r = apr / 12; return P * r / (1 - Math.pow(1 + r, -n)); }
   CF.CUR = 'usd'; CF.FX = 45.5; CF.fmt = fmt; CF.fmtUsd = fmtUsd; CF.fmtUah = fmtUah;
-  CF.setCtx = function (g) { if (!g) return; CF.CUR = (g.rules && g.rules.cur) || 'usd'; CF.FX = (g.world && g.world.fx) || 45.5; };
+  CF.setCtx = function (g) { if (!g) return; CF.CUR = (g.rules && g.rules.cur) || 'usd'; CF.FX = (g.world && g.world.fx) || 45.5; CF.DIFF = (g.rules && g.rules.diff) || 'norm'; };
 
   /* ---------- константи України (листопад 2026) ---------- */
   const K = {
@@ -130,7 +130,7 @@
 
   /* ---------- поле ---------- */
   const RAT = ['pay', 'deal', 'spend', 'market', 'deal', 'luck', 'news', 'deal', 'gig', 'health', 'ai', 'pay', 'deal', 'psy', 'spend', 'market', 'deal', 'child', 'news', 'deal', 'charity', 'layoff', 'pay', 'deal', 'luck', 'market', 'deal', 'gig', 'deal', 'news', 'luck', 'ai'];
-  const FAST = ['pay', 'ftdeal', 'dream', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'charity', 'ftdeal', 'dream', 'pay', 'ftdeal', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'dream', 'ftdeal', 'ftrisk', 'ftdeal', 'pay', 'ftdeal', 'dream', 'ftnews', 'ftdeal', 'charity', 'ftdeal', 'ftrisk', 'ftdeal', 'dream', 'ftnews', 'ftdeal'];
+  const FAST = ['pay', 'ftdeal', 'dream', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'charity', 'ftdeal', 'dream', 'pay', 'ftdeal', 'ftrisk', 'ftdeal', 'ftnews', 'ftdeal', 'dream', 'ftdeal', 'ftrisk', 'ftdeal'];
   CF.RAT = RAT; CF.FAST = FAST;
   CF.CELL = {
     pay: { n: 'Получка', ic: '$', c: 'pay' }, luck: { n: 'Удача', ic: '✧', c: 'luck' }, deal: { n: 'Можливість', ic: '◆', c: 'deal' }, spend: { n: 'Витрата', ic: '▼', c: 'spend' }, health: { n: 'Здоров\'я', ic: '✚', c: 'health' },
@@ -223,7 +223,8 @@
     const price = Math.round(c.base * (isFit ? 0.9 : 1.15) / 500) * 500;
     const mult = c.useless ? 0 : (isFit ? 1.15 : 0.65);
     const monthsSince = (curM != null ? curM : (p.lastCourseM || 0) + 99) - (p.lastCourseM ?? -99);
-    const cooldownLeft = Math.max(0, 3 - monthsSince);
+    const cd = CF.DIFF === 'easy' ? 1 : 3;
+    const cooldownLeft = Math.max(0, cd - monthsSince);
     const bought = (p.courses || []).includes(c.id);
     const reveal = (p.courseReveals || {})[c.id] || null;
     return { price, isFit, mult, bought, cooldownLeft, reveal };
@@ -305,13 +306,15 @@
         if (p.media >= 35) m *= (1 + Math.min(0.25, (p.media - 30) * 0.004));
         if (p.gov >= 40) m *= (1 + Math.min(0.15, (p.gov - 35) * 0.0025));
       }
+      if (CF.DIFF === 'easy') m *= 1.15;
+      else if (CF.DIFF === 'hard') m *= 0.85;
     }
     return m;
   }
   function rentTax(p) { return p.emp === 'fop3' ? K.FOP3 : K.INV_TAX; }
   function assetIncome(a, w, p) {
     switch (a.kind) {
-      case 're': { let r = a.rent * (eff(w, 'lockdown') ? 0.9 : 1) * (w.peace ? 1.15 : 1); return Math.round(r * (1 - rentTax(p)) - (a.maint || 0)); }
+      case 're': { let r = a.rent * (eff(w, 'lockdown') ? 0.9 : 1) * (w.peace ? 1.15 : 1) * (CF.DIFF === 'easy' ? 1.12 : CF.DIFF === 'hard' ? 0.88 : 1); return Math.round(r * (1 - rentTax(p)) - (a.maint || 0)); }
       case 'biz': return Math.round(a.cf * bizMult(a, w, p));
       case 'deposit': return Math.round(a.amt * a.rate / 12 * (1 - K.INV_TAX));
       case 'bond': return Math.round(a.amt * a.rate / 12);
@@ -368,7 +371,7 @@
   CF.statement = statement;
 
   function bankDebt(p, kind) { return p.liabs.filter((l) => l.kind === kind).reduce((s, l) => s + l.bal, 0); }
-  function bankLimit(p, w) { const st = statement(p, w); return Math.max(60000, Math.round(st.income * 6 / 5000) * 5000); }
+  function bankLimit(p, w) { const st = statement(p, w); const k = CF.DIFF === 'easy' ? 1.25 : CF.DIFF === 'hard' ? 0.75 : 1; return Math.max(50000, Math.round(st.income * 6 * k / 5000) * 5000); }
   CF.bankLimit = bankLimit; CF.bankDebt = bankDebt;
   function takeLoan(p, amt, kind) {
     kind = kind || 'bank';
@@ -452,13 +455,27 @@
     const pxHist = { fx: [45.5] }; Object.keys(px).forEach((k) => { pxHist[k] = [px[k]]; });
     return { m: 0, fx: 45.5, rate: 16.5, cpi: 1, infl: 0.10, re: 1, mw: 1, px, tk, tkh: {}, effects: [], peace: 0, news: [], pxHist };
   };
-  CF.newGame = function (hostUid, name) {
-    return { v: 2, rules: { roll: 30, dec: 180, timers: 1, cur: 'usd', news: 'norm', voice: 1, loans: 1 }, ready: {}, trades: {}, deadline: null, paused: null, name: name || 'Нова гра', hostId: hostUid, status: 'lobby', createdAt: Date.now(), updatedAt: Date.now(), order: [], turn: 0, phase: 'roll', world: CF.newWorld(), players: {}, pending: null, pay: {}, log: [], winner: null, seq: 0, round: 0, last: null };
+  CF.newGame = function (hostUid, name, diff) {
+    const d = (diff === 'easy' || diff === 'hard') ? diff : 'norm';
+    const nw = d === 'easy' ? 'rare' : d === 'hard' ? 'often' : 'norm';
+    return { v: 2, rules: { roll: 30, dec: 180, timers: 1, cur: 'uah', news: nw, voice: 0, loans: 1, diff: d }, ready: {}, trades: {}, deadline: null, paused: null, name: name || 'Нова гра', hostId: hostUid, status: 'lobby', createdAt: Date.now(), updatedAt: Date.now(), order: [], turn: 0, phase: 'roll', world: CF.newWorld(), players: {}, pending: null, pay: {}, log: [], winner: null, seq: 0, round: 0, last: null };
   };
   CF.startGame = function (g) {
     const ids = Object.keys(g.players).sort((a, b) => g.players[a].joined - g.players[b].joined);
+    const d = (g.rules && g.rules.diff) || 'norm';
+    ids.forEach((u) => {
+      const p = g.players[u]; if (!p) return;
+      if (d === 'easy') {
+        p.cash = Math.round(p.cash * 1.4);
+        p.liabs.forEach((l) => { if (l.kind !== 'mortgage') { l.bal = Math.round(l.bal * 0.5); l.pay = Math.round(l.pay * 0.5); } });
+      } else if (d === 'hard') {
+        p.cash = Math.max(1500, Math.round(p.cash * 0.75));
+        p.stress = clamp(p.stress + 8, 0, 100);
+      }
+    });
+    const dName = d === 'easy' ? 'Простий (навчальний)' : d === 'hard' ? 'Складний (максимальний реалізм)' : 'Середній (нормальний)';
     g.order = ids; g.turn = 0; g.status = 'active'; g.round = 1;
-    L(g, 'Гра почалася. ' + CF.dateOf(0) + '. Курс ' + g.world.fx.toFixed(2) + ' ₴/$, облікова ставка НБУ ' + g.world.rate + '%. Хай щастить!', 'sys');
+    L(g, 'Гра почалася [' + dName + ']. ' + CF.dateOf(0) + '. Курс ' + g.world.fx.toFixed(2) + ' ₴/$, облікова ставка НБУ ' + g.world.rate + '%. Хай щастить!', 'sys');
     beginTurn(g);
   };
   CF.curUid = (g) => g.order[g.turn % Math.max(1, g.order.length)];
@@ -604,7 +621,9 @@
     }
     w.re = +(w.re * Math.exp(0.003 + randn() * 0.015)).toFixed(4);
     w.fx = +(w.fx * Math.exp(0.0025 + randn() * 0.009)).toFixed(2);
-    w.infl = +((w.infl || 0.1) + 0.03 * (0.07 - (w.infl || 0.1))).toFixed(4);
+    const diff = (g.rules && g.rules.diff) || 'norm';
+    const inflTgt = diff === 'hard' ? 0.13 : diff === 'easy' ? 0.05 : 0.07;
+    w.infl = +((w.infl || 0.1) + 0.03 * (inflTgt - (w.infl || 0.1))).toFixed(4);
     const mi = w.infl / 12 + randn() * 0.002; w.cpi = +(w.cpi * (1 + mi)).toFixed(4);
     Object.keys(SYM).forEach((k) => { w.pxHist[k] = (w.pxHist[k] || []).concat([w.px[k]]).slice(-36); });
     w.pxHist.fx = (w.pxHist.fx || []).concat([w.fx]).slice(-36);
@@ -618,7 +637,8 @@
         let msg = 'Новий рік: ціни зросли на ' + (inf * 100).toFixed(1) + '%. Ваші витрати на життя проіндексовано.';
         p.assets.forEach((a) => { if (a.kind === 're') a.rent = r100(a.rent * (1 + inf * 0.8)); if (a.kind === 'biz') a.cf = r100(a.cf * (1 + inf * 0.7)); });
         if (p.partner) p.partner = r100(p.partner * (1 + inf));
-        if (p.track === 'rat' && !p.voluntaryQuit && rnd() < 0.8) { const k = inf * (0.95 + rnd() * 0.5); p.sal = r100(p.sal * (1 + k)); msg += ' Зарплату підвищили на ' + (k * 100).toFixed(1) + '%. Оренда й прибутки бізнесів теж трохи зросли.'; }
+        const raiseP = diff === 'hard' ? 0.45 : diff === 'easy' ? 0.95 : 0.8;
+        if (p.track === 'rat' && !p.voluntaryQuit && rnd() < raiseP) { const k = inf * (0.95 + rnd() * 0.5); p.sal = r100(p.sal * (1 + k)); msg += ' Зарплату підвищили на ' + (k * 100).toFixed(1) + '%. Оренда й прибутки бізнесів теж трохи зросли.'; }
         else if (p.track === 'rat' && !p.voluntaryQuit) msg += ' Зарплату не підвищили — реальний дохід впав.';
         L(g, msg, 'sys', p.uid);
       });
@@ -1257,11 +1277,15 @@
       }
       case 'gr': {
         ensureStats(p);
-        const wait = 2 - (g.world.m - (p.lastGovM ?? -99));
+        const d = (g.rules && g.rules.diff) || 'norm';
+        const cd = d === 'easy' ? 1 : 2;
+        const wait = cd - (g.world.m - (p.lastGovM ?? -99));
         if (wait > 0) return 'Знайомства у структурах потребують часу. Наступна спроба через ' + wait + ' міс.';
-        if (p.cash < 45000) return "Потрібно 45 000 ₴ на закриті бізнес-клуби, форуми та нетворкінг.";
-        p.cash -= 45000; p.lastGovM = g.world.m;
-        if (rnd() < 0.72) {
+        const gCost = d === 'easy' ? 25000 : d === 'hard' ? 65000 : 45000;
+        if (p.cash < gCost) return "Потрібно " + fmt(gCost) + " на закриті бізнес-клуби, форуми та нетворкінг.";
+        p.cash -= gCost; p.lastGovM = g.world.m;
+        const okP = d === 'easy' ? 0.95 : d === 'hard' ? 0.55 : 0.72;
+        if (rnd() < okP) {
           const gain = rint(5, 10);
           p.gov = clamp(p.gov + gain, 0, 100);
           m = 'Вдалий нетворкінг: з\'явились потрібні контакти (+' + gain + ' до зв\'язків, зараз ' + p.gov + ').';
@@ -1273,14 +1297,16 @@
       }
       case 'shield': {
         ensureStats(p);
+        const d = (g.rules && g.rules.diff) || 'norm';
         if (p.tckShield > 0) return 'У вас уже діє бронювання (' + p.tckShield + ' міс.).';
         if (p.pendingShieldM > 0) return 'Бронювання вже на розгляді (активація через ' + p.pendingShieldM + ' міс.).';
         const hasBiz = (p.ventures || []).length > 0 || p.assets.some((a) => a.kind === 'biz');
         if (!hasBiz) return 'Для бронювання через підприємство потрібна власна справа або бізнес-актив.';
-        if (p.gov < 35) return 'Потрібні зв\'язки в держструктурах (від 35, зараз ' + p.gov + ') — спочатку познайомтесь із потрібними людьми.';
-        const cost = p.gov >= 60 ? 95000 : 135000;
+        const reqGov = d === 'easy' ? 20 : d === 'hard' ? 45 : 35;
+        if (p.gov < reqGov) return 'Потрібні зв\'язки в держструктурах (від ' + reqGov + ', зараз ' + p.gov + ') — спочатку познайомтесь із потрібними людьми.';
+        const cost = d === 'easy' ? 45000 : d === 'hard' ? (p.gov >= 70 ? 120000 : 160000) : (p.gov >= 60 ? 95000 : 135000);
         if (p.cash < cost) return 'Потрібно ' + fmt(cost) + ' на оформлення бронювання й юрсупровід.';
-        p.cash -= cost; p.pendingShieldM = p.gov >= 60 ? 1 : 2;
+        p.cash -= cost; p.pendingShieldM = (d === 'easy' || p.gov >= 60) ? 1 : 2;
         m = 'Подано документи на бронювання (' + fmt(cost) + '). Активація через ' + p.pendingShieldM + ' міс.';
         break;
       }
