@@ -33,7 +33,7 @@ button{cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:trans
 h1,h2,h3{font-family:var(--f-d);margin:0;text-wrap:balance;font-weight:700;color:var(--ink)}
 .muted{color:var(--mute)} .good{color:var(--money)} .bad{color:var(--bad)} .blue{color:var(--blue)}
 .hide{display:none!important}
-#app{height:100%;display:flex;flex-direction:column;position:relative;z-index:1}
+#app{height:100%;width:100%;max-width:100vw;display:flex;flex-direction:column;position:relative;z-index:1;overflow-x:hidden}
 
 /* Atmospheric dark backdrop instead of cartoon sky */
 #sky{
@@ -157,8 +157,8 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 .pchip .on{width:8px;height:8px;border-radius:50%;background:var(--money);box-shadow:0 0 8px var(--money)}
 
 /* Board stage */
-.stage{flex:1;min-height:0;position:relative;display:grid;place-items:center;padding:6px}
-#board{width:100%;height:100%;max-width:1100px;display:block}
+.stage{flex:1;min-height:0;min-width:0;width:100%;position:relative;display:grid;place-items:center;padding:6px;overflow:hidden}
+#board{width:100%;height:100%;max-width:min(1100px,100%);max-height:100%;display:block}
 .tile{cursor:pointer}
 .tok{transition:transform .2s ease-out}
 .datebadge{display:none;position:absolute;left:12px;top:6px;font-family:var(--f-d);font-weight:700;font-size:13px;background:rgba(15,23,42,.88);color:var(--ink);border:1px solid var(--line2);border-radius:12px;padding:4px 10px}
@@ -191,7 +191,7 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 /* Modal / Card Sheet + Immersive Ambient Video Backdrop */
 .scrim{
   position:fixed;inset:0;z-index:60;
-  background:rgba(4,7,14,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  background:rgba(4,7,14,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   display:grid;place-items:center;padding:16px;animation:fade .2s;overflow:hidden;
 }
 @keyframes fade{from{opacity:0}}
@@ -208,17 +208,17 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 }
 .sheet{
   position:relative;z-index:1;
-  width:min(600px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;
-  border-radius:26px;background:rgba(11,18,32,.92);
+  width:min(600px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  border-radius:26px;background:rgba(11,18,32,.97);
   backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);
-  border:1px solid rgba(148,163,184,.22);
-  box-shadow:0 32px 80px -16px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.08);
+  border:1px solid rgba(148,163,184,.25);
+  box-shadow:0 32px 80px -16px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.08);
   color:var(--ink);animation:pop .32s cubic-bezier(.2,.9,.3,1.2);
 }
 @keyframes pop{from{transform:translateY(22px) scale(.96);opacity:0}}
 @media(max-width:640px){
   .scrim{place-items:end center;padding:0}
-  .sheet{border-radius:26px 26px 0 0;max-height:92dvh;padding-bottom:var(--safe-b);animation:up .32s cubic-bezier(.2,.9,.3,1)}
+  .sheet{border-radius:26px 26px 0 0;max-height:88dvh;padding-bottom:calc(20px + var(--safe-b));animation:up .32s cubic-bezier(.2,.9,.3,1)}
   @keyframes up{from{transform:translateY(70%)}}
 }
 .shead{
@@ -227,7 +227,7 @@ label.f{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink2)}
   z-index:3;border-bottom:1px solid var(--line);
 }
 .shead h2{font-size:20px;flex:1;color:#fff}
-.sbody{padding:16px 18px 22px;display:grid;gap:14px;color:var(--ink2)}
+.sbody{padding:16px 18px 28px;display:grid;gap:14px;color:var(--ink2)}
 .sbody p{margin:0;white-space:pre-line;color:var(--ink2);line-height:1.55}
 
 /* Realistic Card Video Hero */
@@ -375,13 +375,30 @@ table.dt th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:v
 .toast{pointer-events:auto;padding:12px 14px;border-radius:16px;background:rgba(15,23,42,.95);backdrop-filter:blur(14px);color:#F8FAFC;border:1px solid var(--line2);box-shadow:0 14px 30px -14px rgba(0,0,0,.7);animation:pop .3s cubic-bezier(.2,.9,.3,1.3);font-weight:700}
 .toast.good{border-color:rgba(16,185,129,.55)} .toast.bad{border-color:rgba(239,68,68,.55)} .toast.blue{border-color:var(--blue)}
 #fx{position:fixed;inset:0;z-index:85;pointer-events:none}
-.dice3{position:fixed;inset:0;z-index:80;display:grid;place-items:center;pointer-events:none}
-.dice3 .row{display:flex;gap:22px;perspective:700px}
-.die{width:84px;height:84px;position:relative;transform-style:preserve-3d;animation:tumble 1s cubic-bezier(.3,.6,.3,1) forwards}
-.die .fc{position:absolute;inset:0;border-radius:18px;background:linear-gradient(145deg,#1E293B,#0F172A);border:1.5px solid rgba(148,163,184,.35);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:12px;box-shadow:inset 0 -6px 12px rgba(0,0,0,.45), 0 12px 24px rgba(0,0,0,.5)}
-.die .fc i{width:14px;height:14px;border-radius:50%;background:#38BDF8;box-shadow:0 0 8px rgba(56,189,248,.6);place-self:center;visibility:hidden}
-.die .f1{transform:translateZ(42px)} .die .f6{transform:rotateY(180deg) translateZ(42px)} .die .f2{transform:rotateY(90deg) translateZ(42px)} .die .f5{transform:rotateY(-90deg) translateZ(42px)} .die .f3{transform:rotateX(90deg) translateZ(42px)} .die .f4{transform:rotateX(-90deg) translateZ(42px)}
-@keyframes tumble{0%{transform:translateY(-120px) rotateX(0) rotateY(0) scale(.6);opacity:0}15%{opacity:1}100%{transform:var(--end)}}
+.dice3{position:fixed;inset:0;z-index:80;display:grid;place-items:center;gap:18px;align-content:center;pointer-events:none;background:radial-gradient(circle at 50% 48%, rgba(4,7,14,.55), transparent 60%)}
+.dice3 .row{display:flex;gap:26px;perspective:900px;justify-content:center}
+.die{width:92px;height:92px;position:relative;transform-style:preserve-3d;animation:tumble .95s cubic-bezier(.22,.68,.24,1) forwards}
+.die .fc{
+  position:absolute;inset:0;border-radius:22px;
+  background:linear-gradient(145deg,#FFFDF7 0%,#F1EDE0 58%,#DFD8C4 100%);
+  border:1.5px solid rgba(245,158,11,.55);
+  display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:13px;
+  box-shadow:inset 0 2px 6px rgba(255,255,255,.95), inset 0 -7px 14px rgba(100,82,40,.22), 0 18px 36px rgba(0,0,0,.55);
+}
+.die .fc i{
+  width:15px;height:15px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #334155, #090E1A 75%);
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.65), 0 1px 0 rgba(255,255,255,.7);
+  place-self:center;visibility:hidden;
+}
+.die .f1 i,.die .f4 i{background:radial-gradient(circle at 35% 35%, #F87171, #B91C1C 75%)}
+.die .f1{transform:translateZ(46px)} .die .f6{transform:rotateY(180deg) translateZ(46px)} .die .f2{transform:rotateY(90deg) translateZ(46px)} .die .f5{transform:rotateY(-90deg) translateZ(46px)} .die .f3{transform:rotateX(90deg) translateZ(46px)} .die .f4{transform:rotateX(-90deg) translateZ(46px)}
+.dice-res{
+  padding:8px 18px;border-radius:999px;font-family:var(--f-d);font-weight:800;font-size:17px;letter-spacing:.02em;
+  background:rgba(15,23,42,.94);color:#FDE68A;border:1.5px solid rgba(245,158,11,.55);
+  box-shadow:0 12px 28px rgba(0,0,0,.65);animation:pop .35s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes tumble{0%{transform:translateY(-130px) rotateX(0) rotateY(0) scale(.55);opacity:0}18%{opacity:1}100%{transform:var(--end)}}
 .dice3.out{animation:fade .4s reverse forwards}
 .emo{position:fixed;z-index:88;pointer-events:none;font-size:44px;animation:floatup 2.6s ease-out forwards;display:grid;justify-items:center}
 .emo small{font-size:12px;font-weight:800;background:rgba(15,23,42,.92);color:#fff;padding:2px 8px;border-radius:8px;font-family:var(--f-b);border:1px solid var(--line)}
@@ -402,6 +419,27 @@ table.dt th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:v
 #board .tree-sw{transform-box:fill-box;transform-origin:50% 100%;animation:scSway 5s ease-in-out infinite alternate}
 @keyframes scSway{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
 body.static .scene *,body.static .cloud,body.static #board *{animation:none!important}
+@media(max-width:640px){
+  .top{padding:calc(var(--safe-t) + 6px) 8px 6px;grid-template-columns:44px minmax(0,1fr) 44px;gap:6px}
+  .ib,.me{width:42px;height:42px}
+  .bal b{font-size:21px}
+  .bal em{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .strip{padding:6px 8px;gap:6px}
+  .stage{padding:4px}
+  .bottom{
+    grid-template-columns:48px minmax(0,1fr) 42px;gap:6px;
+    padding:8px 8px calc(var(--safe-b) + 8px);width:100%;max-width:100vw;
+  }
+  .bottom .main{min-height:46px;font-size:14px;padding:8px 10px;border-radius:13px}
+  .timer,.timer svg{width:46px;height:46px}
+  .timer b{font-size:11.5px}
+  .emopop{right:0;max-width:calc(100vw - 16px);flex-wrap:wrap;justify-content:center}
+  .hero{gap:10px}
+  .hero > div:last-child{display:none}
+  .lwrap{padding:calc(var(--safe-t) + 12px) 12px 32px;gap:12px}
+  .die{width:76px;height:76px}
+  .die .f1{transform:translateZ(38px)} .die .f6{transform:rotateY(180deg) translateZ(38px)} .die .f2{transform:rotateY(90deg) translateZ(38px)} .die .f5{transform:rotateY(-90deg) translateZ(38px)} .die .f3{transform:rotateX(90deg) translateZ(38px)} .die .f4{transform:rotateX(-90deg) translateZ(38px)}
+}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 </style>
@@ -435,7 +473,7 @@ body.static .scene *,body.static .cloud,body.static #board *{animation:none!impo
 /* ⬇ ОНЛАЙН-СЕРВЕР: вставте між лапками посилання веб-застосунку Apps Script (закінчується на /exec) */
 window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbxAJtzy86WUwg5NUtcgwJrw9sBlfgzp7EFGr77-LYomjbOalYan6y1jahGy9spLFyLJ/exec';
 </script>
-<script src="../enginecahsflow.js?v=20261115i"></script>
+<script src="../enginecahsflow.js?v=20261115j"></script>
 <script>
 (function () {
 'use strict';
@@ -730,7 +768,7 @@ function rulesFull() {
   return '<div class="sbody rules-full">'
   + '<div class="note">Це повні правила. Їх не обов\'язково читати від початку до кінця: відкривайте розділи, які цікаві. Короткий зміст — у першому розділі.</div>'
   + S2('1. Коротко: як виграти', '<p>Ви — звичайна людина з роботою, зарплатою, орендою і кредитами. Мета — вирватися з «щурячих перегонів»: зробити так, щоб <b>пасивний дохід</b> (оренда, бізнес, дивіденди, відсотки) став <b>більшим за всі ваші щомісячні витрати</b>. Тоді ви фінансово вільні й переходите на внутрішнє коло — Швидку доріжку. Там перемагає той, хто першим здійснить свою мрію або збільшить пасивний дохід ще на 300 000 ₴ на місяць.</p><p>Секрет простий і складний водночас: купувати активи, які приносять гроші щомісяця, а не пасиви, які гроші забирають.</p>', true)
-  + S2('2. Підготовка до гри', li(['Хост створює гру і надсилає колегам посилання. Кожен заходить своїм акаунтом claude.ai.', 'Кожен гравець <b>тягне професію жеребкуванням</b> — як у житті, вибирати не можна. Від професії залежать зарплата, податки, витрати, кредити, стартові гроші та ризик, що роботу забере штучний інтелект.', 'Гравець обирає <b>аватар</b> і <b>мрію</b> — за неї він гратиме на Швидкій доріжці.', 'Перекличка: кожен натискає «Я тут» — це вмикає звук. Коли всі на місці, хост починає гру.', 'Порядок ходів — за часом приєднання.']))
+  + S2('2. Підготовка до гри', li(['Хост створює гру і надсилає колегам посилання. Кожен відкриває посилання у браузері або додатку.', 'Кожен гравець <b>тягне професію жеребкуванням</b> — як у житті, вибирати не можна. Від професії залежать зарплата, податки, витрати, кредити, стартові гроші та ризик, що роботу забере штучний інтелект.', 'Гравець обирає <b>аватар</b> і <b>мрію</b> — за неї він гратиме на Швидкій доріжці.', 'Перекличка: кожен натискає «Я тут» — це вмикає звук. Коли всі на місці, хост починає гру.', 'Порядок ходів — за часом приєднання.']))
   + S2('3. Хід гравця', li(['Коли настає ваш хід, лунає сигнал, а інші чують «Ходить …».', 'У вас <b>30 секунд, щоб кинути кубик</b>. Якщо не встигли — кубик кидається автоматично.', 'Фішка рухається на стільки клітинок, скільки випало. Подія клітинки відкривається карткою.', 'На рішення є <b>3 хвилини</b>. Таймер видно і чути: попередження за 1 хвилину, за 30 і за 10 секунд, а в кінці годинник цокає швидше. Якщо час вийшов — угода пропускається, а хід переходить далі.', 'До кидка і після картки у свій хід можна керувати фінансами: брокер, банк, страхування, продаж активів, погашення кредитів.', 'Натисніть «Завершити хід», коли все вирішили.', 'Хост може змінити тривалість таймерів, вимкнути їх або поставити гру на паузу.']))
   + S2('4. Час і получки', li(['На великому колі <b>три клітинки «Получка»</b>. Одне коло — це три місяці життя.', 'Получка нараховується, коли ви <b>проходите</b> клітинку або <b>стаєте</b> на неї: приходять зарплата і весь пасивний дохід, списуються податки, платежі по кредитах, оренда житла, їжа, транспорт, діти, страховки й підписки.', '<b>12 получок — рік життя.</b> Ви дорослішаєте разом із грою, і це впливає на здоров\'я, сім\'ю та вартість страхування.', 'Календар світу рухається разом з получками всіх гравців. Кожен місяць змінюються курс долара, ціни на біржі й криптовалюту, нерухомість, інфляція. Раз на рік дорожчає життя, а зарплати, оренда і прибутки бізнесів індексуються — але не завжди встигають за цінами.']))
   + S2('5. Клітинки поля', li(['<b>Получка</b> — зарплата і витрати місяця.', '<b>Можливість</b> — оберіть малу угоду (акції, крипта, гараж, вендинг, ОВДП, депозит — до ~400 тис. ₴) або велику (квартири, франшизи, бізнеси, склади — часто з кредитом). Угоду бачите тільки ви. Можна купити, пропустити або <b>продати цю можливість</b> іншому гравцю за власну ціну.', '<b>Ринок</b> — покупець на ваші активи, ремонти, зміна оренди, конкуренти, обстріли, спліти акцій. Пропозиції купівлі відкриті для всіх: продати може кожен, хто має відповідний актив.', '<b>Витрата</b> — несподівані витрати: поломки, штрафи, весілля друзів, спокуси на кшталт нового телефона чи «курсу мільйонера».', '<b>Удача</b> — премія, повернення податку, подарунок, продаж речей, пропозиція підвищення.', '<b>Новини</b> — подія, яка змінює світ для всіх гравців.', '<b>Підробіток</b> — разово заробити або зробити підробіток регулярним (але це додає стресу).', '<b>Здоров\'я</b> — хвороби, травми, стоматологія, чекап.', '<b>Психологія</b> — стрес, вигорання, психолог, азартні ігри, FOMO, розмови про гроші в сім\'ї.', '<b>Дитина</b> — поповнення в родині (якщо є партнер), державна допомога і нові витрати.', '<b>Благодійність</b> — задонатити 10% доходу. Наступні 3 ходи можна кидати два кубики, стрес знижується.', '<b>Звільнення</b> — 2 місяці без зарплати. Найманим працівникам держава платить допомогу, ФОП — ні.', '<b>ШІ</b> — курси, впровадження ШІ на роботі, власний бізнес на ШІ, шахраї з підробленим голосом.']))
@@ -1042,7 +1080,7 @@ function lobbyHTML() {
   }
   if (S.mode === 'p2p') return lobbyP2P();
   if (S.mode === 'srv') return lobbySrv();
-  const who = signed ? '<div class="note">Ви увійшли як <b>' + esc(S.me.name || 'гравець') + '</b>' + (S.me.email ? ' (' + esc(S.me.email) + ')' : '') + ' через акаунт claude.ai. Прогрес кожної гри зберігається автоматично.</div>' : '<div class="note">Щоб грати з колегами й зберігати прогрес, відкрийте цю сторінку, увійшовши у свій акаунт claude.ai. Без входу працює тільки гра на одному пристрої.</div>';
+  const who = signed ? '<div class="note">Ви увійшли як <b>' + esc(S.me.name || 'гравець') + '</b>' + (S.me.email ? ' (' + esc(S.me.email) + ')' : '') + ' у мережевому режимі. Прогрес кожної гри зберігається автоматично.</div>' : '<div class="note">Щоб грати з колегами й зберігати прогрес, відкрийте цю сторінку, увійшовши в онлайн-режим. Без входу працює тільки гра на одному пристрої.</div>';
   return '<div class="lob"><div class="lwrap"><div class="hero"><div style="display:grid;gap:12px"><div class="blogo" style="font-size:22px">CASH<b>FLOW</b> <i>UA</i></div><h1>Вирвись із <b>щурячих перегонів</b> в українських реаліях</h1><p class="muted" style="margin:0;font-weight:600">Гривня і долар, біржа і крипта, квартири і франшизи, блекаути, війна, пандемії, ШІ, здоров\'я і стрес. Три получки за коло, дванадцять — рік життя.</p>' + who + '</div><div>' + ART.house.replace('<svg', '<svg style="width:100%;max-height:220px"') + '</div></div>'
     + '<div class="lgrid"><div style="display:grid;gap:18px;align-content:start">'
     + (signed ? '<div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Ваші ігри</h2>' + games + '</div><div class="card" style="display:grid;gap:12px"><h2 style="font-size:20px">Нова гра</h2><label class="f" for="gname">Назва<input type="text" id="gname" maxlength="40" value="Наша гра"></label><label class="f" for="gdiff">Режим складності<select id="gdiff"><option value="easy">Простий (навчитись і зрозуміти логіку)</option><option value="norm" selected>Середній (нормальний)</option><option value="hard">Складний (максимальний реалізм)</option></select></label><button class="btn go" data-act="create">Створити гру</button></div>' : '')
@@ -1151,7 +1189,7 @@ function onState(prev) {
 const SHEET_ID = '1JSJAv6OiHtuOedsjySYi1OrhAcNuScXEQ4HN2cx_DfE';
 async function exportResults(reason, manual) {
   const g = S.g; if (!g || g.local || !isHost()) return;
-  if (!S.mcp) { if (manual) toast('Запис у таблицю працює тільки в хоста, у якого в claude.ai підключено Google Sheets.', 'bad', 5000); return; }
+  if (!S.mcp) { if (manual) toast('Запис у таблицю працює тільки в хоста, у якого підключено Google Sheets.', 'bad', 5000); return; }
   const fx = g.world.fx; const usd = (v) => Math.round(v / fx);
   const rows = g.order.map((u) => { const p = g.players[u]; if (!p) return null; const st = CF.statement(p, g.world); const status = g.winner === u ? 'Переможець' : p.track === 'fast' ? 'Швидка доріжка' : 'Щурячі перегони'; return [new Date().toLocaleString('uk-UA'), g.name, nameOf(u), p.email || '', CF.profOf(p).n, p.paid || 0, lived(p.paid), usd(p.cash), usd(st.passive), usd(st.out), usd(st.cf), usd(st.net), status, CF.dateOf(g.world.m), reason]; }).filter(Boolean);
   try { const srv = await S.mcp.server('Google Sheets'); await srv.append_values({ spreadsheetId: SHEET_ID, range: 'Результати!A1', values: rows }); if (manual) toast('Підсумки записано в таблицю', 'good'); }
@@ -1259,9 +1297,10 @@ function showPay(pd, u) {
 const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
 const ROT = { 1: 'rotateX(0) rotateY(0)', 2: 'rotateY(-90deg)', 3: 'rotateX(-90deg)', 4: 'rotateX(90deg)', 5: 'rotateY(90deg)', 6: 'rotateY(180deg)' };
 function showDice(d) {
+  const sum = d.reduce((a, b) => a + b, 0);
   const w = document.createElement('div'); w.className = 'dice3';
-  w.innerHTML = '<div class="row">' + d.map((v) => { let f = ''; for (let n = 1; n <= 6; n++) { let p = ''; for (let i = 0; i < 9; i++) p += '<i style="' + (PIPS[n].includes(i) ? 'visibility:visible' : '') + '"></i>'; f += '<div class="fc f' + n + '">' + p + '</div>'; } return '<div class="die" style="--end:' + ROT[v] + ' rotateX(720deg) rotateY(720deg)">' + f + '</div>'; }).join('') + '</div>';
-  document.body.appendChild(w); setTimeout(() => w.classList.add('out'), 1500); setTimeout(() => w.remove(), 1900);
+  w.innerHTML = '<div class="row">' + d.map((v) => { let f = ''; for (let n = 1; n <= 6; n++) { let p = ''; for (let i = 0; i < 9; i++) p += '<i style="' + (PIPS[n].includes(i) ? 'visibility:visible' : '') + '"></i>'; f += '<div class="fc f' + n + '">' + p + '</div>'; } return '<div class="die" style="--end:' + ROT[v] + ' rotateX(720deg) rotateY(720deg)">' + f + '</div>'; }).join('') + '</div><div class="dice-res">🎲 Випало: ' + (d.length > 1 ? d.join(' + ') + ' = ' + sum : sum) + '</div>';
+  document.body.appendChild(w); setTimeout(() => w.classList.add('out'), 1800); setTimeout(() => w.remove(), 2200);
 }
 
 /* ================= таймер ================= */
@@ -1287,7 +1326,7 @@ function tickLoop() {
 }
 function timerSVG(frac, label, low, sec) {
   const r = 25, c = 2 * Math.PI * r; const col = low ? '#E5484D' : (frac < 0.34 || (sec != null && sec <= 60 && frac < 0.5) ? '#F08A24' : '#16A34A');
-  return '<svg viewBox="0 0 58 58"><circle cx="29" cy="29" r="' + r + '" fill="#fff" stroke="#F3EBD2" stroke-width="6"/><circle cx="29" cy="29" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="6" stroke-linecap="round" stroke-dasharray="' + c + '" stroke-dashoffset="' + (c * (1 - frac)) + '"/></svg><b>' + label + '</b>';
+  return '<svg viewBox="0 0 58 58"><circle cx="29" cy="29" r="' + r + '" fill="#0F172A" stroke="rgba(148,163,184,.28)" stroke-width="6"/><circle cx="29" cy="29" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="6" stroke-linecap="round" stroke-dasharray="' + c + '" stroke-dashoffset="' + (c * (1 - frac)) + '"/></svg><b>' + label + '</b>';
 }
 
 /* ================= модалки ================= */
@@ -1320,7 +1359,7 @@ function render() {
 function rollcallHTML() {
   const g = S.g; const ids = Object.keys(g.players).sort((a, b) => g.players[a].joined - g.players[b].joined); const me = !!g.players[S.me.id];
   const rd = g.ready || {}; const all = ids.length && ids.every((u) => rd[u]);
-  return '<div class="lob"><div class="lwrap" style="max-width:640px"><div class="card" style="display:grid;gap:14px"><div><span class="pill o">Збираємось</span><h1 style="font-size:26px;margin-top:10px">' + esc(g.name) + '</h1>' + ((S.mode === 'p2p' || S.mode === 'srv') && !g.local ? '<p class="muted" style="margin:6px 0 0;font-weight:600">Надішліть колегам посилання або код кімнати <b class="num" style="color:var(--ink)">' + esc(g.id) + '</b>. Кожен приєднується, тягне професію і натискає «Я тут». Коли всі на місці, хост починає гру.' + (isHost() && S.mode === 'p2p' ? ' Ви хост: не закривайте цю вкладку, поки триває гра.' : S.mode === 'srv' ? ' Кімната вже є в загальному списку на головній.' : '') + '</p><div style="display:flex;gap:8px"><input type="text" readonly id="slink" value="' + esc(NET.link(g.id)) + '" aria-label="Посилання"><button class="btn pri" data-act="copylink">Копіювати</button></div>' : '<p class="muted" style="margin:6px 0 0;font-weight:600">Надішліть колегам посилання на цю сторінку (кнопка «Поділитися» в claude.ai, рівень доступу Contributor). Кожен приєднується, тягне професію і натискає «Я тут». Коли всі на місці, хост починає гру.</p>') + '</div>'
+  return '<div class="lob"><div class="lwrap" style="max-width:640px"><div class="card" style="display:grid;gap:14px"><div><span class="pill o">Збираємось</span><h1 style="font-size:26px;margin-top:10px">' + esc(g.name) + '</h1>' + ((S.mode === 'p2p' || S.mode === 'srv') && !g.local ? '<p class="muted" style="margin:6px 0 0;font-weight:600">Надішліть колегам посилання або код кімнати <b class="num" style="color:var(--ink)">' + esc(g.id) + '</b>. Кожен приєднується, тягне професію і натискає «Я тут». Коли всі на місці, хост починає гру.' + (isHost() && S.mode === 'p2p' ? ' Ви хост: не закривайте цю вкладку, поки триває гра.' : S.mode === 'srv' ? ' Кімната вже є в загальному списку на головній.' : '') + '</p><div style="display:flex;gap:8px"><input type="text" readonly id="slink" value="' + esc(NET.link(g.id)) + '" aria-label="Посилання"><button class="btn pri" data-act="copylink">Копіювати</button></div>' : '<p class="muted" style="margin:6px 0 0;font-weight:600">Надішліть колегам посилання або код кімнати. Кожен приєднується, тягне професію і натискає «Я тут». Коли всі на місці, хост починає гру.</p>') + '</div>'
     + '<div class="plist">' + (ids.length ? ids.map((u) => { const p = g.players[u]; return '<div class="pl"><img src="' + esc(avaOf(u)) + '" alt=""><div><div class="nm">' + esc(nameOf(u)) + (u === g.hostId ? ' <span class="tag">хост</span>' : '') + '</div><div class="sub">' + esc(CF.profOf(p).n) + '</div></div>' + (rd[u] ? '<span class="pill g">✓ тут</span>' : '<span class="pill o">чекаємо</span>') + '</div>'; }).join('') : '<div class="note">Поки нікого немає.</div>') + '</div>'
     + '<div style="display:grid;gap:10px">' + (!me ? '<button class="btn go main" data-act="join">Приєднатися до гри</button>' : (!rd[S.me.id] ? '<button class="btn sun main" data-act="here">✋ Я тут — увімкнути звук</button>' : '<div class="note">Ви на місці. Звук увімкнено. Чекаємо на старт.</div>'))
     + '<button class="btn sun" data-sheet="rulesFull">📘 Повні правила гри</button>' + (isHost() ? '<button class="btn pri" data-act="start"' + (ids.length ? '' : ' disabled') + '>' + (all ? 'Всі на місці — почати гру' : 'Почати гру (не всі підтвердили)') + '</button><button class="btn sm" data-sheet="settings">Правила й таймери</button>' : '')
@@ -1433,7 +1472,7 @@ function renderBoard() {
   });
   [...toks.children].forEach((el) => { if (!g.players[el.getAttribute('data-uid')]) el.remove(); });
 }
-function placeTok(el, d, kk, n) { const off = (kk - (n - 1) / 2) * 14; let x, y; if (d.track === 'fast') { const r = fastXY(d.pos, BD.Rf - 6); x = r[0] - Math.sin(r[2]) * off; y = r[1] + Math.cos(r[2]) * off; } else { [x, y] = ratXY(d.pos); x += 30 - kk * 13; y += -14 + (kk % 2) * 6; } el.setAttribute('transform', 'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ')'); }
+function placeTok(el, d, kk, n) { const off = (kk - (n - 1) / 2) * 15; let x, y; if (d.track === 'fast') { const r = fastXY(d.pos, BD.Rf - 8); x = r[0] - Math.sin(r[2]) * off; y = r[1] + Math.cos(r[2]) * off; } else { [x, y] = ratXY(d.pos); const cols = Math.min(3, Math.max(1, n)); const col = kk % cols, row = Math.floor(kk / cols); x += (col - (cols - 1) / 2) * 24; y += (row === 0 ? -24 : 18); } el.setAttribute('transform', 'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ')'); }
 function stepTok(uid, to, track) {
   const d = S.disp[uid]; d.anim = 1; const n = track === 'fast' ? CF.FAST.length : CF.RAT.length;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1498,12 +1537,12 @@ function renderBottom() {
   else if (mine) {
     if (g.phase === 'roll') {
       const ex = CF.canExit(g, cu);
-      main = ex ? '<div style="display:flex;gap:8px"><button class="btn sun main" style="flex:1" data-act="exit">🚀 На Швидку доріжку</button><button class="btn pri main" data-act="roll1">🎲</button></div>'
-        : (p.charity > 0 && p.track === 'rat' ? '<div style="display:flex;gap:8px"><button class="btn pri main" style="flex:1" data-act="roll2">🎲🎲 Два кубики</button><button class="btn main" data-act="roll1">🎲</button></div>' : '<button class="btn pri main" data-act="roll1">🎲 Кинути ' + (p.track === 'fast' ? 'кубики' : 'кубик') + '</button>');
+      main = ex ? '<div style="display:flex;gap:6px"><button class="btn sun main" style="flex:1" data-act="exit">🚀 Велике коло</button><button class="btn pri main" data-act="roll1">🎲</button><button class="btn main" data-sheet="bal" aria-label="Фінанси">📊</button><button class="btn main" data-sheet="mkt" aria-label="Біржа">📈</button></div>'
+        : (p.charity > 0 && p.track === 'rat' ? '<div style="display:flex;gap:6px"><button class="btn pri main" style="flex:1" data-act="roll2">🎲🎲 2 кубики</button><button class="btn main" data-act="roll1">🎲</button><button class="btn main" data-sheet="bal" aria-label="Фінанси">📊</button><button class="btn main" data-sheet="mkt" aria-label="Біржа">📈</button></div>' : '<div style="display:flex;gap:6px"><button class="btn pri main" style="flex:1" data-act="roll1">🎲 Кинути ' + (p.track === 'fast' ? 'кубики' : 'кубик') + '</button><button class="btn main" data-sheet="bal" aria-label="Фінанси">📊</button><button class="btn main" data-sheet="mkt" aria-label="Біржа">📈</button></div>');
     } else if (v && !v.done) {
       if (g.pending.owner !== cu && !g.local) main = '<div class="waitline">Угоду вирішує ' + esc(firstName(g.pending.owner)) + '…</div>';
       else main = '<div style="display:flex;gap:8px"><button class="btn pri main" style="flex:1" data-act="card">Повернутися до картки</button><button class="btn main" data-sheet="bank" aria-label="Банк">🏦</button><button class="btn main" data-sheet="trades" aria-label="Угоди з гравцями">🤝</button></div>';
-    } else main = '<button class="btn go main" data-act="end">Завершити хід →</button>';
+    } else { const lr = (g.dice && g.dice.d && g.dice.d.length) ? '<span class="pill o" style="flex:none">🎲 ' + g.dice.d.join('+') + '</span>' : ''; main = '<div style="display:flex;gap:6px;align-items:center">' + lr + '<button class="btn go main" style="flex:1" data-act="end">Завершити хід →</button><button class="btn main" data-sheet="bal" aria-label="Фінанси">📊</button><button class="btn main" data-sheet="mkt" aria-label="Біржа">📈</button></div>'; }
   } else {
     const what = v ? (v.priv && !(g.pending.offer && g.pending.offer.to === S.me.id) ? 'розглядає угоду' : '«' + cut(v.t, 26) + '»') : (g.phase === 'roll' ? 'кидає кубик' : 'ходить');
     main = '<div class="waitline"><img src="' + esc(avaOf(cu)) + '" alt=""><span>' + esc(firstName(cu)) + ' ' + esc(what) + '</span>' + (v && v.pub ? '<button class="btn sm" data-act="card">Дивитись</button>' : '') + '</div>';
@@ -1758,7 +1797,7 @@ function finHTML(p, g, readonly) {
   let h = '<div class="sbody">';
   h += '<div class="free"><div style="display:flex;justify-content:space-between;gap:10px"><b>' + (fast ? 'До перемоги' : 'До фінансової свободи') + '</b><b class="num good">' + Math.round(pr) + '%</b></div><div class="bar"><i style="width:' + pr.toFixed(1) + '%"></i></div><div class="muted" style="font-size:13px;font-weight:700">Пасивний дохід <span class="num good">' + fmt(st.passive) + '</span> з ' + (fast ? fmt(p.ftGoal) : 'витрат ' + fmt(st.out)) + '</div></div>';
   h += '<div class="kpis"><div class="kpi"><div class="l">Готівка</div><div class="v ' + (p.cash < 0 ? 'bad' : 'good') + '">' + fmt(p.cash) + '</div></div><div class="kpi"><div class="l">Потік / міс</div><div class="v ' + (st.cf >= 0 ? 'good' : 'bad') + '">' + (st.cf >= 0 ? '+' : '') + fmt(st.cf) + '</div></div><div class="kpi"><div class="l">Статки</div><div class="v">' + fmt(st.net) + '</div></div><div class="kpi"><div class="l">Подушка</div><div class="v">' + (st.out ? (Math.max(0, p.cash) / st.out).toFixed(1) : 0) + ' міс</div></div></div>';
-  h += '<div class="sect"><h3>Стан</h3><div class="meters">' + meter('Здоров\'я', p.health, p.health > 60 ? '#16A34A' : p.health > 35 ? '#F08A24' : '#E5484D') + meter('Стрес', p.stress, p.stress < 45 ? '#16A34A' : p.stress < 70 ? '#F08A24' : '#E5484D') + meter('Навички ШІ', p.ai, '#7B61FF') + '<div class="muted" style="font-size:12.5px;font-weight:700">' + esc(CF.profOf(p).n) + ' · дітей: ' + p.kids + ' · ризик заміни ШІ ' + Math.round(p.aiRisk * 100) + '%' + (p.unemp > 0 ? ' · <span class="bad">без роботи ще ' + p.unemp + ' міс</span>' : '') + '</div></div></div>';
+  h += '<div class="sect"><h3>Стан</h3><div class="meters">' + meter('Здоров\'я', p.health, p.health > 60 ? '#16A34A' : p.health > 35 ? '#F08A24' : '#E5484D') + meter('Стрес', p.stress, p.stress < 35 ? '#38BDF8' : p.stress < 70 ? '#F59E0B' : '#EF4444') + meter('Навички ШІ', p.ai, '#7B61FF') + '<div class="muted" style="font-size:12.5px;font-weight:700">' + esc(CF.profOf(p).n) + ' · дітей: ' + p.kids + ' · ризик заміни ШІ ' + Math.round(p.aiRisk * 100) + '%' + (p.unemp > 0 ? ' · <span class="bad">без роботи ще ' + p.unemp + ' міс</span>' : '') + '</div></div></div>';
   h += '<div class="sect"><h3>Доходи</h3><div class="lines">' + st.inc.map((x) => line(x[0], x[1])).join('') + st.pas.map((x) => line('↻ ' + x[0], x[1], x[1] >= 0 ? 'good' : 'bad')).join('') + (st.inc.length + st.pas.length ? '' : '<div class="ln"><span class="muted">Немає</span><span></span></div>') + '</div></div>';
   h += '<div class="sect"><h3>Витрати</h3><div class="lines">' + st.exp.map((x) => line(x[0], x[1], 'bad')).join('') + '<div class="ln tot"><span>Разом</span><span class="num bad">' + fmt(st.out) + '</span></div></div></div>';
   if (!readonly) h += '<div class="tip">💡 ' + esc(CF.advice(p, g.world)) + '</div>';
