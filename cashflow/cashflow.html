@@ -515,7 +515,7 @@ body.static .scene *,body.static .cloud,body.static #board *{animation:none!impo
 /* ⬇ ОНЛАЙН-СЕРВЕР: вставте між лапками посилання веб-застосунку Apps Script (закінчується на /exec) */
 window.CF_API = window.CF_API || 'https://script.google.com/macros/s/AKfycbxAJtzy86WUwg5NUtcgwJrw9sBlfgzp7EFGr77-LYomjbOalYan6y1jahGy9spLFyLJ/exec';
 </script>
-<script src="../enginecahsflow.js?v=20261115o"></script>
+<script src="../enginecahsflow.js?v=20261115p"></script>
 <script>
 (function () {
 'use strict';
@@ -1390,7 +1390,7 @@ function modal(html, kind, locked) {
   d._h = html; document.body.appendChild(d); S.sheet = kind;
 }
 function closeAll() { const m = $('#scrim'); if (m) m.remove(); const dr = $('#drawer'); if (dr) dr.remove(); S.sheet = null; S.drawer = false; S.sheetArg = null; }
-function head(title, back) { return '<div class="shead">' + (back ? '<button class="ib" data-menu="1" aria-label="Назад до меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>' : '') + '<h2>' + title + '</h2><button class="ib" data-act="close" aria-label="Закрити"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'; }
+function head(title, back, extra) { return '<div class="shead">' + (back ? '<button class="ib" data-menu="1" aria-label="Назад до меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>' : '') + '<h2>' + title + '</h2>' + (extra || '') + '<button class="ib" data-act="close" aria-label="Закрити"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'; }
 
 /* ================= рендер ================= */
 function render() {
@@ -1847,11 +1847,11 @@ function renderCard(force) {
   const visible = decide || offerMe || v.pub || !v.priv || g.local;
   const col = { pay: '#16A34A', luck: '#65A30D', small: '#2D8CFF', big: '#2D8CFF', choose: '#2D8CFF', market: '#16A34A', spend: '#F08A24', health: '#E5484D', psy: '#E0409A', gig: '#8B5CF6', ai: '#7B61FF', child: '#E0409A', charity: '#B07A00', layoff: '#6B5A3A', news: '#B07A00', ftdeal: '#2D8CFF', ftrisk: '#E5484D', ftnews: '#B07A00', dream: '#B07A00' }[v.deck] || '#2D8CFF';
   const DN = { pay: 'Получка', luck: 'Удача', small: 'Мала угода', big: 'Велика угода', choose: 'Можливість', market: 'Ринок', spend: 'Витрата', health: 'Здоров\'я', psy: 'Психологія', gig: 'Підробіток', ai: 'Штучний інтелект', child: 'Родина', charity: 'Благодійність', layoff: 'Робота', news: 'Новини', ftdeal: 'Швидка доріжка', ftrisk: 'Ризик', ftnews: 'Новини', dream: 'Мрія' };
-  const rm = realisticMediaFor(v); let h = rm.html + head('<span class="kicker" style="color:' + col + ';display:block">' + esc(v.tk ? 'Біржа' : (DN[v.deck] || 'Подія')) + ' · ' + esc(firstName(g.pending.owner || CF.curUid(g))) + '</span>' + esc(visible ? v.t : 'Угода'));
+  const rm = realisticMediaFor(v); let h = rm.html + head('<span class="kicker" style="color:' + col + ';display:block">' + esc(v.tk ? 'Біржа' : (DN[v.deck] || 'Подія')) + ' · ' + esc(firstName(g.pending.owner || CF.curUid(g))) + '</span>' + esc(visible ? v.t : 'Угода'), false, visible ? '<button class="btn sm" style="min-height:34px;padding:4px 10px;font-size:12px;border-radius:10px;background:rgba(56,189,248,.14);border:1px solid rgba(56,189,248,.42);color:#7DD3FC;flex:none" data-act="explain">' + (S.eduOpen ? '✕ Пояснення' : '💡 Що це?') + '</button>' : null);
   h += '<div class="sbody">';
   if (!visible) h += '<p>' + esc(firstName(g.pending.owner)) + ' розглядає можливість. Подробиці бачить тільки він — якщо захоче, запропонує її вам.</p>';
   else {
-    if (v.text) h += '<p>' + esc(v.text) + '</p>'; if (visible) { const ed = eduForCard(v); h += '<div><button class="btn sm" style="background:rgba(56,189,248,.14);border-color:rgba(56,189,248,.45);color:#7DD3FC" data-act="explain">' + (S.eduOpen ? '✕ Сховати пояснення' : '💡 Що це означає? (Навчання)') + '</button></div>'; if (S.eduOpen) h += '<div class="edu-inline">' + eduHTML(ed) + '</div>'; }
+    if (S.eduOpen && visible) h += '<div class="edu-inline">' + eduHTML(eduForCard(v)) + '</div>'; if (v.text) h += '<p>' + esc(v.text) + '</p>';
     if (v.rows && v.rows.length) h += '<div class="rows">' + v.rows.map((r) => '<div><span>' + esc(r[0]) + '</span><span>' + esc(r[1]) + '</span></div>').join('') + '</div>';
     if (v.done) {
       h += '<div class="res' + (/втрач|штраф|програно|збит|вкрали|скорот|банкрут|Мікрокредит/i.test(v.res || '') ? ' badr' : '') + '">' + esc(v.res) + '</div>';
@@ -2235,6 +2235,7 @@ document.addEventListener('click', (e) => {
     case 'end': endTurn(); break;
     case 'card': openCard(); break;
     case 'menu': openMenu(); break;
+    case 'explain': S.eduOpen = !S.eduOpen; renderCard(true); break;
     case 'close': closeAll(); break;
     case 'live': lifeToggle(); toast(LIFE.on ? '🌿 Живе поле увімкнено' : 'Поле статичне — без анімацій', '', 1800); break;
     case 'emo': S.emoOpen = !S.emoOpen; renderBottom(); break;
