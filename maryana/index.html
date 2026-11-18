@@ -243,7 +243,12 @@ const DAYS = [
   /* 3 */ { type: "task", title: "Завдання: десять хвилин тиші", text: "Зроби собі найсмачніший чай або какао, загорнися в плед і десять хвилин нічого не роби. Без телефону, без справ.\n\nЦе завдання від мене, і провалити його неможливо.", button: "Виконала ☕", done: "Ідеально. Саме так і треба.", notify: "☕ Мар'яна виконала завдання дня 3 (десять хвилин тиші)" },
   /* 4 */ { type: "choice", title: "Обери фільм на наш зимовий вечір", text: "Колись ми увімкнемо його разом. Обирай чесно, без оглядки на мене.", fields: [{ id: "film", label: "Фільм", options: ["Сам удома", "Любов насправді", "Гаррі Поттер і філософський камінь", "Відпустка за обміном", "Полярний експрес", "Обери сам"] }], button: "Обрати", done: "Записав. Готую ковдру і попкорн.", notify: "🎬 Мар'яна обрала фільм: {film}" },
   /* 5 */ { type: "scratch", title: "Зітри сніг", text: "Під снігом щось ховається. Потри пальцем.", prize: "Ти мені подобаєшся", prizeSub: "Просто хотів, щоб ти знала.", notify: "✨ Мар'яна стерла сніг у віконці 5" },
-  /* 6 */ { type: "choice", special: true, title: "Сьогодні День святого Миколая", text: "Миколай передав, що ти цього року була дуже чемна. І попросив дізнатися, яку шоколадку тобі привезти.", fields: [{ id: "choc", label: "Шоколадка", options: ["Milka з цілим горіхом", "Ritter Sport", "Шоколад ручної роботи зі Львівської майстерні", "Kinder", "Чорний гіркий", "Здивуй мене"] }], button: "Замовити в Миколая", done: "Миколай уже в дорозі. Він дуже схожий на мене, не лякайся.", notify: "🍫 Шоколадка від Миколая: {choc}" },
+  /* 6 */ { type: "choice", special: true, title: "Сьогодні День святого Миколая", text: "Миколай передав, що ти цього року була дуже чемна. І попросив дізнатися, яку шоколадку тобі привезти.", fields: [
+      { id: "choc", label: "Шоколадка", options: ["Milka з цілим горіхом", "Ritter Sport", "Шоколад ручної роботи зі Львівської майстерні", "Kinder", "Чорний гіркий", "Здивуй мене"] },
+      { id: "day", label: "Коли Миколаю прийти", options: ["Сьогодні ввечері, 6 грудня", "Завтра ввечері, 7 грудня"] },
+      { id: "where", label: "Куди привезти", input: "Адреса або «додому»" }
+    ], button: "Замовити в Миколая", done: "Миколай уже в дорозі. Він дуже схожий на мене, не лякайся.", notify: "🍫 ШОКОЛАДКА ВІД МИКОЛАЯ\nЩо: {choc}\nКоли: {day}\nКуди: {where}",
+    delivery: { what: "🍫 Шоколадка: {choc}", time: "ввечері", where: "{where}" } },
   /* 7 */ { type: "game", game: "memory", title: "Зимова пам'ять", intro: "Знайди всі пари. Поспішати нікуди.", win: "Всі пари знайдено! Пам'ять у тебе краща, ніж у мене на дати.", notify: "🧠 Мар'яна пройшла «Зимову пам'ять» за {v} ходів" },
   /* 8 */ { type: "task", title: "Завдання: полювання на гірлянди", text: "Дорогою сьогодні знайди найгарнішу гірлянду чи вітрину і сфотографуй.\n\nЯкщо захочеш, надішли мені. Влаштуємо конкурс на найзатишніший куточок Львова.", button: "Знайшла!", done: "Чекаю фото. Переможець конкурсу отримує гарячий шоколад.", notify: "📸 Мар'яна знайшла гарну гірлянду — чекай фото" },
   /* 9 */ { type: "note", title: "Три речі", text: "Три речі, які я помітив за той час, що ми знайомі:\n\n1. З тобою дуже легко говорити.\n2. У тебе неймовірна усмішка, особливо коли ти намагаєшся не сміятися.\n3. Після зустрічі з тобою день здається кращим, ніж був." },
@@ -254,7 +259,8 @@ const DAYS = [
       { id: "day", label: "День", options: "workdays:2026-12-10:6" },
       { id: "time", label: "Час", options: ["10:00–12:00", "12:00–14:00", "14:00–16:00", "16:00–18:00"] },
       { id: "where", label: "Куди привезти", input: "Адреса або «на роботу»" }
-    ], button: "Чекаю каву", done: "Прийнято! Я вже знаю, коли сідати в машину.", notify: "☕ КАВА З ДОСТАВКОЮ\nНапій: {drink}\nМолоко: {milk}\nСироп: {syrup}\nКоли: {day}, {time}\nКуди: {where}" },
+    ], button: "Чекаю каву", done: "Прийнято! Я вже знаю, коли сідати в машину.", notify: "☕ КАВА З ДОСТАВКОЮ\nНапій: {drink}\nМолоко: {milk}\nСироп: {syrup}\nКоли: {day}, {time}\nКуди: {where}",
+    delivery: { what: "☕ Кава: {drink}, молоко {milk}, {syrup}", time: "{time}", where: "{where}" } },
   /* 11 */ { type: "game", game: "anagram", title: "Зимові слова", intro: "Літери переплуталися. Натискай їх по порядку, щоб скласти слово.", words: ["ЯЛИНКА", "ПРЯНИК", "КОЛЯДА", "СНІЖИНКА"], win: "Усі слова на місці. Ти чарівниця.", notify: "🔤 Мар'яна склала всі зимові слова" },
   /* 12 */ { type: "fortune", title: "Зимове печиво з передбаченням", text: "Розламай печиво. Передбачення збувається протягом тижня. Перевірено.", list: ["Завтра хтось подумає про тебе рівно о 12:34. Здогадайся хто.", "Найближчим часом ти отримаєш напій, який не замовляла. І він буде смачний.", "Цього тижня ти будеш сміятися так, що аж заболить живіт.", "На тебе чекає несподівана зустріч. Можливо, навіть запланована.", "Твоє бажання вже в дорозі. Воно трохи запізнюється через сніг.", "Хтось дуже чекає на твоє наступне повідомлення."], notify: "🥠 Передбачення для Мар'яни: «{v}»" },
   /* 13 */ { type: "task", title: "Завдання: вечір турботи", text: "Сьогодні неділя. Влаштуй собі вечір турботи: маска, улюблений серіал, ковдра, щось смачне.\n\nЖодних справ. Я перевірю.", button: "Влаштувала", done: "Пишаюся тобою. Так тримати.", notify: "🛁 Мар'яна влаштувала собі вечір турботи" },
@@ -273,8 +279,10 @@ const DAYS = [
       { id: "flower", label: "Квіти", options: ["Тюльпани", "Троянди", "Ранункулюси", "Хризантеми", "Гортензія", "Здивуй мене"] },
       { id: "color", label: "Колір", options: ["Білі", "Ніжно-рожеві", "Червоні", "Пастельні мікс", "Будь-які"] },
       { id: "day", label: "Коли", options: ["пн 21 грудня", "вт 22 грудня", "ср 23 грудня", "чт 24 грудня"] },
-      { id: "time", label: "Час", options: ["Вдень", "Ввечері, після 18:00"] }
-    ], button: "Обрати букет", done: "Букет замовлено. Залишилося дочекатися.", notify: "💐 КВІТИ\nЩо: {flower}, {color}\nКоли: {day}, {time}" },
+      { id: "time", label: "Час", options: ["Вдень", "Ввечері, після 18:00"] },
+      { id: "where", label: "Куди привезти", input: "Адреса або «додому»" }
+    ], button: "Обрати букет", done: "Букет замовлено. Залишилося дочекатися.", notify: "💐 КВІТИ\nЩо: {flower}, {color}\nКоли: {day}, {time}\nКуди: {where}",
+    delivery: { what: "💐 Квіти: {flower}, {color}", time: "{time}", where: "{where}" } },
   /* 21 */ { type: "letter", title: "Лист собі в наступну зиму", text: "Напиши кілька рядків собі через рік: що відчуваєш зараз, чого хочеш, за що вдячна. Цей лист бачиш тільки ти, він зберігається лише на твоєму телефоні.", notify: "" },
   /* 22 */ { type: "game", game: "catch", hearts: true, title: "Лови сердечка", intro: "Тепер падають сердечка. 30 секунд, ціль 25.", goal: 25, win: "Усі мої сердечка в тебе. Чесно.", lose: "Ще трішки! Сердечок вистачить на всіх.", notify: "💗 Мар'яна зловила {v} сердечок у грі дня 22" },
   /* 23 */ { type: "choice", title: "Різдвяна підказка", text: "Я вже дещо готую на Різдво. Не скажу що, але підкажи настрій.", fields: [{ id: "mood", label: "Хочеться чогось", options: ["Затишного", "Смачного", "Враження разом", "Корисного", "Сюрпризу, нічого не підказую"] }], button: "Підказати", done: "Дякую! Тепер я точно знаю, що робити.", notify: "🎁 Різдвяна підказка від Мар'яни: хочеться {mood}" },
@@ -290,6 +298,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const ONLINE = /github\.io$/i.test(location.hostname);
 const PREVIEW = !ONLINE || location.hash === "#admin";
+let SIM = 0; // у режимі перегляду: 0 — усі відкриті, N — як побачить Мар'яна в день N
 const KEY = "advent-maryana-2026";
 let S = { opened: {}, done: {}, notified: {}, letter: "" };
 try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") S = Object.assign(S, s); } catch (e) {}
@@ -304,8 +313,8 @@ const dayDiff = (a, b) => Math.round((toDate(b) - toDate(a)) / 86400000);
 const dateOf = n => { const d = toDate(START); d.setUTCDate(d.getUTCDate() + n - 1); return d; };
 const label = n => { const d = dateOf(n); return `${d.getUTCDate()} ${MON}`; };
 const wdShort = n => WDS[dateOf(n).getUTCDay()];
-function todayIndex() { return dayDiff(START, kyivToday()) + 1; }  // 1 = перший день
-function isOpenable(n) { return PREVIEW || todayIndex() >= n; }
+function todayIndex() { return PREVIEW && SIM ? SIM : dayDiff(START, kyivToday()) + 1; }  // 1 = перший день
+function isOpenable(n) { return (PREVIEW && !SIM) || todayIndex() >= n; }
 
 /* ---------- звук ---------- */
 let audio = null, muted = false;
@@ -324,9 +333,9 @@ let toastT = 0;
 function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2400); }
 
 /* ---------- надсилання тобі в Telegram ---------- */
-async function notify(text) {
+async function notify(text, extra = {}) {
   if (!text) return true;
-  const body = JSON.stringify({ text: (PREVIEW ? "[ТЕСТ] " : "") + text });
+  const body = JSON.stringify(Object.assign({ text: (PREVIEW ? "[ТЕСТ] " : "") + text, test: PREVIEW }, extra));
   if (!SEND_URL) return false;
   try { await fetch(SEND_URL, { method: "POST", mode: "no-cors", body }); return true; } catch (e) { return false; }
 }
@@ -340,8 +349,8 @@ function bindFallback(text) {
   const sel = () => { const r = document.createRange(); r.selectNodeContents($("fbMsg")); const g = getSelection(); g.removeAllRanges(); g.addRange(r); toast("Виділено, скопіюй"); };
 }
 /* надіслати й показати результат у контейнері */
-async function sendAndShow(box, text, doneText) {
-  const ok = await notify(text);
+async function sendAndShow(box, text, doneText, extra) {
+  const ok = await notify(text, extra);
   box.innerHTML = `<div class="done-box"><b>${esc(doneText)}</b>${PREVIEW && !SEND_URL ? `<span class="small">Режим перегляду: у Telegram прийшло б:<br>${esc(text).replace(/\n/g, "<br>")}</span>` : ""}</div>` + (ok || PREVIEW ? "" : fallbackHtml(text));
   bindFallback(text);
 }
@@ -365,10 +374,18 @@ function renderWall() {
   $("sLeft").textContent = Math.max(0, left);
   $("sLeftL").textContent = left > 0 ? (left === 1 ? "день до Різдва" : left < 5 ? "дні до Різдва" : "днів до Різдва") : "Різдво!";
   let ban = "";
-  if (PREVIEW) ban = `<div class="banner"><b>Режим перегляду.</b> Усі віконця відкриваються, а повідомлення позначаються як «ТЕСТ». Мар'яна цього не бачить.</div>`;
+  if (PREVIEW) ban = `<div class="banner"><b>Режим перегляду для Тараса.</b> Повідомлення позначаються як «ТЕСТ». Мар'яна цього не бачить: у неї відкриваються лише сьогоднішнє і минулі віконця.
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><label for="simSel">Показати, як у неї:</label>
+    <select id="simSel" style="font:inherit;padding:6px 10px;border-radius:10px;background:#0b1730;color:#f4f8fc;border:1px solid rgba(220,235,255,.3)"><option value="0">усі віконця відкриті</option>${DAYS.map((_, i) => `<option value="${i + 1}"${SIM === i + 1 ? " selected" : ""}>${label(i + 1)}</option>`).join("")}</select>
+    <button type="button" id="simReset" style="font:inherit;padding:6px 10px;border-radius:10px;border:0;cursor:pointer">Скинути відкриті</button></div></div>`;
   else if (ti < 1) ban = `<div class="banner">Календар відкриється <b>1 грудня</b>. Ще ${-ti + 1} ${(-ti + 1) === 1 ? "день" : (-ti + 1) < 5 ? "дні" : "днів"}.</div>`;
   else if (ti <= TOTAL && !S.opened[ti]) ban = `<div class="banner">Сьогоднішнє віконце <b>№${ti}</b> чекає на тебе.</div>`;
   $("banner").innerHTML = ban;
+  if ($("simSel")) {
+    $("simSel").value = String(SIM);
+    $("simSel").onchange = e => { SIM = +e.target.value; renderWall(); };
+    $("simReset").onclick = () => { S = { opened: {}, done: {}, notified: {}, letter: "" }; save(); renderWall(); toast("Скинуто"); };
+  }
 }
 function backIcon(d) {
   const ico = { note: "M4 6h16v12H4z M4 6l8 7 8-7", choice: "M12 3l2.6 5.6 6 .6-4.5 4 1.3 5.9L12 16l-5.4 3.1 1.3-5.9-4.5-4 6-.6z", task: "M5 12l4 4 10-10", game: "M6 10h4M8 8v4M15 11h.01M18 9h.01M7 5h10a4 4 0 0 1 4 4l-1 7a2.5 2.5 0 0 1-4.3 1.6L14 16h-4l-1.7 1.6A2.5 2.5 0 0 1 4 16L3 9a4 4 0 0 1 4-4z", scratch: "M4 8h16v10H4z M8 8v10 M12 4c-2 0-3 4 0 4s2-4 0-4z", fortune: "M4 14a8 8 0 0 1 16 0z", letter: "M5 3h10l4 4v14H5z", wish: "M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z", final: "M3 10h18v11H3z M12 10v11 M12 10c-3-6-8-3-5 0 M12 10c3-6 8-3 5 0" }[d.type] || "M12 3v18";
@@ -382,7 +399,7 @@ function tapDoor(n, el) {
   }
   if (!S.opened[n]) {
     S.opened[n] = Date.now(); save(); el.classList.add("opened"); el.classList.remove("today"); sBell();
-    if (NOTIFY_OPEN && !S.notified["open" + n]) { S.notified["open" + n] = 1; save(); notify(`🚪 ${HER} відкрила віконце №${n}`); }
+    if (NOTIFY_OPEN && !S.notified["open" + n]) { S.notified["open" + n] = 1; save(); notify(`🚪 ${HER} відкрила віконце №${n} (${label(n)})`, { event: "open", day: n }); }
     setTimeout(() => { openSheet(n); renderWall(); }, reduce ? 0 : 550);
   } else openSheet(n);
 }
@@ -444,7 +461,12 @@ const RENDER = {
       $("cGo").disabled = true;
       S.done[n] = Object.assign({}, vals); save();
       sWin(); confetti(50);
-      await sendAndShow($("cRes"), fill(d.notify, vals), d.done);
+      let extra = { event: "choice", day: n };
+      if (d.delivery) {
+        const m = String(vals.day || "").match(/(\d{1,2})\s+грудня/);
+        extra.delivery = { id: "d" + n, date: m ? `2026-12-${m[1].padStart(2, "0")}` : "", label: vals.day || "", what: fill(d.delivery.what, vals), time: fill(d.delivery.time, vals), where: fill(d.delivery.where, vals) };
+      }
+      await sendAndShow($("cRes"), fill(d.notify, vals), d.done, extra);
       $("cGo").textContent = "Змінити вибір"; $("cGo").disabled = false;
     };
   },
