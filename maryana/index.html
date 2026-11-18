@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta property="og:title" content="Зимовий календар"><meta property="og:description" content="Нове віконце щодня до Різдва"><meta name="theme-color" content="#0b1730"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style></head><body>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta property="og:title" content="Зимовий календар"><meta property="og:description" content="Нове віконце щоранку до Різдва"><meta name="theme-color" content="#0b1730"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style></head><body>
 <title>Зимовий календар Мар'яни</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,6 +125,7 @@ h1 em { font-style: normal; color: var(--ice); }
 .chip.sel { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .input, textarea.input { font: 500 16px/1.4 var(--f-body); border: 1.5px solid rgba(34,22,15,.15); border-radius: 14px; padding: 12px 14px; background: #fff; color: var(--ink); width: 100%; box-sizing: border-box; }
 textarea.input { min-height: 110px; resize: vertical; font-family: var(--f-hand); font-size: 22px; }
+textarea.input.story { min-height: 220px; line-height: 1.25; }
 .done-box { background: #eef7f1; border: 1.5px solid #9fd3b6; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
 .done-box b { color: var(--pine); }
 .fallback { background: #fff4dc; border: 1.5px solid #ecc672; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
@@ -139,8 +140,12 @@ textarea.input { min-height: 110px; resize: vertical; font-family: var(--f-hand)
 .gover div { display: flex; flex-direction: column; gap: 10px; align-items: center; }
 .gover b { font-family: var(--f-display); font-size: 22px; }
 .mem { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.mem button { aspect-ratio: 1; max-width: 100%; border: 0; border-radius: 12px; cursor: pointer; font-size: clamp(24px, 7vw, 34px); background: var(--night-2); color: transparent; transition: transform .25s, background .25s; }
-.mem button.up, .mem button.ok { background: #fff; color: inherit; box-shadow: inset 0 0 0 2px rgba(34,22,15,.12); }
+.mem button { position: relative; aspect-ratio: 1; max-width: 100%; border: 0; border-radius: 12px; cursor: pointer; font-size: clamp(24px, 7vw, 34px); background: var(--night-2); color: var(--ice); transition: transform .25s, background .25s; display: grid; place-items: center; padding: 0; }
+.mem button .face { display: none; }
+.mem button .cover { font-size: .7em; opacity: .6; }
+.mem button.up .face, .mem button.ok .face { display: block; }
+.mem button.up .cover, .mem button.ok .cover { display: none; }
+.mem button.up, .mem button.ok { background: #fff; box-shadow: inset 0 0 0 2px rgba(34,22,15,.12); }
 .mem button.ok { background: #eef7f1; }
 .ana-word { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; min-height: 48px; }
 .ana-word i { width: 38px; height: 46px; border-radius: 10px; background: rgba(34,22,15,.08); display: grid; place-items: center; font-style: normal; font-family: var(--f-display); font-weight: 800; font-size: 20px; }
@@ -211,7 +216,7 @@ textarea.input { min-height: 110px; resize: vertical; font-family: var(--f-hand)
   </g>
   <circle cx="527" cy="48" r="5" fill="#bfe0f2" opacity=".9"/>
 </svg>
-<footer class="foot" id="foot">Від <b>Тараса</b>, з теплом. Нове віконце відкривається щодня о 00:00.</footer>
+<footer class="foot" id="foot">Від <b>Тараса</b>, з теплом. Нове віконце відкривається щодня о 8:00.</footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -238,44 +243,44 @@ const MON = "грудня";
    type: note | choice | task | game | scratch | fortune | letter | wish | final
    notify: що прилетить тобі в Telegram ({v} — її вибір/відповідь) */
 const DAYS = [
-  /* 1 */ { type: "note", title: "Привіт, Мар'яно!", text: "Це твій зимовий календар. Щодня до Різдва тут відкриватиметься одне віконце.\n\nУ деяких — просто кілька теплих слів. У деяких — маленька гра або завдання. А в деяких треба буде щось обрати, і я одразу про це дізнаюся. Що буде далі, не скажу.\n\nГарного тобі першого дня зими." },
-  /* 2 */ { type: "game", game: "catch", title: "Лови сніжинки", intro: "30 секунд, щоб зловити 20 сніжинок. Торкайся їх пальцем.", goal: 20, win: "Ти спритніша за хуртовину. Зараховано!", lose: "Майже! Спробуй ще раз, сніжинки не закінчуються.", notify: "❄️ Мар'яна зловила {v} сніжинок у грі дня 2" },
-  /* 3 */ { type: "task", title: "Завдання: десять хвилин тиші", text: "Зроби собі найсмачніший чай або какао, загорнися в плед і десять хвилин нічого не роби. Без телефону, без справ.\n\nЦе завдання від мене, і провалити його неможливо.", button: "Виконала ☕", done: "Ідеально. Саме так і треба.", notify: "☕ Мар'яна виконала завдання дня 3 (десять хвилин тиші)" },
-  /* 4 */ { type: "choice", title: "Обери фільм на наш зимовий вечір", text: "Колись ми увімкнемо його разом. Обирай чесно, без оглядки на мене.", fields: [{ id: "film", label: "Фільм", options: ["Сам удома", "Любов насправді", "Гаррі Поттер і філософський камінь", "Відпустка за обміном", "Полярний експрес", "Обери сам"] }], button: "Обрати", done: "Записав. Готую ковдру і попкорн.", notify: "🎬 Мар'яна обрала фільм: {film}" },
-  /* 5 */ { type: "scratch", title: "Зітри сніг", text: "Під снігом щось ховається. Потри пальцем.", prize: "Ти мені подобаєшся", prizeSub: "Просто хотів, щоб ти знала.", notify: "✨ Мар'яна стерла сніг у віконці 5" },
-  /* 6 */ { type: "choice", special: true, title: "Сьогодні День святого Миколая", text: "Миколай передав, що ти цього року була дуже чемна. І попросив дізнатися, яку шоколадку тобі привезти.", fields: [
+  /* 1 */ { type: "note", title: "Доброго ранку, Мар'яно", text: "Я довго думав, як зробити цей грудень для тебе трохи теплішим. І вирішив: хай кожен ранок до Різдва починається з маленького сюрпризу від мене.\n\nТут 25 віконець. Щодня о восьмій ранку відкривається нове. У деяких будуть мої слова, у деяких ігри, а в деяких я питатиму про тебе, бо дуже хочу знати тебе краще. А кілька віконець з подарунками, які я привезу особисто.\n\nСьогодні просто знай: з самого ранку про тебе думає одна людина. Це я.\n\nГарного першого дня зими 🤍", heart: true },
+  /* 2 */ { type: "game", game: "catch", title: "Сніг для тебе", intro: "За вікном снігу може й не бути, тому я зробив його тут. Злови 20 сніжинок за 30 секунд.", goal: 20, win: "Спритна! Одна з тих сніжинок була від мене. Та, що найтепліша.", lose: "Майже! Спробуй ще раз, для тебе снігу не шкода.", notify: "❄️ Мар'яна зловила {v} сніжинок (віконце 2)" },
+  /* 3 */ { type: "story", title: "Розкажи мені про маленьку Мар'яну", text: "Мені цікаво все про тебе. Якою ти була в дитинстві? Що любила, ким мріяла стати, що тебе смішило, за що тебе сварили?\n\nПиши скільки хочеш. Я прочитаю кожне слово.", placeholder: "Коли я була маленькою…", notify: "📖 Мар'яна розповіла про своє дитинство (віконце 3):\n\n{v}" },
+  /* 4 */ { type: "choice", title: "Наш зимовий фільм", text: "Хочу один вечір цієї зими провести з тобою під ковдрою перед фільмом. Обери, який увімкнемо.", fields: [{ id: "film", label: "Фільм", options: ["Сам удома", "Любов насправді", "Гаррі Поттер і філософський камінь", "Відпустка за обміном", "Полярний експрес", "Обери сам"] }], button: "Обрати", done: "Записав. Ковдру і какао беру на себе.", notify: "🎬 Мар'яна обрала фільм: {film}" },
+  /* 5 */ { type: "scratch", title: "Зітри іній", text: "Під інеєм дещо, що я хотів сказати не лише в повідомленні. Потри пальцем.", prize: "Ти мені дуже подобаєшся", prizeSub: "І з кожною зустріччю все більше.", notify: "✨ Мар'яна стерла іній і прочитала «Ти мені дуже подобаєшся» (віконце 5)" },
+  /* 6 */ { type: "choice", special: true, title: "Сьогодні Миколай", text: "Миколай написав мені, що ти цього року була дуже чемна. І попросив дізнатися, яку шоколадку тобі привезти. Між нами: Миколай дуже схожий на мене.", fields: [
       { id: "choc", label: "Шоколадка", options: ["Milka з цілим горіхом", "Ritter Sport", "Шоколад ручної роботи зі Львівської майстерні", "Kinder", "Чорний гіркий", "Здивуй мене"] },
       { id: "day", label: "Коли Миколаю прийти", options: ["Сьогодні ввечері, 6 грудня", "Завтра ввечері, 7 грудня"] },
       { id: "where", label: "Куди привезти", input: "Адреса або «додому»" }
-    ], button: "Замовити в Миколая", done: "Миколай уже в дорозі. Він дуже схожий на мене, не лякайся.", notify: "🍫 ШОКОЛАДКА ВІД МИКОЛАЯ\nЩо: {choc}\nКоли: {day}\nКуди: {where}",
+    ], button: "Замовити в Миколая", done: "Миколай уже чистить сани. Чекай!", notify: "🍫 ШОКОЛАДКА ВІД МИКОЛАЯ\nЩо: {choc}\nКоли: {day}\nКуди: {where}",
     delivery: { what: "🍫 Шоколадка: {choc}", time: "ввечері", where: "{where}" } },
-  /* 7 */ { type: "game", game: "memory", title: "Зимова пам'ять", intro: "Знайди всі пари. Поспішати нікуди.", win: "Всі пари знайдено! Пам'ять у тебе краща, ніж у мене на дати.", notify: "🧠 Мар'яна пройшла «Зимову пам'ять» за {v} ходів" },
-  /* 8 */ { type: "task", title: "Завдання: полювання на гірлянди", text: "Дорогою сьогодні знайди найгарнішу гірлянду чи вітрину і сфотографуй.\n\nЯкщо захочеш, надішли мені. Влаштуємо конкурс на найзатишніший куточок Львова.", button: "Знайшла!", done: "Чекаю фото. Переможець конкурсу отримує гарячий шоколад.", notify: "📸 Мар'яна знайшла гарну гірлянду — чекай фото" },
-  /* 9 */ { type: "note", title: "Три речі", text: "Три речі, які я помітив за той час, що ми знайомі:\n\n1. З тобою дуже легко говорити.\n2. У тебе неймовірна усмішка, особливо коли ти намагаєшся не сміятися.\n3. Після зустрічі з тобою день здається кращим, ніж був." },
-  /* 10 */ { type: "choice", special: true, title: "Кава з доставкою", text: "Одного разу посеред робочого дня я все кину і привезу тобі каву. Ти тільки скажи яку, коли і куди.", fields: [
+  /* 7 */ { type: "game", game: "memory", title: "Зимові пари", intro: "Відкривай по дві картки і знаходь однакові. Поспішати нікуди.", win: "Всі пари знайдено! У тебе чудова пам'ять. Сподіваюся, наші зустрічі ти теж запам'ятовуєш.", notify: "🧠 Мар'яна знайшла всі пари за {v} ходів (віконце 7)" },
+  /* 8 */ { type: "story", title: "Твій ідеальний зимовий день", text: "Опиши свій ідеальний зимовий день від ранку до вечора. Де ти прокидаєшся, що п'єш, куди йдеш, з ким, чим закінчується вечір.\n\nКажу одразу: питаю не просто так. Хочу колись зробити тобі такий день.", placeholder: "Я прокидаюся…", notify: "📖 Ідеальний зимовий день Мар'яни (віконце 8):\n\n{v}" },
+  /* 9 */ { type: "note", title: "Що я в тобі помітив", text: "Кілька речей, які я помітив за той час, що ми знайомі.\n\nЗ тобою дуже легко говорити. Ніби ми знайомі набагато довше.\n\nУ тебе неймовірна усмішка, особливо коли ти намагаєшся не сміятися.\n\nТи уважна до дрібниць. Я це бачу і ціную.\n\nІ після кожної нашої зустрічі мій день стає кращим, ніж був.", heart: true },
+  /* 10 */ { type: "choice", special: true, title: "Кава з доставкою", text: "Одного дня посеред роботи я все кину, сяду в машину і привезу тобі каву. Просто тому, що хочу тебе побачити хоча б на п'ять хвилин.\n\nСкажи яку, коли і куди.", fields: [
       { id: "drink", label: "Напій", options: ["Лате", "Капучино", "Раф", "Флет вайт", "Американо", "Какао", "Матча"] },
       { id: "milk", label: "Молоко", options: ["Звичайне", "Рослинне", "Без молока"] },
       { id: "syrup", label: "Сироп", options: ["Без сиропу", "Карамель", "Ваніль", "Лісовий горіх", "Солона карамель"] },
       { id: "day", label: "День", options: "workdays:2026-12-10:6" },
       { id: "time", label: "Час", options: ["10:00–12:00", "12:00–14:00", "14:00–16:00", "16:00–18:00"] },
       { id: "where", label: "Куди привезти", input: "Адреса або «на роботу»" }
-    ], button: "Чекаю каву", done: "Прийнято! Я вже знаю, коли сідати в машину.", notify: "☕ КАВА З ДОСТАВКОЮ\nНапій: {drink}\nМолоко: {milk}\nСироп: {syrup}\nКоли: {day}, {time}\nКуди: {where}",
+    ], button: "Чекаю каву", done: "Прийнято! Вже знаю, коли сідати в машину.", notify: "☕ КАВА З ДОСТАВКОЮ\nНапій: {drink}\nМолоко: {milk}\nСироп: {syrup}\nКоли: {day}, {time}\nКуди: {where}",
     delivery: { what: "☕ Кава: {drink}, молоко {milk}, {syrup}", time: "{time}", where: "{where}" } },
-  /* 11 */ { type: "game", game: "anagram", title: "Зимові слова", intro: "Літери переплуталися. Натискай їх по порядку, щоб скласти слово.", words: ["ЯЛИНКА", "ПРЯНИК", "КОЛЯДА", "СНІЖИНКА"], win: "Усі слова на місці. Ти чарівниця.", notify: "🔤 Мар'яна склала всі зимові слова" },
-  /* 12 */ { type: "fortune", title: "Зимове печиво з передбаченням", text: "Розламай печиво. Передбачення збувається протягом тижня. Перевірено.", list: ["Завтра хтось подумає про тебе рівно о 12:34. Здогадайся хто.", "Найближчим часом ти отримаєш напій, який не замовляла. І він буде смачний.", "Цього тижня ти будеш сміятися так, що аж заболить живіт.", "На тебе чекає несподівана зустріч. Можливо, навіть запланована.", "Твоє бажання вже в дорозі. Воно трохи запізнюється через сніг.", "Хтось дуже чекає на твоє наступне повідомлення."], notify: "🥠 Передбачення для Мар'яни: «{v}»" },
-  /* 13 */ { type: "task", title: "Завдання: вечір турботи", text: "Сьогодні неділя. Влаштуй собі вечір турботи: маска, улюблений серіал, ковдра, щось смачне.\n\nЖодних справ. Я перевірю.", button: "Влаштувала", done: "Пишаюся тобою. Так тримати.", notify: "🛁 Мар'яна влаштувала собі вечір турботи" },
-  /* 14 */ { type: "choice", title: "Куди підемо наступного разу?", text: "Наступне побачення обираєш ти.", fields: [{ id: "place", label: "Куди", options: ["Різдвяний ярмарок біля Оперного", "Каток", "Кав'ярня з настілками", "VR Dragon, реванш", "Прогулянка вечірнім Львовом", "Вирішуй ти"] }], button: "Обрати", done: "Домовились. Я все організую.", notify: "📍 Наступне побачення: {place}" },
-  /* 15 */ { type: "game", game: "tree", title: "Прикрась ялинку", intro: "Торкнися кожного кружечка, щоб повісити іграшку. Коли прикрасиш усе, засвітиться зірка.", win: "Найгарніша ялинка в місті!", notify: "🎄 Мар'яна прикрасила ялинку у віконці 15" },
-  /* 16 */ { type: "task", title: "Завдання: зимова пісня", text: "Яка пісня в тебе асоціюється із зимою? Напиши її сюди, і я додам її в наш плейлист.", input: "Назва пісні або виконавець", button: "Надіслати пісню", done: "Вже слухаю.", notify: "🎵 Зимова пісня від Мар'яни: {v}" },
-  /* 17 */ { type: "scratch", title: "Купон", text: "Зітри сніг і забери свій купон.", prize: "Купон на одне бажання", prizeSub: "Пред'яви Тарасу. Діє всю зиму.", notify: "🎟 Мар'яна відкрила купон на одне бажання (готуйся!)" },
-  /* 18 */ { type: "game", game: "quiz", title: "Що ти знаєш про Тараса?", intro: "Чотири питання. Неправильних відповідей не буває. Ну, майже.", qs: [
+  /* 11 */ { type: "game", game: "anagram", title: "Зимові слова", intro: "Літери переплуталися. Натискай їх по порядку, щоб скласти слово.", words: ["ЯЛИНКА", "ПРЯНИК", "КОЛЯДА", "СНІЖИНКА"], win: "Усі слова на місці. Розумниця!", notify: "🔤 Мар'яна склала всі зимові слова (віконце 11)" },
+  /* 12 */ { type: "story", title: "Що робить тебе щасливою", text: "Розкажи про речі, які завжди піднімають тобі настрій. Великі і зовсім дрібні: запах, пісня, місце, людина, смаколик.\n\nІ про одну, яка його псує. Щоб я знав, чого уникати 😄", placeholder: "Мені завжди стає краще, коли…", notify: "📖 Що робить Мар'яну щасливою (віконце 12):\n\n{v}" },
+  /* 13 */ { type: "task", title: "Вечір турботи про себе", text: "Сьогодні неділя. Прошу тебе про одне: влаштуй собі вечір турботи. Маска, улюблений серіал, ковдра, щось смачне. Жодних справ і жодного почуття провини.\n\nТи заслуговуєш, щоб про тебе дбали. Сьогодні почни сама, а далі я допоможу.", button: "Влаштувала 🛁", done: "Пишаюся тобою. Так і треба.", notify: "🛁 Мар'яна влаштувала собі вечір турботи (віконце 13)" },
+  /* 14 */ { type: "choice", title: "Наше наступне побачення", text: "Цього разу обираєш ти. Куди підемо?", fields: [{ id: "place", label: "Куди", options: ["Різдвяний ярмарок біля Оперного", "Каток", "Кав'ярня з настілками", "VR Dragon, реванш", "Прогулянка вечірнім Львовом", "Вирішуй ти"] }], button: "Обрати", done: "Домовились. Решту я організую.", notify: "📍 Наступне побачення: {place}" },
+  /* 15 */ { type: "game", game: "tree", title: "Прикрась ялинку", intro: "Торкайся кружечків, щоб повісити іграшки. Коли прикрасиш усе, засвітиться зірка.", win: "Найгарніша ялинка в місті. Майже така гарна, як ти.", notify: "🎄 Мар'яна прикрасила ялинку (віконце 15)" },
+  /* 16 */ { type: "story", title: "Твій найтепліший зимовий спогад", text: "Розкажи свій найтепліший спогад, пов'язаний із зимою чи Різдвом. Де це було, хто був поруч, що ти тоді відчувала.\n\nДуже хочу, щоб цієї зими в тебе з'явився ще один такий спогад. І щоб я був у ньому.", placeholder: "Пам'ятаю, як…", notify: "📖 Найтепліший зимовий спогад Мар'яни (віконце 16):\n\n{v}" },
+  /* 17 */ { type: "scratch", title: "Купон", text: "Зітри іній і забери свій купон.", prize: "Купон на одне бажання", prizeSub: "Будь-яке (в межах розумного 😄). Пред'яви мені. Діє всю зиму.", notify: "🎟 Мар'яна відкрила купон на одне бажання (віконце 17)" },
+  /* 18 */ { type: "game", game: "quiz", title: "Що ти знаєш про Тараса?", intro: "Чотири питання про мене. Неправильних відповідей не буває. Ну, майже.", qs: [
       { q: "Яка гра в Тараса улюблена?", a: ["Dota 2", "CS 2", "FIFA", "Minecraft"], r: 0 },
       { q: "Що Тарас робить у будні з 9 до 18?", a: ["Директорує в магазині сантехніки", "Пише код", "Варить каву", "Тренує футболістів"], r: 0 },
-      { q: "Скільки разів Тарас переписував текст цього календаря?", a: ["Один", "Три", "Десять", "Збився з рахунку"], r: 3 },
-      { q: "Що Тарас зробить, коли ти пройдеш цей тест?", a: ["Усміхнеться", "Обійме при зустрічі", "Скаже, що ти найрозумніша", "Усе разом"], r: 3 }
-    ], notify: "❓ Мар'яна пройшла тест про тебе: {v}" },
-  /* 19 */ { type: "game", game: "find", title: "Знайди сердечко", intro: "Серед сніжинок сховалося сердечко. Три раунди, кожен трохи складніший.", win: "Знайшла! Як і моє, до речі.", notify: "💗 Мар'яна знайшла всі сердечка" },
-  /* 20 */ { type: "choice", special: true, title: "Квіти", text: "Взимку квітів мало, тому я привезу тобі букет. Обери, які тобі до душі.", fields: [
+      { q: "Скільки разів Тарас переписував тексти цього календаря?", a: ["Один", "Три", "Десять", "Збився з рахунку"], r: 3 },
+      { q: "Про кого Тарас думає, коли пише ці віконця?", a: ["Про роботу", "Про Доту", "Про тебе", "Про каву"], r: 2 }
+    ], notify: "❓ Мар'яна пройшла тест про тебе: {v} (віконце 18)" },
+  /* 19 */ { type: "game", game: "find", title: "Знайди сердечко", intro: "Серед сніжинок сховалося сердечко. Три раунди, кожен трохи складніший.", win: "Знайшла! Так само, як колись знайшла місце в моєму.", notify: "💗 Мар'яна знайшла всі сердечка (віконце 19)" },
+  /* 20 */ { type: "choice", special: true, title: "Квіти для тебе", text: "Взимку квітів мало, і саме тому хочу привезти тобі букет. Обери, які тобі до душі, і коли тобі зручно.", fields: [
       { id: "flower", label: "Квіти", options: ["Тюльпани", "Троянди", "Ранункулюси", "Хризантеми", "Гортензія", "Здивуй мене"] },
       { id: "color", label: "Колір", options: ["Білі", "Ніжно-рожеві", "Червоні", "Пастельні мікс", "Будь-які"] },
       { id: "day", label: "Коли", options: ["пн 21 грудня", "вт 22 грудня", "ср 23 грудня", "чт 24 грудня"] },
@@ -283,11 +288,11 @@ const DAYS = [
       { id: "where", label: "Куди привезти", input: "Адреса або «додому»" }
     ], button: "Обрати букет", done: "Букет замовлено. Залишилося дочекатися.", notify: "💐 КВІТИ\nЩо: {flower}, {color}\nКоли: {day}, {time}\nКуди: {where}",
     delivery: { what: "💐 Квіти: {flower}, {color}", time: "{time}", where: "{where}" } },
-  /* 21 */ { type: "letter", title: "Лист собі в наступну зиму", text: "Напиши кілька рядків собі через рік: що відчуваєш зараз, чого хочеш, за що вдячна. Цей лист бачиш тільки ти, він зберігається лише на твоєму телефоні.", notify: "" },
-  /* 22 */ { type: "game", game: "catch", hearts: true, title: "Лови сердечка", intro: "Тепер падають сердечка. 30 секунд, ціль 25.", goal: 25, win: "Усі мої сердечка в тебе. Чесно.", lose: "Ще трішки! Сердечок вистачить на всіх.", notify: "💗 Мар'яна зловила {v} сердечок у грі дня 22" },
-  /* 23 */ { type: "choice", title: "Різдвяна підказка", text: "Я вже дещо готую на Різдво. Не скажу що, але підкажи настрій.", fields: [{ id: "mood", label: "Хочеться чогось", options: ["Затишного", "Смачного", "Враження разом", "Корисного", "Сюрпризу, нічого не підказую"] }], button: "Підказати", done: "Дякую! Тепер я точно знаю, що робити.", notify: "🎁 Різдвяна підказка від Мар'яни: хочеться {mood}" },
-  /* 24 */ { type: "wish", special: true, title: "Святвечір", text: "Сьогодні особливий вечір. Кажуть, на Святвечір перша зірка виконує бажання.\n\nЗагадай своє і торкнися зірки.", done: "Бажання відправлено. Я теж загадав. Здається, про одне й те саме.", notify: "⭐ Мар'яна загадала бажання на Святвечір" },
-  /* 25 */ { type: "final", special: true, title: "З Різдвом, Мар'яно!", text: "Двадцять п'ять днів, двадцять п'ять віконець. Дякую, що відкривала кожне.\n\nЯ дуже радий, що цієї зими в мене є ти. Хай Різдво принесе тобі спокій, тепло і багато приводів усміхатися.\n\nА найголовніший подарунок я хочу вручити особисто.", ask: "Побачимося на свята?", answers: ["Так! 🎄", "Напишу тобі"], notify: "🎄 Мар'яна на Різдво відповіла: {v}" }
+  /* 21 */ { type: "story", title: "Про що ти мрієш", text: "Розкажи мені про свої мрії. Великі й маленькі. Що хочеш встигнути наступного року, куди поїхати, ким стати, що спробувати.\n\nЯ не сміятимусь. Мені правда важливо знати, що важливо для тебе.", placeholder: "Я мрію…", notify: "📖 Мрії Мар'яни (віконце 21):\n\n{v}" },
+  /* 22 */ { type: "game", game: "catch", hearts: true, title: "Лови сердечка", intro: "Сьогодні падають сердечка. 30 секунд, ціль 25.", goal: 25, win: "Усі мої сердечка в тебе. Чесно.", lose: "Ще трішки! Сердечок вистачить.", notify: "💗 Мар'яна зловила {v} сердечок (віконце 22)" },
+  /* 23 */ { type: "choice", title: "Різдвяна підказка", text: "Я вже дещо готую тобі на Різдво. Не скажу що, але підкажи настрій.", fields: [{ id: "mood", label: "Хочеться чогось", options: ["Затишного", "Смачного", "Враження разом", "Корисного", "Сюрпризу, нічого не підказую"] }], button: "Підказати", done: "Дякую! Тепер я точно знаю, що робити.", notify: "🎁 Різдвяна підказка від Мар'яни: хочеться {mood}" },
+  /* 24 */ { type: "wish", special: true, title: "Святвечір", text: "Сьогодні особливий вечір. Кажуть, перша зірка на Святвечір виконує бажання.\n\nЗагадай своє і торкнися зірки. А я тим часом скажу тобі те, що відчуваю: я дуже вдячний цій зимі за тебе.", done: "Бажання відправлено. Я теж загадав. Здається, про одне й те саме.", notify: "⭐ Мар'яна загадала бажання на Святвечір (віконце 24)" },
+  /* 25 */ { type: "final", special: true, title: "З Різдвом, Мар'яно!", text: "Двадцять п'ять ранків, двадцять п'ять віконець. Дякую, що відкривала кожне, грала, обирала і розповідала мені про себе. Я читав усе і дізнався про тебе стільки всього хорошого.\n\nЯ дуже радий, що цієї зими в мене є ти. Хай Різдво принесе тобі спокій, тепло і багато приводів усміхатися.\n\nА найголовніший подарунок я хочу вручити тобі особисто.", ask: "Побачимося на свята?", answers: ["Так! 🎄", "Напишу тобі"], notify: "🎄 Мар'яна на Різдво відповіла: {v}" }
 ];
 
 /* =========================================================
@@ -304,8 +309,9 @@ let S = { opened: {}, done: {}, notified: {}, letter: "" };
 try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") S = Object.assign(S, s); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
 
-function kyivToday() {
-  const p = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Kyiv", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+const OPEN_HOUR = 8;                   // нове віконце відкривається о 08:00 за Києвом
+function kyivToday(shift = OPEN_HOUR) {
+  const p = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Kyiv", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(Date.now() - shift * 3600000));
   return p; // YYYY-MM-DD
 }
 const toDate = s => { const [y, m, d] = s.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)); };
@@ -335,9 +341,18 @@ function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("sh
 /* ---------- надсилання тобі в Telegram ---------- */
 async function notify(text, extra = {}) {
   if (!text) return true;
-  const body = JSON.stringify(Object.assign({ text: (PREVIEW ? "[ТЕСТ] " : "") + text, test: PREVIEW }, extra));
   if (!SEND_URL) return false;
-  try { await fetch(SEND_URL, { method: "POST", mode: "no-cors", body }); return true; } catch (e) { return false; }
+  const pre = PREVIEW ? "[ТЕСТ] " : "";
+  const parts = [];
+  for (let i = 0; i < text.length; i += 1300) parts.push(text.slice(i, i + 1300));
+  try {
+    for (let k = 0; k < parts.length; k++) {
+      const t = pre + (parts.length > 1 ? `(${k + 1}/${parts.length}) ` : "") + parts[k];
+      const body = JSON.stringify(Object.assign({ text: t, test: PREVIEW }, k === 0 ? extra : {}));
+      await fetch(SEND_URL, { method: "POST", mode: "no-cors", body });
+    }
+    return true;
+  } catch (e) { return false; }
 }
 function fill(tpl, vals) { return tpl.replace(/\{(\w+)\}/g, (_, k) => vals[k] ?? ""); }
 function fallbackHtml(text) {
@@ -370,7 +385,7 @@ function renderWall() {
   $("wall").querySelectorAll(".door").forEach(b => b.onclick = () => tapDoor(+b.dataset.n, b));
   const opened = Object.keys(S.opened).length;
   $("sOpen").textContent = opened;
-  const left = dayDiff(kyivToday(), "2026-12-25");
+  const left = dayDiff(kyivToday(0), "2026-12-25");
   $("sLeft").textContent = Math.max(0, left);
   $("sLeftL").textContent = left > 0 ? (left === 1 ? "день до Різдва" : left < 5 ? "дні до Різдва" : "днів до Різдва") : "Різдво!";
   let ban = "";
@@ -378,7 +393,7 @@ function renderWall() {
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><label for="simSel">Показати, як у неї:</label>
     <select id="simSel" style="font:inherit;padding:6px 10px;border-radius:10px;background:#0b1730;color:#f4f8fc;border:1px solid rgba(220,235,255,.3)"><option value="0">усі віконця відкриті</option>${DAYS.map((_, i) => `<option value="${i + 1}"${SIM === i + 1 ? " selected" : ""}>${label(i + 1)}</option>`).join("")}</select>
     <button type="button" id="simReset" style="font:inherit;padding:6px 10px;border-radius:10px;border:0;cursor:pointer">Скинути відкриті</button></div></div>`;
-  else if (ti < 1) ban = `<div class="banner">Календар відкриється <b>1 грудня</b>. Ще ${-ti + 1} ${(-ti + 1) === 1 ? "день" : (-ti + 1) < 5 ? "дні" : "днів"}.</div>`;
+  else if (ti < 1) ban = `<div class="banner">Календар відкриється <b>1 грудня о 8:00</b>. Ще ${-ti + 1} ${(-ti + 1) === 1 ? "день" : (-ti + 1) < 5 ? "дні" : "днів"}.</div>`;
   else if (ti <= TOTAL && !S.opened[ti]) ban = `<div class="banner">Сьогоднішнє віконце <b>№${ti}</b> чекає на тебе.</div>`;
   $("banner").innerHTML = ban;
   if ($("simSel")) {
@@ -388,14 +403,14 @@ function renderWall() {
   }
 }
 function backIcon(d) {
-  const ico = { note: "M4 6h16v12H4z M4 6l8 7 8-7", choice: "M12 3l2.6 5.6 6 .6-4.5 4 1.3 5.9L12 16l-5.4 3.1 1.3-5.9-4.5-4 6-.6z", task: "M5 12l4 4 10-10", game: "M6 10h4M8 8v4M15 11h.01M18 9h.01M7 5h10a4 4 0 0 1 4 4l-1 7a2.5 2.5 0 0 1-4.3 1.6L14 16h-4l-1.7 1.6A2.5 2.5 0 0 1 4 16L3 9a4 4 0 0 1 4-4z", scratch: "M4 8h16v10H4z M8 8v10 M12 4c-2 0-3 4 0 4s2-4 0-4z", fortune: "M4 14a8 8 0 0 1 16 0z", letter: "M5 3h10l4 4v14H5z", wish: "M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z", final: "M3 10h18v11H3z M12 10v11 M12 10c-3-6-8-3-5 0 M12 10c3-6 8-3 5 0" }[d.type] || "M12 3v18";
+  const ico = { story: "M4 19.5V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-1.5z M8 7h7 M8 11h7", note: "M4 6h16v12H4z M4 6l8 7 8-7", choice: "M12 3l2.6 5.6 6 .6-4.5 4 1.3 5.9L12 16l-5.4 3.1 1.3-5.9-4.5-4 6-.6z", task: "M5 12l4 4 10-10", game: "M6 10h4M8 8v4M15 11h.01M18 9h.01M7 5h10a4 4 0 0 1 4 4l-1 7a2.5 2.5 0 0 1-4.3 1.6L14 16h-4l-1.7 1.6A2.5 2.5 0 0 1 4 16L3 9a4 4 0 0 1 4-4z", scratch: "M4 8h16v10H4z M8 8v10 M12 4c-2 0-3 4 0 4s2-4 0-4z", fortune: "M4 14a8 8 0 0 1 16 0z", letter: "M5 3h10l4 4v14H5z", wish: "M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z", final: "M3 10h18v11H3z M12 10v11 M12 10c-3-6-8-3-5 0 M12 10c3-6 8-3 5 0" }[d.type] || "M12 3v18";
   return `<svg viewBox="0 0 24 24" fill="none" stroke="#f3c96f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${ico}"/></svg>`;
 }
 function tapDoor(n, el) {
   ac();
   if (!isOpenable(n)) {
     el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); sNo();
-    toast(`Ще рано! Це віконце відкриється ${label(n)}`); return;
+    toast(`Ще рано! Це віконце відкриється ${label(n)} о 8:00`); return;
   }
   if (!S.opened[n]) {
     S.opened[n] = Date.now(); save(); el.classList.add("opened"); el.classList.remove("today"); sBell();
@@ -438,8 +453,33 @@ function workdays(spec) {
   return out;
 }
 const RENDER = {
-  note(body, d) {
-    body.innerHTML = `<p class="letter">${esc(d.text)}</p><p class="sign">— ${ME}</p>`;
+  note(body, d, n) {
+    body.innerHTML = `<p class="letter">${esc(d.text)}</p><p class="sign">— ${ME}</p>${d.heart ? `<button class="btn btn-main" id="hBtn" type="button">${S.done[n] ? "Надіслати ще одне ❤️" : "Надіслати Тарасу ❤️"}</button><div id="hRes"></div>` : ""}`;
+    if (d.heart) $("hBtn").onclick = async () => {
+      S.done[n] = { v: 1 }; save(); confetti(60); sWin();
+      await sendAndShow($("hRes"), `❤️ Мар'яна надіслала тобі сердечко у відповідь на віконце ${n}`, "Сердечко полетіло до Тараса.", { event: "heart", day: n });
+      $("hBtn").textContent = "Надіслати ще одне ❤️";
+    };
+  },
+  story(body, d, n) {
+    const prev = S.done[n]?.v || "";
+    body.innerHTML = `<p class="letter">${esc(d.text)}</p><textarea class="input story" id="stIn" maxlength="6000" placeholder="${esc(d.placeholder || "")}">${esc(prev)}</textarea>
+      <p class="small" id="stCnt"></p><button class="btn btn-main" id="stGo" type="button">${prev ? "Надіслати ще раз" : "Надіслати Тарасу"}</button><div id="stRes"></div>`;
+    if (prev) $("stRes").innerHTML = `<div class="done-box"><b>Тарас уже прочитав твою розповідь 🤍</b><span class="small">Можна дописати й надіслати ще раз.</span></div>`;
+    const cnt = () => {
+      const w = $("stIn").value.trim().split(/\s+/).filter(Boolean).length;
+      $("stCnt").textContent = w < 30 ? `Слів: ${w}. Розкажи більше, мені цікаво все 🙂` : w < 80 ? `Слів: ${w}. Чудово, пиши ще!` : `Слів: ${w}. Я вже усміхаюся 🤍`;
+      $("stGo").disabled = w < 3;
+    };
+    $("stIn").oninput = () => { cnt(); try { localStorage.setItem(KEY + ":draft" + n, $("stIn").value); } catch (e) {} };
+    if (!prev) { try { const dr = localStorage.getItem(KEY + ":draft" + n); if (dr) $("stIn").value = dr; } catch (e) {} }
+    cnt();
+    $("stGo").onclick = async () => {
+      const v = $("stIn").value.trim();
+      $("stGo").disabled = true; S.done[n] = { v }; save(); sWin(); confetti(60);
+      await sendAndShow($("stRes"), fill(d.notify, { v }), "Надіслано! Дякую, що розповідаєш мені про себе 🤍", { event: "story", day: n });
+      $("stGo").textContent = "Надіслати ще раз"; $("stGo").disabled = false;
+    };
   },
   choice(body, d, n) {
     const prev = S.done[n];
@@ -610,7 +650,7 @@ const GAMES = {
   memory(area, d, end) {
     const icons = ["❄️", "🎄", "⛄", "🎁", "🧣", "☕"];
     let cards = [...icons, ...icons].sort(() => Math.random() - .5), up = [], moves = 0, found = 0, lock = false;
-    area.innerHTML = `<div class="mem">${cards.map((c, i) => `<button type="button" data-i="${i}" aria-label="Картка">${c}</button>`).join("")}</div><p class="small" id="mv">Ходів: 0</p>`;
+    area.innerHTML = `<div class="mem">${cards.map((c, i) => `<button type="button" data-i="${i}" data-c="${c}" aria-label="Картка"><span class="face">${c}</span><span class="cover">❄</span></button>`).join("")}</div><p class="small" id="mv">Ходів: 0</p>`;
     const btns = [...area.querySelectorAll("button")];
     btns.forEach(b => b.onclick = () => {
       if (lock || b.classList.contains("up") || b.classList.contains("ok")) return;
@@ -618,7 +658,7 @@ const GAMES = {
       if (up.length === 2) {
         moves++; $("mv").textContent = `Ходів: ${moves}`;
         const [a, c] = up;
-        if (a.textContent === c.textContent) { a.classList.add("ok"); c.classList.add("ok"); up = []; found++; tone(1320, 0, .2, "sine", .07); if (found === icons.length) end(moves); }
+        if (a.dataset.c === c.dataset.c) { a.classList.add("ok"); c.classList.add("ok"); up = []; found++; tone(1320, 0, .2, "sine", .07); if (found === icons.length) end(moves); }
         else { lock = true; setTimeout(() => { a.classList.remove("up"); c.classList.remove("up"); up = []; lock = false; }, 750); }
       }
     });
