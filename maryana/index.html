@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta property="og:title" content="Зимовий календар"><meta property="og:description" content="Нове віконце щодня до Різдва"><meta name="theme-color" content="#0b1730"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style></head><body>
+<title>Зимовий календар Мар'яни</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Onest:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap">
+<style>
+/* Layout: a frosted night window over Lviv — header with countdown, a 5×5 wall of advent doors, rooftops along the bottom; each door opens into a sheet */
+:root {
+  --night: #0b1730;
+  --night-2: #142a4f;
+  --ice: #bfe0f2;
+  --snow: #f4f8fc;
+  --cran: #d93a52;
+  --cran-deep: #a8213a;
+  --pine: #1f6a52;
+  --gold: #f3c96f;
+  --paper: #fdf8ef;
+  --ink: #22160f;
+  --ink-soft: #6a584c;
+  --muted: #9fb3cf;
+  --line: rgba(220, 235, 255, .16);
+  --f-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --f-body: "Onest", system-ui, -apple-system, sans-serif;
+  --f-hand: "Caveat", "Segoe Script", cursive;
+  color-scheme: dark;
+}
+html, body { min-height: 100%; }
+body {
+  margin: 0; color: var(--snow); font-family: var(--f-body); font-size: 16px; line-height: 1.5; overflow-x: hidden;
+  background:
+    radial-gradient(70% 40% at 80% 0%, rgba(191,224,242,.18), transparent 70%),
+    radial-gradient(60% 40% at 10% 30%, rgba(120,90,200,.14), transparent 70%),
+    linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%) fixed, var(--night);
+}
+button { font-family: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+#snow { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+.wrap {
+  position: relative; z-index: 1; max-width: 640px; margin: 0 auto; padding-block: 18px 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 18px;
+}
+.top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.kicker { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; color: var(--gold); }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(32px, 9vw, 56px); line-height: .98; letter-spacing: -.02em; margin: 6px 0 0; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--ice); }
+.icon-btn { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.06); cursor: pointer; display: grid; place-items: center; color: var(--gold); }
+.icon-btn svg { width: 18px; height: 18px; }
+.icon-btn[aria-pressed="false"] { color: var(--muted); }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat { background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.stat b { font-family: var(--f-display); font-weight: 800; font-size: 28px; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1; }
+.stat span { font-size: 13px; color: var(--muted); line-height: 1.2; }
+.banner { border-radius: 16px; padding: 12px 14px; background: rgba(243,201,111,.12); border: 1px solid rgba(243,201,111,.35); font-size: 14px; color: var(--snow); }
+.banner b { color: var(--gold); }
+
+/* the wall of doors */
+.wall { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 600px) { .wall { gap: 12px; } }
+.door {
+  position: relative; aspect-ratio: 1; max-width: 100%; border: 0; padding: 0; cursor: pointer; perspective: 600px; background: none;
+}
+.door .back {
+  position: absolute; inset: 0; border-radius: 14px; background: rgba(0,0,0,.35); box-shadow: inset 0 0 0 1px var(--line);
+  display: grid; place-items: center;
+}
+.door .back svg { width: 46%; height: 46%; opacity: .9; }
+.door .back .bn { position: absolute; top: 6px; left: 8px; font-family: var(--f-display); font-weight: 800; font-size: clamp(10px, 2.6vw, 14px); color: var(--muted); }
+.door .leaf {
+  position: absolute; inset: 0; border-radius: 14px; transform-origin: left center; transition: transform .7s cubic-bezier(.3,.8,.3,1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  background: var(--c, var(--cran)); box-shadow: 0 10px 20px -12px rgba(0,0,0,.8), inset 0 0 0 2px rgba(255,255,255,.12);
+  backface-visibility: hidden;
+}
+.door .leaf::after { content: ""; position: absolute; right: 9%; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.55); transform: translateY(-50%); }
+.door .num { font-family: var(--f-display); font-weight: 800; font-size: clamp(18px, 6vw, 34px); line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+.door .dw { font-size: clamp(9px, 2.4vw, 12px); color: rgba(255,255,255,.75); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.door .cap { position: absolute; left: 6%; right: 6%; top: -5px; height: 10px; background: radial-gradient(circle at 7px 5px, #fff 5.5px, transparent 6px) 0 0 / 14px 10px repeat-x; pointer-events: none; z-index: 2; }
+.door.opened .leaf { transform: rotateY(-105deg); }
+.door.opened .cap { display: none; }
+.door.locked .leaf { filter: saturate(.55) brightness(.75); }
+.door.locked .leaf .lk { position: absolute; bottom: 8%; width: 14px; height: 14px; opacity: .8; }
+.door.today .leaf { box-shadow: 0 0 0 3px var(--gold), 0 0 24px 4px rgba(243,201,111,.45); animation: glow 2s ease-in-out infinite; }
+@keyframes glow { 50% { box-shadow: 0 0 0 3px var(--gold), 0 0 34px 8px rgba(243,201,111,.65); } }
+.door.special .leaf::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, transparent 44%, rgba(243,201,111,.9) 44% 56%, transparent 56%), linear-gradient(0deg, transparent 44%, rgba(243,201,111,.9) 44% 56%, transparent 56%); opacity: .55; pointer-events: none; }
+.door.shake { animation: shake .4s; }
+@keyframes shake { 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+
+.city { position: relative; z-index: 1; display: block; width: 100%; height: auto; margin-top: 24px; }
+.foot { position: relative; z-index: 1; text-align: center; font-size: 13px; color: var(--muted); padding: 10px 16px calc(24px + env(safe-area-inset-bottom, 0px)); background: #0d1a2f; }
+.foot b { color: var(--snow); font-weight: 600; }
+
+/* sheet */
+.sheet-bg { position: fixed; inset: 0; z-index: 50; background: rgba(5,10,25,.6); backdrop-filter: blur(4px); display: grid; align-items: end; justify-items: center; }
+@media (min-width: 700px) { .sheet-bg { align-items: center; } }
+.sheet {
+  position: relative; width: 100%; max-width: 560px; max-height: calc(100% - env(safe-area-inset-top, 0px) - 24px); overflow-y: auto;
+  background: var(--paper); color: var(--ink); border-radius: 26px 26px 0 0; box-sizing: border-box;
+  padding: 22px max(20px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+  animation: up .4s cubic-bezier(.2,.9,.3,1.05); display: flex; flex-direction: column; gap: 14px;
+}
+@media (min-width: 700px) { .sheet { border-radius: 26px; padding: 26px 28px 26px; } }
+@keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet .s-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.sheet .tag { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--cran-deep); }
+.close { width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(34,22,15,.08); cursor: pointer; display: grid; place-items: center; color: var(--ink); flex: 0 0 auto; }
+.close svg { width: 16px; height: 16px; }
+.sheet h2 { font-family: var(--f-display); font-weight: 800; font-size: clamp(22px, 6vw, 30px); line-height: 1.12; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.letter { font-family: var(--f-hand); font-weight: 600; font-size: 25px; line-height: 1.22; margin: 0; white-space: pre-line; }
+.sign { font-family: var(--f-hand); font-weight: 700; font-size: 26px; color: var(--cran-deep); text-align: right; margin: 0; }
+.p { margin: 0; color: var(--ink-soft); }
+.btn { border: 0; border-radius: 999px; padding: 15px 22px; cursor: pointer; font: 700 16px/1.1 var(--f-body); display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform .12s, filter .12s; text-decoration: none; }
+.btn:active { transform: scale(.97); }
+.btn:hover { filter: brightness(1.06); }
+.btn-main { background: var(--cran); color: #fff; }
+.btn-gold { background: var(--gold); color: var(--ink); }
+.btn-soft { background: rgba(34,22,15,.08); color: var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field > span { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1.5px solid rgba(34,22,15,.15); background: #fff; border-radius: 999px; padding: 10px 14px; cursor: pointer; font: 600 15px/1.2 var(--f-body); color: var(--ink); }
+.chip.sel { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.input, textarea.input { font: 500 16px/1.4 var(--f-body); border: 1.5px solid rgba(34,22,15,.15); border-radius: 14px; padding: 12px 14px; background: #fff; color: var(--ink); width: 100%; box-sizing: border-box; }
+textarea.input { min-height: 110px; resize: vertical; font-family: var(--f-hand); font-size: 22px; }
+.done-box { background: #eef7f1; border: 1.5px solid #9fd3b6; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done-box b { color: var(--pine); }
+.fallback { background: #fff4dc; border: 1.5px solid #ecc672; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.fallback .msg { background: #fff; border-radius: 10px; padding: 10px 12px; white-space: pre-line; user-select: all; }
+.small { font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+/* games */
+.game { position: relative; border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, #13284c, #2a4a7a); color: var(--snow); touch-action: none; user-select: none; -webkit-user-select: none; }
+.game canvas { display: block; width: 100%; height: 340px; }
+.ghud { position: absolute; top: 10px; left: 12px; right: 12px; display: flex; justify-content: space-between; font-weight: 700; font-variant-numeric: tabular-nums; pointer-events: none; }
+.gover { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 16px; background: rgba(11,23,48,.72); }
+.gover div { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.gover b { font-family: var(--f-display); font-size: 22px; }
+.mem { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.mem button { aspect-ratio: 1; max-width: 100%; border: 0; border-radius: 12px; cursor: pointer; font-size: clamp(24px, 7vw, 34px); background: var(--night-2); color: transparent; transition: transform .25s, background .25s; }
+.mem button.up, .mem button.ok { background: #fff; color: inherit; box-shadow: inset 0 0 0 2px rgba(34,22,15,.12); }
+.mem button.ok { background: #eef7f1; }
+.ana-word { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; min-height: 48px; }
+.ana-word i { width: 38px; height: 46px; border-radius: 10px; background: rgba(34,22,15,.08); display: grid; place-items: center; font-style: normal; font-family: var(--f-display); font-weight: 800; font-size: 20px; }
+.ana-tiles { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.ana-tiles button { width: 44px; height: 50px; border: 0; border-radius: 12px; background: var(--ink); color: var(--paper); font: 800 20px/1 var(--f-display); cursor: pointer; }
+.ana-tiles button:disabled { opacity: .15; }
+.shakey { animation: shake .4s; }
+.treeg { width: 100%; max-width: 300px; margin: 0 auto; display: block; }
+.treeg .slot { cursor: pointer; }
+.findg { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.findg button { aspect-ratio: 1; border: 0; border-radius: 10px; background: #e8f1f9; cursor: pointer; display: grid; place-items: center; padding: 0; }
+.findg button svg { width: 70%; height: 70%; }
+.quiz-q { display: flex; flex-direction: column; gap: 10px; }
+.quiz-q .chip.right { background: #2f8a5f; color: #fff; border-color: #2f8a5f; }
+.quiz-q .chip.wrong { background: #e9d6d9; border-color: #e9d6d9; }
+.scratch { position: relative; border-radius: 18px; overflow: hidden; touch-action: none; }
+.scratch .prize { padding: 28px 22px; min-height: 180px; display: flex; flex-direction: column; justify-content: center; gap: 6px; background: linear-gradient(160deg, #fff6dc, #ffe2a0); text-align: center; box-sizing: border-box; }
+.scratch .prize b { font-family: var(--f-display); font-size: 22px; color: var(--cran-deep); }
+.scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
+.cookie { display: grid; place-items: center; padding: 10px; }
+.cookie button { border: 0; background: none; cursor: pointer; font-size: 84px; line-height: 1; transition: transform .2s; }
+.cookie button:hover { transform: rotate(-8deg) scale(1.05); }
+.fortune { text-align: center; font-family: var(--f-hand); font-size: 28px; line-height: 1.2; margin: 0; }
+.sky { position: relative; height: 220px; border-radius: 18px; overflow: hidden; background: radial-gradient(120% 100% at 50% 100%, #2a4a7a, #0b1730); cursor: pointer; }
+.sky .bigstar { position: absolute; left: 50%; top: 40%; width: 64px; height: 64px; transform: translate(-50%, -50%); animation: tw 2s ease-in-out infinite; }
+@keyframes tw { 50% { transform: translate(-50%, -50%) scale(1.15); filter: drop-shadow(0 0 14px #f3c96f); } }
+.sky .shoot { position: absolute; width: 120px; height: 2px; background: linear-gradient(90deg, #fff, transparent); transform: rotate(-25deg); animation: shoot 1.2s ease-out forwards; }
+@keyframes shoot { from { left: 80%; top: 10%; opacity: 1; } to { left: -20%; top: 70%; opacity: 0; } }
+.summary { display: flex; flex-direction: column; gap: 6px; background: #fff; border-radius: 16px; padding: 14px 16px; }
+.summary div { display: flex; gap: 8px; font-size: 15px; }
+.summary div b { min-width: 0; }
+
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
+.toast { position: fixed; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); transform: translate(-50%, -20px); z-index: 70; background: var(--snow); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 15px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; max-width: calc(100% - 32px); text-align: center; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .door .leaf { transition: none; }
+  .door.today .leaf, .sky .bigstar { animation: none; }
+  .sheet { animation: none; }
+}
+</style>
+
+<canvas id="snow" aria-hidden="true"></canvas>
+<main class="wrap">
+  <header class="top">
+    <div>
+      <div class="kicker" id="kicker">Грудень · Львів</div>
+      <h1>Зимовий календар<br><em id="hname">Мар'яни</em></h1>
+    </div>
+    <button class="icon-btn" id="mute" type="button" aria-label="Вимкнути звук" aria-pressed="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor" stroke="none"/><path id="waves" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path id="cross" d="M16 9l5 6M21 9l-5 6" hidden/></svg>
+    </button>
+  </header>
+  <div id="banner"></div>
+  <div class="stats">
+    <div class="stat"><b id="sLeft">0</b><span id="sLeftL">днів до Різдва</span></div>
+    <div class="stat"><b id="sOpen">0</b><span>віконець відкрито з 25</span></div>
+  </div>
+  <div class="wall" id="wall" role="list"></div>
+</main>
+<svg class="city" viewBox="0 0 1000 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <path d="M0 150V96h40V78h30v18h20V70l20-16 20 16v26h30V84h40v12h26V62h12V40l8-12 8 12v22h12v34h30V80l18-14 18 14v16h40V72h50v24h20V58l26-20 26 20v38h30V86h22V30h8V10h6v20h8v56h22V66h40v30h30V76l22-18 22 18v20h40V60h16V44l10-10 10 10v16h16v36h40V82h36v14h30V70h40v26h28V88h22v62z" fill="#0d1a2f"/>
+  <g fill="#f3c96f" opacity=".85">
+    <rect x="52" y="104" width="6" height="8"/><rect x="118" y="80" width="6" height="8"/><rect x="200" y="100" width="6" height="8"/><rect x="262" y="70" width="5" height="8"/>
+    <rect x="356" y="84" width="6" height="8"/><rect x="418" y="104" width="6" height="8"/><rect x="487" y="64" width="6" height="8"/><rect x="560" y="96" width="6" height="8"/>
+    <rect x="636" y="80" width="6" height="8"/><rect x="706" y="70" width="6" height="8"/><rect x="782" y="100" width="6" height="8"/><rect x="866" y="88" width="6" height="8"/><rect x="930" y="96" width="6" height="8"/>
+  </g>
+  <circle cx="527" cy="48" r="5" fill="#bfe0f2" opacity=".9"/>
+</svg>
+<footer class="foot" id="foot">Від <b>Тараса</b>, з теплом. Нове віконце відкривається щодня о 00:00.</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<script>
+/* =========================================================
+   НАЛАШТУВАННЯ (міняти тут)
+   ========================================================= */
+const HER = "Мар'яна", HER_VOC = "Мар'яно", ME = "Тарас";
+const START = "2026-12-01";            // день першого віконця
+const TOTAL = 25;                      // до Різдва (25 грудня)
+/* Адреса Google Apps Script, який пересилає її вибір тобі в Telegram (див. інструкцію) */
+const SEND_URL = "";
+/* Якщо надіслати не вдалося — куди їй написати вручну */
+const FALLBACK_TG = "https://t.me/Tarashotpoint";
+const NOTIFY_OPEN = true;              // повідомляти тобі, що вона відкрила віконце
+const DOOR_COLORS = ["#d93a52", "#1f6a52", "#2f5d9a", "#b8862a", "#7a3e8f"];
+
+const WD = ["неділя", "понеділок", "вівторок", "середа", "четвер", "пʼятниця", "субота"];
+const WDS = ["нд", "пн", "вт", "ср", "чт", "пт", "сб"];
+const MON = "грудня";
+
+/* ---------- ВМІСТ ВІКОНЕЦЬ ----------
+   type: note | choice | task | game | scratch | fortune | letter | wish | final
+   notify: що прилетить тобі в Telegram ({v} — її вибір/відповідь) */
+const DAYS = [
+  /* 1 */ { type: "note", title: "Привіт, Мар'яно!", text: "Це твій зимовий календар. Щодня до Різдва тут відкриватиметься одне віконце.\n\nУ деяких — просто кілька теплих слів. У деяких — маленька гра або завдання. А в деяких треба буде щось обрати, і я одразу про це дізнаюся. Що буде далі, не скажу.\n\nГарного тобі першого дня зими." },
+  /* 2 */ { type: "game", game: "catch", title: "Лови сніжинки", intro: "30 секунд, щоб зловити 20 сніжинок. Торкайся їх пальцем.", goal: 20, win: "Ти спритніша за хуртовину. Зараховано!", lose: "Майже! Спробуй ще раз, сніжинки не закінчуються.", notify: "❄️ Мар'яна зловила {v} сніжинок у грі дня 2" },
+  /* 3 */ { type: "task", title: "Завдання: десять хвилин тиші", text: "Зроби собі найсмачніший чай або какао, загорнися в плед і десять хвилин нічого не роби. Без телефону, без справ.\n\nЦе завдання від мене, і провалити його неможливо.", button: "Виконала ☕", done: "Ідеально. Саме так і треба.", notify: "☕ Мар'яна виконала завдання дня 3 (десять хвилин тиші)" },
+  /* 4 */ { type: "choice", title: "Обери фільм на наш зимовий вечір", text: "Колись ми увімкнемо його разом. Обирай чесно, без оглядки на мене.", fields: [{ id: "film", label: "Фільм", options: ["Сам удома", "Любов насправді", "Гаррі Поттер і філософський камінь", "Відпустка за обміном", "Полярний експрес", "Обери сам"] }], button: "Обрати", done: "Записав. Готую ковдру і попкорн.", notify: "🎬 Мар'яна обрала фільм: {film}" },
+  /* 5 */ { type: "scratch", title: "Зітри сніг", text: "Під снігом щось ховається. Потри пальцем.", prize: "Ти мені подобаєшся", prizeSub: "Просто хотів, щоб ти знала.", notify: "✨ Мар'яна стерла сніг у віконці 5" },
+  /* 6 */ { type: "choice", special: true, title: "Сьогодні День святого Миколая", text: "Миколай передав, що ти цього року була дуже чемна. І попросив дізнатися, яку шоколадку тобі привезти.", fields: [{ id: "choc", label: "Шоколадка", options: ["Milka з цілим горіхом", "Ritter Sport", "Шоколад ручної роботи зі Львівської майстерні", "Kinder", "Чорний гіркий", "Здивуй мене"] }], button: "Замовити в Миколая", done: "Миколай уже в дорозі. Він дуже схожий на мене, не лякайся.", notify: "🍫 Шоколадка від Миколая: {choc}" },
+  /* 7 */ { type: "game", game: "memory", title: "Зимова пам'ять", intro: "Знайди всі пари. Поспішати нікуди.", win: "Всі пари знайдено! Пам'ять у тебе краща, ніж у мене на дати.", notify: "🧠 Мар'яна пройшла «Зимову пам'ять» за {v} ходів" },
+  /* 8 */ { type: "task", title: "Завдання: полювання на гірлянди", text: "Дорогою сьогодні знайди найгарнішу гірлянду чи вітрину і сфотографуй.\n\nЯкщо захочеш, надішли мені. Влаштуємо конкурс на найзатишніший куточок Львова.", button: "Знайшла!", done: "Чекаю фото. Переможець конкурсу отримує гарячий шоколад.", notify: "📸 Мар'яна знайшла гарну гірлянду — чекай фото" },
+  /* 9 */ { type: "note", title: "Три речі", text: "Три речі, які я помітив за той час, що ми знайомі:\n\n1. З тобою дуже легко говорити.\n2. У тебе неймовірна усмішка, особливо коли ти намагаєшся не сміятися.\n3. Після зустрічі з тобою день здається кращим, ніж був." },
+  /* 10 */ { type: "choice", special: true, title: "Кава з доставкою", text: "Одного разу посеред робочого дня я все кину і привезу тобі каву. Ти тільки скажи яку, коли і куди.", fields: [
+      { id: "drink", label: "Напій", options: ["Лате", "Капучино", "Раф", "Флет вайт", "Американо", "Какао", "Матча"] },
+      { id: "milk", label: "Молоко", options: ["Звичайне", "Рослинне", "Без молока"] },
+      { id: "syrup", label: "Сироп", options: ["Без сиропу", "Карамель", "Ваніль", "Лісовий горіх", "Солона карамель"] },
+      { id: "day", label: "День", options: "workdays:2026-12-10:6" },
+      { id: "time", label: "Час", options: ["10:00–12:00", "12:00–14:00", "14:00–16:00", "16:00–18:00"] },
+      { id: "where", label: "Куди привезти", input: "Адреса або «на роботу»" }
+    ], button: "Чекаю каву", done: "Прийнято! Я вже знаю, коли сідати в машину.", notify: "☕ КАВА З ДОСТАВКОЮ\nНапій: {drink}\nМолоко: {milk}\nСироп: {syrup}\nКоли: {day}, {time}\nКуди: {where}" },
+  /* 11 */ { type: "game", game: "anagram", title: "Зимові слова", intro: "Літери переплуталися. Натискай їх по порядку, щоб скласти слово.", words: ["ЯЛИНКА", "ПРЯНИК", "КОЛЯДА", "СНІЖИНКА"], win: "Усі слова на місці. Ти чарівниця.", notify: "🔤 Мар'яна склала всі зимові слова" },
+  /* 12 */ { type: "fortune", title: "Зимове печиво з передбаченням", text: "Розламай печиво. Передбачення збувається протягом тижня. Перевірено.", list: ["Завтра хтось подумає про тебе рівно о 12:34. Здогадайся хто.", "Найближчим часом ти отримаєш напій, який не замовляла. І він буде смачний.", "Цього тижня ти будеш сміятися так, що аж заболить живіт.", "На тебе чекає несподівана зустріч. Можливо, навіть запланована.", "Твоє бажання вже в дорозі. Воно трохи запізнюється через сніг.", "Хтось дуже чекає на твоє наступне повідомлення."], notify: "🥠 Передбачення для Мар'яни: «{v}»" },
+  /* 13 */ { type: "task", title: "Завдання: вечір турботи", text: "Сьогодні неділя. Влаштуй собі вечір турботи: маска, улюблений серіал, ковдра, щось смачне.\n\nЖодних справ. Я перевірю.", button: "Влаштувала", done: "Пишаюся тобою. Так тримати.", notify: "🛁 Мар'яна влаштувала собі вечір турботи" },
+  /* 14 */ { type: "choice", title: "Куди підемо наступного разу?", text: "Наступне побачення обираєш ти.", fields: [{ id: "place", label: "Куди", options: ["Різдвяний ярмарок біля Оперного", "Каток", "Кав'ярня з настілками", "VR Dragon, реванш", "Прогулянка вечірнім Львовом", "Вирішуй ти"] }], button: "Обрати", done: "Домовились. Я все організую.", notify: "📍 Наступне побачення: {place}" },
+  /* 15 */ { type: "game", game: "tree", title: "Прикрась ялинку", intro: "Торкнися кожного кружечка, щоб повісити іграшку. Коли прикрасиш усе, засвітиться зірка.", win: "Найгарніша ялинка в місті!", notify: "🎄 Мар'яна прикрасила ялинку у віконці 15" },
+  /* 16 */ { type: "task", title: "Завдання: зимова пісня", text: "Яка пісня в тебе асоціюється із зимою? Напиши її сюди, і я додам її в наш плейлист.", input: "Назва пісні або виконавець", button: "Надіслати пісню", done: "Вже слухаю.", notify: "🎵 Зимова пісня від Мар'яни: {v}" },
+  /* 17 */ { type: "scratch", title: "Купон", text: "Зітри сніг і забери свій купон.", prize: "Купон на одне бажання", prizeSub: "Пред'яви Тарасу. Діє всю зиму.", notify: "🎟 Мар'яна відкрила купон на одне бажання (готуйся!)" },
+  /* 18 */ { type: "game", game: "quiz", title: "Що ти знаєш про Тараса?", intro: "Чотири питання. Неправильних відповідей не буває. Ну, майже.", qs: [
+      { q: "Яка гра в Тараса улюблена?", a: ["Dota 2", "CS 2", "FIFA", "Minecraft"], r: 0 },
+      { q: "Що Тарас робить у будні з 9 до 18?", a: ["Директорує в магазині сантехніки", "Пише код", "Варить каву", "Тренує футболістів"], r: 0 },
+      { q: "Скільки разів Тарас переписував текст цього календаря?", a: ["Один", "Три", "Десять", "Збився з рахунку"], r: 3 },
+      { q: "Що Тарас зробить, коли ти пройдеш цей тест?", a: ["Усміхнеться", "Обійме при зустрічі", "Скаже, що ти найрозумніша", "Усе разом"], r: 3 }
+    ], notify: "❓ Мар'яна пройшла тест про тебе: {v}" },
+  /* 19 */ { type: "game", game: "find", title: "Знайди сердечко", intro: "Серед сніжинок сховалося сердечко. Три раунди, кожен трохи складніший.", win: "Знайшла! Як і моє, до речі.", notify: "💗 Мар'яна знайшла всі сердечка" },
+  /* 20 */ { type: "choice", special: true, title: "Квіти", text: "Взимку квітів мало, тому я привезу тобі букет. Обери, які тобі до душі.", fields: [
+      { id: "flower", label: "Квіти", options: ["Тюльпани", "Троянди", "Ранункулюси", "Хризантеми", "Гортензія", "Здивуй мене"] },
+      { id: "color", label: "Колір", options: ["Білі", "Ніжно-рожеві", "Червоні", "Пастельні мікс", "Будь-які"] },
+      { id: "day", label: "Коли", options: ["пн 21 грудня", "вт 22 грудня", "ср 23 грудня", "чт 24 грудня"] },
+      { id: "time", label: "Час", options: ["Вдень", "Ввечері, після 18:00"] }
+    ], button: "Обрати букет", done: "Букет замовлено. Залишилося дочекатися.", notify: "💐 КВІТИ\nЩо: {flower}, {color}\nКоли: {day}, {time}" },
+  /* 21 */ { type: "letter", title: "Лист собі в наступну зиму", text: "Напиши кілька рядків собі через рік: що відчуваєш зараз, чого хочеш, за що вдячна. Цей лист бачиш тільки ти, він зберігається лише на твоєму телефоні.", notify: "" },
+  /* 22 */ { type: "game", game: "catch", hearts: true, title: "Лови сердечка", intro: "Тепер падають сердечка. 30 секунд, ціль 25.", goal: 25, win: "Усі мої сердечка в тебе. Чесно.", lose: "Ще трішки! Сердечок вистачить на всіх.", notify: "💗 Мар'яна зловила {v} сердечок у грі дня 22" },
+  /* 23 */ { type: "choice", title: "Різдвяна підказка", text: "Я вже дещо готую на Різдво. Не скажу що, але підкажи настрій.", fields: [{ id: "mood", label: "Хочеться чогось", options: ["Затишного", "Смачного", "Враження разом", "Корисного", "Сюрпризу, нічого не підказую"] }], button: "Підказати", done: "Дякую! Тепер я точно знаю, що робити.", notify: "🎁 Різдвяна підказка від Мар'яни: хочеться {mood}" },
+  /* 24 */ { type: "wish", special: true, title: "Святвечір", text: "Сьогодні особливий вечір. Кажуть, на Святвечір перша зірка виконує бажання.\n\nЗагадай своє і торкнися зірки.", done: "Бажання відправлено. Я теж загадав. Здається, про одне й те саме.", notify: "⭐ Мар'яна загадала бажання на Святвечір" },
+  /* 25 */ { type: "final", special: true, title: "З Різдвом, Мар'яно!", text: "Двадцять п'ять днів, двадцять п'ять віконець. Дякую, що відкривала кожне.\n\nЯ дуже радий, що цієї зими в мене є ти. Хай Різдво принесе тобі спокій, тепло і багато приводів усміхатися.\n\nА найголовніший подарунок я хочу вручити особисто.", ask: "Побачимося на свята?", answers: ["Так! 🎄", "Напишу тобі"], notify: "🎄 Мар'яна на Різдво відповіла: {v}" }
+];
+
+/* =========================================================
+   РУШІЙ
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ONLINE = /github\.io$/i.test(location.hostname);
+const PREVIEW = !ONLINE || location.hash === "#admin";
+const KEY = "advent-maryana-2026";
+let S = { opened: {}, done: {}, notified: {}, letter: "" };
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") S = Object.assign(S, s); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+function kyivToday() {
+  const p = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Kyiv", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  return p; // YYYY-MM-DD
+}
+const toDate = s => { const [y, m, d] = s.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+const dayDiff = (a, b) => Math.round((toDate(b) - toDate(a)) / 86400000);
+const dateOf = n => { const d = toDate(START); d.setUTCDate(d.getUTCDate() + n - 1); return d; };
+const label = n => { const d = dateOf(n); return `${d.getUTCDate()} ${MON}`; };
+const wdShort = n => WDS[dateOf(n).getUTCDay()];
+function todayIndex() { return dayDiff(START, kyivToday()) + 1; }  // 1 = перший день
+function isOpenable(n) { return PREVIEW || todayIndex() >= n; }
+
+/* ---------- звук ---------- */
+let audio = null, muted = false;
+try { muted = localStorage.getItem(KEY + ":muted") === "1"; } catch (e) {}
+function ac() { if (muted) return null; try { if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === "suspended") audio.resume(); } catch (e) { audio = null; } return audio; }
+function tone(f, st, d, type = "sine", v = .1) { const a = ac(); if (!a) return; const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f; const t = a.currentTime + st; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + .05); }
+const sBell = () => [1047, 1319, 1568, 2093].forEach((f, i) => tone(f, i * .09, .8, "sine", .07));
+const sTap = () => tone(880, 0, .1, "sine", .06);
+const sWin = () => [659, 784, 988, 1319].forEach((f, i) => tone(f, i * .08, .45, "triangle", .1));
+const sNo = () => { tone(330, 0, .2, "sine", .08); tone(262, .1, .25, "sine", .07); };
+function paintMute() { $("mute").setAttribute("aria-pressed", String(!muted)); $("mute").setAttribute("aria-label", muted ? "Увімкнути звук" : "Вимкнути звук"); $("waves").hidden = muted; $("cross").hidden = !muted; }
+$("mute").onclick = () => { muted = !muted; try { localStorage.setItem(KEY + ":muted", muted ? "1" : "0"); } catch (e) {} paintMute(); };
+paintMute();
+
+let toastT = 0;
+function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2400); }
+
+/* ---------- надсилання тобі в Telegram ---------- */
+async function notify(text) {
+  if (!text) return true;
+  const body = JSON.stringify({ text: (PREVIEW ? "[ТЕСТ] " : "") + text });
+  if (!SEND_URL) return false;
+  try { await fetch(SEND_URL, { method: "POST", mode: "no-cors", body }); return true; } catch (e) { return false; }
+}
+function fill(tpl, vals) { return tpl.replace(/\{(\w+)\}/g, (_, k) => vals[k] ?? ""); }
+function fallbackHtml(text) {
+  return `<div class="fallback"><b>Не вдалося надіслати автоматично</b><span>Надішли, будь ласка, Тарасу це повідомлення сама:</span><div class="msg" id="fbMsg">${esc(text)}</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-gold" type="button" id="fbCopy">Скопіювати</button><a class="btn btn-soft" href="${FALLBACK_TG}" target="_blank" rel="noopener">Відкрити Telegram</a></div></div>`;
+}
+function bindFallback(text) {
+  const b = $("fbCopy"); if (!b) return;
+  b.onclick = () => { try { navigator.clipboard.writeText(text).then(() => toast("Скопійовано"), sel); } catch (e) { sel(); } };
+  const sel = () => { const r = document.createRange(); r.selectNodeContents($("fbMsg")); const g = getSelection(); g.removeAllRanges(); g.addRange(r); toast("Виділено, скопіюй"); };
+}
+/* надіслати й показати результат у контейнері */
+async function sendAndShow(box, text, doneText) {
+  const ok = await notify(text);
+  box.innerHTML = `<div class="done-box"><b>${esc(doneText)}</b>${PREVIEW && !SEND_URL ? `<span class="small">Режим перегляду: у Telegram прийшло б:<br>${esc(text).replace(/\n/g, "<br>")}</span>` : ""}</div>` + (ok || PREVIEW ? "" : fallbackHtml(text));
+  bindFallback(text);
+}
+
+/* ---------- стіна віконець ---------- */
+function renderWall() {
+  const ti = todayIndex();
+  $("wall").innerHTML = DAYS.map((d, i) => {
+    const n = i + 1, open = !!S.opened[n], can = isOpenable(n), today = n === ti;
+    const c = d.special ? (n === 25 ? "#b8862a" : "#a8213a") : DOOR_COLORS[(i * 3) % DOOR_COLORS.length];
+    return `<button class="door${open ? " opened" : ""}${!can ? " locked" : ""}${today && !open ? " today" : ""}${d.special ? " special" : ""}" type="button" data-n="${n}" role="listitem" aria-label="Віконце ${n}, ${label(n)}${!can ? ", ще зачинене" : open ? ", відкрите" : ""}" style="--c:${c}">
+      <span class="back">${backIcon(d)}<span class="bn">${n}</span></span>
+      <span class="leaf"><span class="num">${n}</span><span class="dw">${wdShort(n)}</span>${!can ? `<svg class="lk" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>` : ""}</span>
+      ${!open ? `<span class="cap"></span>` : ""}
+    </button>`;
+  }).join("");
+  $("wall").querySelectorAll(".door").forEach(b => b.onclick = () => tapDoor(+b.dataset.n, b));
+  const opened = Object.keys(S.opened).length;
+  $("sOpen").textContent = opened;
+  const left = dayDiff(kyivToday(), "2026-12-25");
+  $("sLeft").textContent = Math.max(0, left);
+  $("sLeftL").textContent = left > 0 ? (left === 1 ? "день до Різдва" : left < 5 ? "дні до Різдва" : "днів до Різдва") : "Різдво!";
+  let ban = "";
+  if (PREVIEW) ban = `<div class="banner"><b>Режим перегляду.</b> Усі віконця відкриваються, а повідомлення позначаються як «ТЕСТ». Мар'яна цього не бачить.</div>`;
+  else if (ti < 1) ban = `<div class="banner">Календар відкриється <b>1 грудня</b>. Ще ${-ti + 1} ${(-ti + 1) === 1 ? "день" : (-ti + 1) < 5 ? "дні" : "днів"}.</div>`;
+  else if (ti <= TOTAL && !S.opened[ti]) ban = `<div class="banner">Сьогоднішнє віконце <b>№${ti}</b> чекає на тебе.</div>`;
+  $("banner").innerHTML = ban;
+}
+function backIcon(d) {
+  const ico = { note: "M4 6h16v12H4z M4 6l8 7 8-7", choice: "M12 3l2.6 5.6 6 .6-4.5 4 1.3 5.9L12 16l-5.4 3.1 1.3-5.9-4.5-4 6-.6z", task: "M5 12l4 4 10-10", game: "M6 10h4M8 8v4M15 11h.01M18 9h.01M7 5h10a4 4 0 0 1 4 4l-1 7a2.5 2.5 0 0 1-4.3 1.6L14 16h-4l-1.7 1.6A2.5 2.5 0 0 1 4 16L3 9a4 4 0 0 1 4-4z", scratch: "M4 8h16v10H4z M8 8v10 M12 4c-2 0-3 4 0 4s2-4 0-4z", fortune: "M4 14a8 8 0 0 1 16 0z", letter: "M5 3h10l4 4v14H5z", wish: "M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z", final: "M3 10h18v11H3z M12 10v11 M12 10c-3-6-8-3-5 0 M12 10c3-6 8-3 5 0" }[d.type] || "M12 3v18";
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="#f3c96f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${ico}"/></svg>`;
+}
+function tapDoor(n, el) {
+  ac();
+  if (!isOpenable(n)) {
+    el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); sNo();
+    toast(`Ще рано! Це віконце відкриється ${label(n)}`); return;
+  }
+  if (!S.opened[n]) {
+    S.opened[n] = Date.now(); save(); el.classList.add("opened"); el.classList.remove("today"); sBell();
+    if (NOTIFY_OPEN && !S.notified["open" + n]) { S.notified["open" + n] = 1; save(); notify(`🚪 ${HER} відкрила віконце №${n}`); }
+    setTimeout(() => { openSheet(n); renderWall(); }, reduce ? 0 : 550);
+  } else openSheet(n);
+}
+
+/* ---------- лист-вікно ---------- */
+let sheetCleanup = null;
+function openSheet(n) {
+  closeSheet();
+  const d = DAYS[n - 1];
+  const bg = document.createElement("div"); bg.className = "sheet-bg"; bg.id = "sheetBg";
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+    <div class="s-top"><span class="tag">Віконце ${n} · ${label(n)}, ${WD[dateOf(n).getUTCDay()]}</span>
+      <button class="close" id="sClose" type="button" aria-label="Закрити"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <h2 id="sTitle">${esc(d.title)}</h2>
+    <div id="sBody" style="display:flex;flex-direction:column;gap:14px"></div>
+  </div>`;
+  document.body.appendChild(bg);
+  document.body.style.overflow = "hidden";
+  bg.addEventListener("click", e => { if (e.target === bg) closeSheet(); });
+  $("sClose").onclick = closeSheet;
+  $("sClose").focus({ preventScroll: true });
+  const body = $("sBody");
+  (RENDER[d.type] || RENDER.note)(body, d, n);
+}
+function closeSheet() {
+  if (sheetCleanup) { sheetCleanup(); sheetCleanup = null; }
+  const bg = $("sheetBg"); if (bg) bg.remove();
+  document.body.style.overflow = "";
+}
+addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+
+/* ---------- типи віконець ---------- */
+function workdays(spec) {
+  const [, from, cnt] = spec.split(":"); const out = []; const d = toDate(from);
+  while (out.length < +cnt) { const w = d.getUTCDay(); if (w !== 0 && w !== 6) out.push(`${WDS[w]} ${d.getUTCDate()} ${MON}`); d.setUTCDate(d.getUTCDate() + 1); }
+  return out;
+}
+const RENDER = {
+  note(body, d) {
+    body.innerHTML = `<p class="letter">${esc(d.text)}</p><p class="sign">— ${ME}</p>`;
+  },
+  choice(body, d, n) {
+    const prev = S.done[n];
+    const vals = Object.assign({}, prev || {});
+    body.innerHTML = `<p class="letter">${esc(d.text)}</p>` + d.fields.map(f => {
+      if (f.input) return `<label class="field"><span>${esc(f.label)}</span><input class="input" data-f="${f.id}" maxlength="120" placeholder="${esc(f.input)}" value="${esc(vals[f.id] || "")}"></label>`;
+      const opts = typeof f.options === "string" ? workdays(f.options) : f.options;
+      return `<div class="field"><span>${esc(f.label)}</span><div class="chips">${opts.map(o => `<button class="chip${vals[f.id] === o ? " sel" : ""}" type="button" data-f="${f.id}" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div></div>`;
+    }).join("") + `<button class="btn btn-main" id="cGo" type="button">${esc(prev ? "Змінити вибір" : d.button)}</button><div id="cRes"></div>`;
+    if (prev) $("cRes").innerHTML = `<div class="done-box"><b>Ти вже обрала, і я про це знаю.</b><span class="small">Можна змінити й надіслати ще раз.</span></div>`;
+    body.querySelectorAll(".chip").forEach(c => c.onclick = () => {
+      body.querySelectorAll(`.chip[data-f="${c.dataset.f}"]`).forEach(x => x.classList.toggle("sel", x === c));
+      vals[c.dataset.f] = c.dataset.v; sTap(); check();
+    });
+    body.querySelectorAll("input[data-f]").forEach(i => i.oninput = () => { vals[i.dataset.f] = i.value.trim(); check(); });
+    const check = () => { $("cGo").disabled = !d.fields.every(f => vals[f.id]); };
+    check();
+    $("cGo").onclick = async () => {
+      $("cGo").disabled = true;
+      S.done[n] = Object.assign({}, vals); save();
+      sWin(); confetti(50);
+      await sendAndShow($("cRes"), fill(d.notify, vals), d.done);
+      $("cGo").textContent = "Змінити вибір"; $("cGo").disabled = false;
+    };
+  },
+  task(body, d, n) {
+    body.innerHTML = `<p class="letter">${esc(d.text)}</p>${d.input ? `<input class="input" id="tIn" maxlength="140" placeholder="${esc(d.input)}" value="${esc(S.done[n]?.v || "")}">` : ""}<button class="btn btn-main" id="tGo" type="button">${esc(d.button)}</button><div id="tRes"></div>`;
+    if (S.done[n]) $("tRes").innerHTML = `<div class="done-box"><b>${esc(d.done)}</b></div>`;
+    const chk = () => { if ($("tIn")) $("tGo").disabled = !$("tIn").value.trim(); };
+    if ($("tIn")) $("tIn").oninput = chk; chk();
+    $("tGo").onclick = async () => {
+      const v = $("tIn") ? $("tIn").value.trim() : "";
+      $("tGo").disabled = true; S.done[n] = { v }; save(); sWin(); confetti(40);
+      await sendAndShow($("tRes"), fill(d.notify, { v }), d.done);
+      $("tGo").disabled = false;
+    };
+  },
+  game(body, d, n) {
+    body.innerHTML = `<p class="p">${esc(d.intro)}</p><div id="gArea"></div><div id="gRes"></div>`;
+    GAMES[d.game]($("gArea"), d, async (score, won = true) => {
+      if (won) { sWin(); confetti(70); }
+      if (!won) { $("gRes").innerHTML = `<div class="fallback" style="background:#eef3fb;border-color:#b9cbe6"><b>${esc(d.lose || "Спробуй ще раз")}</b></div>`; return; }
+      const first = !S.done[n]; S.done[n] = { v: score }; save();
+      if (first) await sendAndShow($("gRes"), fill(d.notify, { v: score }), d.win);
+      else $("gRes").innerHTML = `<div class="done-box"><b>${esc(d.win)}</b></div>`;
+    });
+  },
+  scratch(body, d, n) {
+    body.innerHTML = `<p class="p">${esc(d.text)}</p><div class="scratch" id="scr"><div class="prize"><b>${esc(d.prize)}</b><span>${esc(d.prizeSub || "")}</span></div><canvas id="scrC"></canvas></div><div id="scRes"></div><p class="sign">— ${ME}</p>`;
+    const wrap = $("scr"), c = $("scrC"), g = c.getContext("2d");
+    const r = wrap.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+    c.width = r.width * dpr; c.height = r.height * dpr; g.scale(dpr, dpr);
+    if (S.done[n]) { c.remove(); return; }
+    const grd = g.createLinearGradient(0, 0, r.width, r.height); grd.addColorStop(0, "#e9f2fa"); grd.addColorStop(1, "#c9dcee");
+    g.fillStyle = grd; g.fillRect(0, 0, r.width, r.height);
+    for (let i = 0; i < 70; i++) { g.beginPath(); g.arc(Math.random() * r.width, Math.random() * r.height, 1 + Math.random() * 3, 0, 7); g.fillStyle = "rgba(255,255,255,.9)"; g.fill(); }
+    g.fillStyle = "#5a78a0"; g.font = "600 16px Onest, sans-serif"; g.textAlign = "center"; g.fillText("потри тут пальцем", r.width / 2, r.height / 2 + 6);
+    g.globalCompositeOperation = "destination-out";
+    let down = false, last = 0, doneFlag = false;
+    const at = e => { const b = c.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+    const scratchAt = (x, y) => { g.beginPath(); g.arc(x, y, 22, 0, 7); g.fill(); if (Date.now() - last > 60) { tone(1200 + Math.random() * 400, 0, .04, "sine", .02); last = Date.now(); } };
+    const check = () => {
+      if (doneFlag) return;
+      const px = g.getImageData(0, 0, c.width, c.height).data; let clear = 0;
+      for (let i = 3; i < px.length; i += 64) if (px[i] === 0) clear++;
+      if (clear / (px.length / 64) > .55) {
+        doneFlag = true; c.style.transition = "opacity .5s"; c.style.opacity = 0; setTimeout(() => c.remove(), 500);
+        S.done[n] = { v: 1 }; save(); sWin(); confetti(60); sendAndShow($("scRes"), d.notify, "Відкрито!");
+      }
+    };
+    c.addEventListener("pointerdown", e => { down = true; c.setPointerCapture(e.pointerId); scratchAt(...at(e)); });
+    c.addEventListener("pointermove", e => { if (down) scratchAt(...at(e)); });
+    c.addEventListener("pointerup", () => { down = false; check(); });
+    c.addEventListener("pointercancel", () => { down = false; check(); });
+  },
+  fortune(body, d, n) {
+    const prev = S.done[n]?.v;
+    body.innerHTML = `<p class="p">${esc(d.text)}</p><div class="cookie"><button type="button" id="ck" aria-label="Розламати печиво">🥠</button></div><p class="fortune" id="ft">${prev ? esc(prev) : ""}</p><div id="fRes"></div>`;
+    $("ck").onclick = async () => {
+      if (S.done[n]) { toast("Передбачення одне на день 😉"); return; }
+      const v = d.list[Math.floor(Math.random() * d.list.length)];
+      $("ck").textContent = "✨"; $("ft").textContent = v; S.done[n] = { v }; save(); sWin();
+      await sendAndShow($("fRes"), fill(d.notify, { v }), "Тепер чекаємо, коли збудеться.");
+    };
+  },
+  letter(body, d, n) {
+    body.innerHTML = `<p class="p">${esc(d.text)}</p><textarea class="input" id="lt" placeholder="Дорога я з наступної зими…">${esc(S.letter || "")}</textarea><button class="btn btn-main" id="ltGo" type="button">Зберегти лист</button><p class="small" id="ltN">Я цей лист не побачу. Обіцяю.</p>`;
+    $("ltGo").onclick = () => { S.letter = $("lt").value; S.done[n] = { v: 1 }; save(); sWin(); $("ltN").textContent = "Збережено на цьому телефоні. Відкрий віконце 21 наступної зими 😉"; };
+  },
+  wish(body, d, n) {
+    body.innerHTML = `<p class="letter">${esc(d.text)}</p><div class="sky" id="sky" role="button" tabindex="0" aria-label="Торкнутися зірки"><svg class="bigstar" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z" fill="#f3c96f"/></svg></div><div id="wRes"></div><p class="sign">— ${ME}</p>`;
+    if (S.done[n]) $("wRes").innerHTML = `<div class="done-box"><b>${esc(d.done)}</b></div>`;
+    const go = async () => {
+      const sh = document.createElement("span"); sh.className = "shoot"; $("sky").appendChild(sh); setTimeout(() => sh.remove(), 1300);
+      [1568, 2093, 2637, 3136].forEach((f, i) => tone(f, i * .12, 1, "sine", .05));
+      if (S.done[n]) return;
+      S.done[n] = { v: 1 }; save(); confetti(90);
+      await sendAndShow($("wRes"), d.notify, d.done);
+    };
+    $("sky").onclick = go; $("sky").onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+  },
+  final(body, d, n) {
+    const picks = DAYS.map((x, i) => [x, i + 1]).filter(([x, k]) => x.type === "choice" && S.done[k]).map(([x, k]) => `<div><span>${esc(x.title)}:</span> <b>${esc(Object.values(S.done[k]).join(", "))}</b></div>`).join("");
+    body.innerHTML = `<p class="letter">${esc(d.text)}</p><p class="sign">— ${ME}</p>${picks ? `<div class="summary"><span class="small">Що ти обрала за цей грудень</span>${picks}</div>` : ""}<p class="letter" style="text-align:center">${esc(d.ask)}</p><div class="chips" style="justify-content:center">${d.answers.map(a => `<button class="chip" type="button" data-v="${esc(a)}">${esc(a)}</button>`).join("")}</div><div id="fnRes"></div>`;
+    confetti(120); sWin();
+    body.querySelectorAll(".chip").forEach(c => c.onclick = async () => {
+      body.querySelectorAll(".chip").forEach(x => x.classList.toggle("sel", x === c));
+      S.done[n] = { v: c.dataset.v }; save(); confetti(60);
+      await sendAndShow($("fnRes"), fill(d.notify, { v: c.dataset.v }), "Відповідь у мене. З Різдвом! 🎄");
+    });
+  }
+};
+
+/* ---------- міні-ігри ---------- */
+const HEART = "M0 4.2C-13 -3 -6 -12.6 0 -5.4 6 -12.6 13 -3 0 4.2Z";
+const GAMES = {
+  catch(area, d, end) {
+    area.innerHTML = `<div class="game"><canvas id="gc"></canvas><div class="ghud"><span id="gS">0 / ${d.goal}</span><span id="gT">30</span></div><div class="gover" id="gO"><div><b>${d.hearts ? "Лови сердечка" : "Лови сніжинки"}</b><button class="btn btn-gold" id="gStart" type="button">Почати</button></div></div></div>`;
+    const cv = $("gc"), g = cv.getContext("2d");
+    let W, H, items = [], score = 0, t0 = 0, raf = 0, running = false, spawnT = 0, last = 0;
+    const size = () => { const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    size();
+    const draw = () => {
+      g.clearRect(0, 0, W, H);
+      items.forEach(it => {
+        g.save(); g.translate(it.x, it.y); g.rotate(it.r);
+        if (d.hearts) { g.scale(it.s / 12, it.s / 12); g.fillStyle = "#ff6f8a"; g.fill(new Path2D(HEART)); }
+        else { g.strokeStyle = "#fff"; g.lineWidth = 2.2; g.lineCap = "round"; for (let k = 0; k < 3; k++) { g.rotate(Math.PI / 3); g.beginPath(); g.moveTo(-it.s, 0); g.lineTo(it.s, 0); g.stroke(); } }
+        g.restore();
+      });
+      g.fillStyle = "rgba(255,255,255,.12)"; g.fillRect(0, H - 6, W, 6);
+    };
+    const loop = now => {
+      if (!running) return;
+      const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+      const left = 30 - (now - t0) / 1000;
+      spawnT -= dt; if (spawnT <= 0) { items.push({ x: 20 + Math.random() * (W - 40), y: -20, v: 60 + Math.random() * 90 + (30 - left) * 3, s: 11 + Math.random() * 7, r: Math.random() * 6, vr: (Math.random() - .5) * 2, sw: Math.random() * 6 }); spawnT = .38 + Math.random() * .3; }
+      items.forEach(it => { it.y += it.v * dt; it.r += it.vr * dt; it.sw += dt * 2; it.x += Math.sin(it.sw) * .6; });
+      items = items.filter(it => it.y < H + 30);
+      $("gT").textContent = Math.max(0, Math.ceil(left));
+      draw();
+      if (left <= 0) { running = false; finish(); return; }
+      raf = requestAnimationFrame(loop);
+    };
+    const finish = () => {
+      const won = score >= d.goal;
+      $("gO").hidden = false;
+      $("gO").innerHTML = `<div><b>${score} ${d.hearts ? "сердечок" : "сніжинок"}</b><button class="btn btn-gold" id="gStart" type="button">${won ? "Ще раз" : "Спробувати ще"}</button></div>`;
+      $("gStart").onclick = start;
+      end(score, won);
+    };
+    const start = () => { ac(); size(); items = []; score = 0; $("gS").textContent = `0 / ${d.goal}`; $("gO").hidden = true; running = true; t0 = performance.now(); last = 0; raf = requestAnimationFrame(loop); };
+    $("gStart").onclick = start;
+    cv.addEventListener("pointerdown", e => {
+      if (!running) return;
+      const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      let hit = -1, best = 1e9;
+      items.forEach((it, i) => { const dd = Math.hypot(it.x - x, it.y - y); if (dd < it.s + 22 && dd < best) { best = dd; hit = i; } });
+      if (hit >= 0) { items.splice(hit, 1); score++; $("gS").textContent = `${score} / ${d.goal}`; tone(900 + score * 20, 0, .12, "sine", .06); }
+    });
+    sheetCleanup = () => { running = false; cancelAnimationFrame(raf); };
+  },
+  memory(area, d, end) {
+    const icons = ["❄️", "🎄", "⛄", "🎁", "🧣", "☕"];
+    let cards = [...icons, ...icons].sort(() => Math.random() - .5), up = [], moves = 0, found = 0, lock = false;
+    area.innerHTML = `<div class="mem">${cards.map((c, i) => `<button type="button" data-i="${i}" aria-label="Картка">${c}</button>`).join("")}</div><p class="small" id="mv">Ходів: 0</p>`;
+    const btns = [...area.querySelectorAll("button")];
+    btns.forEach(b => b.onclick = () => {
+      if (lock || b.classList.contains("up") || b.classList.contains("ok")) return;
+      ac(); sTap(); b.classList.add("up"); up.push(b);
+      if (up.length === 2) {
+        moves++; $("mv").textContent = `Ходів: ${moves}`;
+        const [a, c] = up;
+        if (a.textContent === c.textContent) { a.classList.add("ok"); c.classList.add("ok"); up = []; found++; tone(1320, 0, .2, "sine", .07); if (found === icons.length) end(moves); }
+        else { lock = true; setTimeout(() => { a.classList.remove("up"); c.classList.remove("up"); up = []; lock = false; }, 750); }
+      }
+    });
+  },
+  anagram(area, d, end) {
+    let wi = 0;
+    const word = () => {
+      const w = d.words[wi]; let pos = 0;
+      let letters = w.split("").map((ch, i) => ({ ch, i })).sort(() => Math.random() - .5);
+      area.innerHTML = `<p class="small">Слово ${wi + 1} з ${d.words.length}</p><div class="ana-word" id="aw">${w.split("").map(() => "<i></i>").join("")}</div><div class="ana-tiles" id="at">${letters.map((l, k) => `<button type="button" data-k="${k}">${l.ch}</button>`).join("")}</div>`;
+      const slots = [...area.querySelectorAll("#aw i")];
+      area.querySelectorAll("#at button").forEach(b => b.onclick = () => {
+        ac(); const l = letters[+b.dataset.k];
+        if (l.ch === w[pos]) {
+          slots[pos].textContent = l.ch; b.disabled = true; pos++; sTap();
+          if (pos === w.length) { tone(1320, 0, .3, "sine", .08); wi++; setTimeout(() => wi < d.words.length ? word() : (area.innerHTML = `<p class="fortune">${d.words.join(" · ")}</p>`, end(d.words.length)), 600); }
+        } else { sNo(); $("aw").classList.remove("shakey"); void $("aw").offsetWidth; $("aw").classList.add("shakey"); }
+      });
+    };
+    word();
+  },
+  tree(area, d, end) {
+    const slots = [[100, 70], [82, 102], [120, 108], [70, 140], [104, 146], [136, 136], [60, 182], [96, 190], [140, 182], [118, 168]];
+    const cols = ["#d93a52", "#f3c96f", "#bfe0f2", "#7a3e8f", "#ff8fa3"];
+    let filled = 0;
+    area.innerHTML = `<svg class="treeg" viewBox="0 0 200 240" aria-label="Ялинка">
+      <rect x="90" y="208" width="20" height="24" rx="3" fill="#6b4226"/>
+      <polygon points="100,110 34,212 166,212" fill="#1b6249"/><polygon points="100,70 46,160 154,160" fill="#217a57"/><polygon points="100,34 60,112 140,112" fill="#2a9264"/>
+      <polygon id="tstar" points="100,10 104.4,20.9 116.2,21.7 107.1,29.3 110,40.8 100,34.5 90,40.8 92.9,29.3 83.8,21.7 95.6,20.9" fill="#3a4a63" stroke="#8aa0c0" stroke-width="1"/>
+      ${slots.map(([x, y], i) => `<circle class="slot" data-i="${i}" cx="${x}" cy="${y}" r="8" fill="rgba(255,255,255,.08)" stroke="#fff" stroke-dasharray="3 3" stroke-width="1.4"/>`).join("")}
+    </svg><p class="small" id="tl">Залишилось: ${slots.length}</p>`;
+    area.querySelectorAll(".slot").forEach(s => s.addEventListener("click", () => {
+      if (s.dataset.done) return; ac();
+      s.dataset.done = 1; s.setAttribute("fill", cols[filled % cols.length]); s.removeAttribute("stroke-dasharray"); s.setAttribute("stroke", "rgba(255,255,255,.6)");
+      tone([1047, 1175, 1319, 1397, 1568, 1760, 1976, 2093, 2349, 2637][filled], 0, .6, "sine", .07); filled++;
+      $("tl").textContent = filled < slots.length ? `Залишилось: ${slots.length - filled}` : "Готово!";
+      if (filled === slots.length) { $("tstar").setAttribute("fill", "#f3c96f"); $("tstar").setAttribute("stroke", "#fff1c9"); $("tstar").style.filter = "drop-shadow(0 0 8px #f3c96f)"; end(1); }
+    }));
+  },
+  find(area, d, end) {
+    let round = 0;
+    const SF = `<svg viewBox="0 0 24 24" fill="none" stroke="#7aa6c8" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17l17.4-10"/></svg>`;
+    const HT = c => `<svg viewBox="-12 -12 24 22"><path d="${HEART}" fill="${c}"/></svg>`;
+    const go = () => {
+      const n = [24, 30, 36][round], h = Math.floor(Math.random() * n), col = ["#ff6f8a", "#c7a5c9", "#a9bfd6"][round];
+      area.innerHTML = `<p class="small">Раунд ${round + 1} з 3</p><div class="findg">${Array.from({ length: n }, (_, i) => `<button type="button" data-i="${i}" aria-label="${i === h ? "Сердечко" : "Сніжинка"}">${i === h ? HT(col) : SF}</button>`).join("")}</div>`;
+      area.querySelectorAll(".findg button").forEach(b => b.onclick = () => {
+        ac();
+        if (+b.dataset.i === h) { tone(1320, 0, .25, "sine", .08); round++; if (round < 3) go(); else { area.innerHTML = `<p class="fortune">Усі три знайдено 💗</p>`; end(3); } }
+        else { sNo(); b.classList.remove("shakey"); void b.offsetWidth; b.classList.add("shakey"); }
+      });
+    };
+    go();
+  },
+  quiz(area, d, end) {
+    let qi = 0, right = 0;
+    const show = () => {
+      const Q = d.qs[qi];
+      area.innerHTML = `<div class="quiz-q"><p class="small">Питання ${qi + 1} з ${d.qs.length}</p><p class="letter" style="font-size:24px">${esc(Q.q)}</p><div class="chips">${Q.a.map((a, k) => `<button class="chip" type="button" data-k="${k}">${esc(a)}</button>`).join("")}</div></div>`;
+      area.querySelectorAll(".chip").forEach(c => c.onclick = () => {
+        ac(); const k = +c.dataset.k;
+        area.querySelectorAll(".chip").forEach(x => { x.disabled = true; if (+x.dataset.k === Q.r) x.classList.add("right"); });
+        if (k === Q.r) { right++; tone(1100, 0, .2, "sine", .07); } else { c.classList.add("wrong"); sNo(); }
+        setTimeout(() => { qi++; if (qi < d.qs.length) show(); else { area.innerHTML = `<p class="fortune">${right} з ${d.qs.length}! ${right === d.qs.length ? "Ти знаєш мене краще, ніж я думав." : "Нічого, у нас ще буде час познайомитися ближче."}</p>`; end(`${right} з ${d.qs.length}`); } }, 900);
+      });
+    };
+    show();
+  }
+};
+
+/* ---------- конфеті й сніг ---------- */
+const fx = $("fx"), fg = fx.getContext("2d"); let fp = [], frun = false;
+function confetti(n) {
+  if (reduce) return;
+  const dpr = Math.min(2, devicePixelRatio || 1); fx.width = innerWidth * dpr; fx.height = innerHeight * dpr; fg.setTransform(dpr, 0, 0, dpr, 0, 0);
+  for (let i = 0; i < n; i++) fp.push({ x: innerWidth / 2 + (Math.random() - .5) * 140, y: innerHeight * .45, vx: (Math.random() - .5) * 13, vy: -6 - Math.random() * 9, s: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .2, life: 0, c: ["#d93a52", "#f3c96f", "#ffffff", "#bfe0f2"][i % 4] });
+  if (!frun) { frun = true; requestAnimationFrame(fstep); }
+}
+function fstep() {
+  fg.clearRect(0, 0, innerWidth, innerHeight);
+  fp.forEach(p => { p.vy += .28; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++; fg.save(); fg.translate(p.x, p.y); fg.rotate(p.r); fg.scale(p.s / 12, p.s / 12); fg.fillStyle = p.c; fg.fill(new Path2D(HEART)); fg.restore(); });
+  fp = fp.filter(p => p.y < innerHeight + 20 && p.life < 240);
+  if (fp.length) requestAnimationFrame(fstep); else { frun = false; fg.clearRect(0, 0, innerWidth, innerHeight); }
+}
+const snowC = $("snow"), sg = snowC.getContext("2d"); let flakes = [], snowRaf = 0;
+function snowSize() {
+  const d = Math.min(2, devicePixelRatio || 1); snowC.width = innerWidth * d; snowC.height = innerHeight * d; sg.setTransform(d, 0, 0, d, 0, 0);
+  const n = Math.round(Math.min(120, Math.max(40, innerWidth * innerHeight / 9000)));
+  flakes = Array.from({ length: n }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, r: .8 + Math.random() * 2.4, v: .25 + Math.random() * .7, a: Math.random() * 6, o: .3 + Math.random() * .6 }));
+  if (reduce) snowDraw(false);
+}
+function snowDraw(m) {
+  sg.clearRect(0, 0, innerWidth, innerHeight);
+  flakes.forEach(f => { if (m) { f.y += f.v; f.a += .01; f.x += Math.sin(f.a) * .3; if (f.y > innerHeight + 4) { f.y = -4; f.x = Math.random() * innerWidth; } } sg.beginPath(); sg.arc(f.x, f.y, f.r, 0, 7); sg.fillStyle = `rgba(255,255,255,${f.o})`; sg.fill(); });
+}
+function snowLoop() { snowDraw(true); snowRaf = requestAnimationFrame(snowLoop); }
+addEventListener("resize", snowSize);
+document.addEventListener("visibilitychange", () => { cancelAnimationFrame(snowRaf); if (!document.hidden && !reduce) snowLoop(); if (!document.hidden) renderWall(); });
+snowSize(); if (!reduce) snowLoop();
+
+renderWall();
+/* відкрити сьогоднішнє, якщо прийшла за посиланням з #today */
+if (location.hash === "#today") { const t = todayIndex(); if (t >= 1 && t <= TOTAL) { const el = document.querySelector(`.door[data-n="${t}"]`); if (el) setTimeout(() => tapDoor(t, el), 400); } }
+</script>
+
+</body></html>
