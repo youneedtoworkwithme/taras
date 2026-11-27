@@ -547,32 +547,6 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
         <div class="live-pill"><i class="live-dot" aria-hidden="true"></i><span>На зв'язку · Рахунок за ~15 хв</span></div>
       </div>
       <div class="about" id="mAbout" hidden></div>
-      <div class="quick" id="quick">
-        <div class="qh"><b>Швидкий підбір і рахунок за 15 хв</b><span>Безкоштовно · ШІ підбере коди з прайсу, я перевірю</span></div>
-        <button type="button" class="btn primary qmain" id="qOwnBtn">📋 У мене є мій список (фото / файл / текст)</button>
-        <div class="qbar" id="qBar">
-          <label class="qclip" title="Додати фото чи файли (до 20)" aria-label="Додати фото чи файли"><input type="file" id="qFile" multiple accept="image/*,application/pdf,.xlsx,.xls,.csv,.txt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5 12.6 20a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2L10 17.4a1.8 1.8 0 0 1-2.6-2.6l7.8-7.8"/></svg><i id="qCnt" hidden></i></label>
-          <textarea id="qText" rows="1" placeholder="Вставте список або прикріпіть 📎 фото…"></textarea>
-          <button type="button" class="qgo" id="qGo" aria-label="Отримати підбір"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        </div>
-        <div class="qmode" id="qModeBox" hidden>
-          <div class="qmode-h">⚠️ Як підібрати по вашому списку?</div>
-          <div class="qmodes" id="qModes" role="group" aria-label="Як підібрати товар">
-            <button type="button" class="qm" data-m="Тільки той самий товар/бренд (1 в 1)">🎯 Той самий товар</button>
-            <button type="button" class="qm on" data-m="Аналоги тієї ж якості (оптимально)">⚖️ Аналоги по якості</button>
-            <button type="button" class="qm" data-m="Дешевші аналоги (економ)">💰 Дешевше</button>
-            <button type="button" class="qm" data-m="Дорожчі/надійніші аналоги (преміум)">⭐ Краще / дорожче</button>
-          </div>
-        </div>
-        <div class="qsub">Або оберіть, що порахувати з нуля:</div>
-        <div class="qpresets" id="qPresets" role="group" aria-label="Швидкі шаблони запиту">
-          <button type="button" class="qpreset" data-tpl="Потрібен підбір на теплу підлогу (труба, колектор, підкладка) на ___ м²">🔥 Тепла підлога</button>
-          <button type="button" class="qpreset" data-tpl="Потрібен підбір на розводку води та каналізації (___ точок)">💧 Розводка води</button>
-          <button type="button" class="qpreset" data-tpl="Комплектація котельні під ключ (котел, бойлер, арматура) на ___ м²">⚡ Котельня</button>
-          <button type="button" class="qpreset qpreset-cmp" data-cmp="1">📄 Порівняти чужий рахунок</button>
-        </div>
-        <div class="qnote" id="qFileT">Доставка Пн/Ср/Пт · від 10 000 грн безкоштовно</div>
-      </div>
       <style>
         .live-pill{display:inline-flex;align-items:center;gap:7px;margin-top:6px;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--ok) 13%,transparent);border:1px solid color-mix(in srgb,var(--ok) 32%,transparent);font-size:12px;font-weight:700;color:var(--ok);white-space:nowrap}
         .live-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent);animation:lpulse 2s infinite}
@@ -618,6 +592,11 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
       (function(){
         var slug = (location.pathname.split('/').filter(Boolean)[0] || 'taras').toLowerCase().replace(/-v\d+$/, '');
         var APP = 'https://youneedtoworkwithme.github.io/aihotpoint/?m=' + encodeURIComponent(slug) + '&from=card';
+        if(!document.getElementById('quick')){ // блок швидкого підбору прибрано — лише перегляд фото
+          document.addEventListener('click', function(e){ var b = e.target.closest('.rgal button'); if(!b) return;
+            var d = document.createElement('div'); d.className = 'rbox'; d.innerHTML = '<img src="' + b.querySelector('img').src + '" alt=""><button aria-label="Закрити">✕</button>';
+            d.onclick = function(){ d.remove(); }; document.body.appendChild(d); });
+          return; }
         var f = document.getElementById('qFile'), t = document.getElementById('qText'), go = document.getElementById('qGo'), lab = document.getElementById('qFileT');
         var cnt = document.getElementById('qCnt'), noteTxt = lab.textContent, mBox = document.getElementById('qModeBox');
         var qModeVal = 'Аналоги тієї ж якості (оптимально)';
@@ -688,19 +667,9 @@ textarea{width:100%;min-height:76px;border:1.5px solid var(--line);border-radius
             <div class="cmp-tag">Для нових клієнтів</div>
             <h3 id="cmpH">Порівняйте з вашим постачальником</h3>
             <p class="cmp-sub">Скиньте фото рахунку, який у Вас уже є. Я порахую ті самі позиції — і Ви побачите різницю.</p>
-            <ol class="cmp-steps"><li><b>Фото рахунку</b><span>від будь-якого постачальника</span></li><li><b>Оберіть як рахувати</b><span>1 в 1, аналоги чи дешевше</span></li><li><b>Мій рахунок за 15 хв</b><span>точні ціни дає тільки менеджер</span></li></ol>
-            <div class="qmode" id="cmpModeBox" style="margin-bottom:10px">
-              <div class="qmode-h">⚠️ Оберіть, як саме порівняти ваш рахунок:</div>
-              <div class="qmodes" id="cmpModes" role="group" aria-label="Режим порівняння рахунку">
-                <button type="button" class="qm" data-m="Тільки той самий товар/бренд (1 в 1)">🎯 Той самий товар</button>
-                <button type="button" class="qm on" data-m="Аналоги тієї ж якості (оптимально)">⚖️ Аналоги по якості</button>
-                <button type="button" class="qm" data-m="Дешевші аналоги (економ)">💰 Дешевше</button>
-                <button type="button" class="qm" data-m="Дорожчі/надійніші аналоги (преміум)">⭐ Краще / дорожче</button>
-              </div>
-            </div>
-            <label class="btn primary cmp-up"><input type="file" id="cmpFile" multiple accept="image/*,application/pdf,.xlsx,.xls,.csv"><span id="cmpUpT">📷 Завантажити рахунок</span></label>
-            <div class="cmp-or">або надішліть мені напряму</div>
-            <div class="row2"><a class="btn viber" id="cmpViber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c5 0 9 3 9 8s-4 8-9 8c-1 0-2-.1-2.9-.4L5 21v-3.6C3.7 16 3 13.8 3 11c0-5 4-8 9-8z"/><path d="M9 8.5c0 3.5 3 6 6 6l1-1.5-2-1-1 .8c-1-.4-1.8-1.2-2.2-2.2l.8-1-1-2z"/></svg>Viber</a><a class="btn" id="cmpTg" target="_blank" rel="noopener">Telegram</a></div>
+            <ol class="cmp-steps"><li><b>Фото рахунку</b><span>від будь-якого постачальника</span></li><li><b>Надішліть мені</b><span>у Telegram або Viber</span></li><li><b>Мій рахунок за 15 хв</b><span>точні ціни дає тільки менеджер</span></li></ol>
+            <div class="cmp-or">Надішліть фото рахунку мені напряму:</div>
+            <div class="row2"><a class="btn viber" id="cmpViber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c5 0 9 3 9 8s-4 8-9 8c-1 0-2-.1-2.9-.4L5 21v-3.6C3.7 16 3 13.8 3 11c0-5 4-8 9-8z"/><path d="M9 8.5c0 3.5 3 6 6 6l1-1.5-2-1-1 .8c-1-.4-1.8-1.2-2.2-2.2l.8-1-1-2z"/></svg>Viber</a><a class="btn tg" id="cmpTg" target="_blank" rel="noopener">Telegram</a></div>
             <ul class="cmp-plus"><li>Великий основний склад — більшість позицій у наявності</li><li>Доставка Пн/Ср/Пт, від 10 000 грн — безкоштовно</li><li>Під ключ: чорнова, чистова, електрика</li></ul>
           </div>
         </div>
@@ -4620,7 +4589,7 @@ $("cmpBtn").onclick = () => cmpShow(true);
 $("cmpX").onclick = () => cmpShow(false);
 $("cmp").addEventListener("click", e => { if (e.target === $("cmp")) cmpShow(false); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("cmp").hidden) cmpShow(false); });
-$("cmpFile").onchange = () => { const fl = [...$("cmpFile").files].slice(0, 20); if (!fl.length) return;
+if ($("cmpFile")) $("cmpFile").onchange = () => { const fl = [...$("cmpFile").files].slice(0, 20); if (!fl.length) return;
   $("cmpUpT").textContent = "Відкриваю Hotpoint.ai…";
   if (window.hpToApp) window.hpToApp("Порівняти з рахунком постачальника. Пріоритет підбору: " + cmpModeVal, fl); };
 $("mReal").onclick = () => setMode("real"); $("mAi").onclick = () => setMode("ai");
